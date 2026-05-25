@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { Save, School, Globe, Bell, Shield, Palette, Database } from "lucide-react";
+import { Save, School, Bell, Shield, Palette, Database } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,12 +10,21 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+const NOTIF_ITEMS = [
+  { id: "paiements", label: "Paiements en retard", desc: "Recevoir une alerte lorsqu'un paiement dépasse la date d'échéance" },
+  { id: "admissions", label: "Nouvelles admissions", desc: "Notification à chaque nouveau dossier de candidature reçu" },
+  { id: "absences", label: "Absences répétées", desc: "Alerte lorsqu'un étudiant dépasse 10 absences" },
+  { id: "resultats", label: "Résultats publiés", desc: "Notification lors de la publication des notes d'examen" },
+  { id: "rapports", label: "Rapports hebdomadaires", desc: "Résumé automatique chaque lundi matin" },
+];
 
 export default function SettingsPage() {
-  const [toast, setToast] = useState("");
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
+  const showToast = useToast();
+  const [notifPrefs, setNotifPrefs] = useState<Record<string, boolean>>(
+    Object.fromEntries(NOTIF_ITEMS.map(i => [i.id, true]))
+  );
+
+  const toggleNotif = (id: string) => setNotifPrefs(prev => ({ ...prev, [id]: !prev[id] }));
 
   const [general, setGeneral] = useState({
     schoolName: "EduStar University",
@@ -111,27 +121,25 @@ export default function SettingsPage() {
         {/* Notifications */}
         <TabsContent value="notifications">
           <div className="max-w-2xl space-y-3">
-            {[
-              { label: "Paiements en retard", desc: "Recevoir une alerte lorsqu'un paiement dépasse la date d'échéance" },
-              { label: "Nouvelles admissions", desc: "Notification à chaque nouveau dossier de candidature reçu" },
-              { label: "Absences répétées", desc: "Alerte lorsqu'un étudiant dépasse 10 absences" },
-              { label: "Résultats publiés", desc: "Notification lors de la publication des notes d'examen" },
-              { label: "Rapports hebdomadaires", desc: "Résumé automatique chaque lundi matin" },
-            ].map((item, i) => (
-              <Card key={i}>
-                <div className="flex items-center justify-between p-4">
-                  <div>
-                    <div className="text-[13px] font-semibold text-[var(--ink)]">{item.label}</div>
-                    <div className="text-[11.5px] text-[var(--ink-4)] mt-0.5">{item.desc}</div>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <div className="w-9 h-5 rounded-full bg-[var(--blue)] flex items-center justify-end pr-0.5 cursor-pointer">
-                      <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
+            {NOTIF_ITEMS.map(item => {
+              const on = notifPrefs[item.id];
+              return (
+                <Card key={item.id}>
+                  <div className="flex items-center justify-between p-4">
+                    <div>
+                      <div className="text-[13px] font-semibold text-[var(--ink)]">{item.label}</div>
+                      <div className="text-[11.5px] text-[var(--ink-4)] mt-0.5">{item.desc}</div>
                     </div>
+                    <button
+                      onClick={() => toggleNotif(item.id)}
+                      className={`w-9 h-5 rounded-full flex items-center transition-all duration-200 shrink-0 ${on ? "bg-[var(--blue)] justify-end pr-0.5" : "bg-[var(--line-dark)] justify-start pl-0.5"}`}
+                    >
+                      <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
+                    </button>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
             <div className="flex justify-end">
               <Button onClick={() => showToast("Préférences de notification sauvegardées !")}>
                 <Save className="w-3.5 h-3.5" /> Sauvegarder
@@ -237,16 +245,6 @@ export default function SettingsPage() {
         </TabsContent>
       </Tabs>
 
-      <AnimatePresence>
-        {toast && (
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
-            className="fixed bottom-5 right-5 z-[9999] bg-[var(--ink)] text-white rounded-[10px] px-4 py-3 flex items-center gap-3 shadow-lg border-l-[3px] border-[var(--success)] text-[12.5px] font-medium"
-          >
-            <span>{toast}</span>
-            <button onClick={() => setToast("")}><X className="w-3.5 h-3.5 text-white/40 hover:text-white/80" /></button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

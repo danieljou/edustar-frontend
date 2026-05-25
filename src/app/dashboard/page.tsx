@@ -8,23 +8,27 @@ export const metadata = { title: "Tableau de bord" };
 
 export default function DashboardPage() {
   return (
-    <div>
+    <div className="space-y-4 md:space-y-5">
       <KpiSection />
 
       {/* Charts + quick actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
+        <div className="lg:col-span-2 min-w-0">
           <AnalyticsChart />
         </div>
-        <QuickActions />
+        <div className="min-w-0">
+          <QuickActions />
+        </div>
       </div>
 
       {/* Recent students + activity */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-        <div className="xl:col-span-2">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-5">
+        <div className="xl:col-span-2 min-w-0">
           <RecentStudents />
         </div>
-        <ActivityFeed />
+        <div className="min-w-0">
+          <ActivityFeed />
+        </div>
       </div>
     </div>
   );

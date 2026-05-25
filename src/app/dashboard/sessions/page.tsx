@@ -1,27 +1,91 @@
 "use client";
 import { useState } from "react";
-import { Plus, CalendarRange, Users, Check } from "lucide-react";
+import { Plus, CalendarRange, Users, AlertTriangle, Lock } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduBadge, statusBadge } from "@/components/shared/EduBadge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { SESSIONS, CLASSES } from "@/constants/mock-data";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from "@/components/ui/dialog";
+import { CLASSES } from "@/constants/mock-data";
 import { formatDate } from "@/lib/utils";
+import { useToast } from "@/components/ui/toast";
+import type { Session } from "@/types";
+
+const INITIAL_SESSIONS: Session[] = [
+  { id: "ses-1", lib: "2023–2024", debut: "2023-09-04", fin: "2024-07-05", statut: "Clôturée", effectif: 342 },
+  { id: "ses-2", lib: "2024–2025", debut: "2024-09-02", fin: "2025-07-04", statut: "Clôturée", effectif: 378 },
+  { id: "ses-3", lib: "2025–2026", debut: "2025-09-01", fin: "2026-07-03", statut: "Active", effectif: 391 },
+];
 
 export default function SessionsPage() {
-  const activeSession = SESSIONS.find(s => s.statut === "Active");
+  const toast = useToast();
+  const [sessions, setSessions] = useState<Session[]>(INITIAL_SESSIONS);
+  const [showForm, setShowForm] = useState(false);
+  const [showCloseConfirm, setShowCloseConfirm] = useState<Session | null>(null);
+  const [form, setForm] = useState({ lib: "", debut: "", fin: "" });
+
+  const activeSession = sessions.find(s => s.statut === "Active");
+
+  const handleCreate = () => {
+    if (!form.lib || !form.debut || !form.fin) {
+      toast("Tous les champs sont obligatoires.", "error");
+      return;
+    }
+    if (new Date(form.fin) <= new Date(form.debut)) {
+      toast("La date de fin doit être postérieure à la date de début.", "error");
+      return;
+    }
+    const newSession: Session = {
+      id: `ses-${Date.now()}`,
+      lib: form.lib,
+      debut: form.debut,
+      fin: form.fin,
+      statut: "À venir",
+      effectif: 0,
+    };
+    setSessions(prev => [...prev, newSession]);
+    setForm({ lib: "", debut: "", fin: "" });
+    setShowForm(false);
+    toast(`Session ${form.lib} créée avec succès !`, "success");
+  };
+
+  const handleActivate = (id: string) => {
+    if (activeSession) {
+      toast("Une session est déjà active. Clôturez-la d'abord avant d'en activer une autre.", "warning");
+      return;
+    }
+    setSessions(prev => prev.map(s => s.id === id ? { ...s, statut: "Active" as const } : s));
+    toast("Session activée !", "success");
+  };
+
+  const handleClose = (session: Session) => {
+    setShowCloseConfirm(session);
+  };
+
+  const confirmClose = () => {
+    if (!showCloseConfirm) return;
+    setSessions(prev => prev.map(s => s.id === showCloseConfirm.id ? { ...s, statut: "Clôturée" as const } : s));
+    setShowCloseConfirm(null);
+    toast("Session clôturée et archivée. Cette action est irréversible.", "info");
+  };
 
   return (
     <div>
       <PageHeader
         title="Sessions scolaires"
-        subtitle={`${SESSIONS.length} sessions · Session active : ${activeSession?.lib || "Aucune"}`}
-        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> Nouvelle session</Button>}
+        subtitle={`${sessions.length} sessions · Session active : ${activeSession?.lib || "Aucune"}`}
+        actions={
+          <Button size="sm" onClick={() => setShowForm(true)}>
+            <Plus className="w-3.5 h-3.5" /> Nouvelle session
+          </Button>
+        }
       />
 
       {/* Sessions timeline */}
       <div className="space-y-4 mb-6">
-        {SESSIONS.map(s => (
+        {sessions.map(s => (
           <Card key={s.id} className={`overflow-hidden transition-all ${s.statut === "Active" ? "border-[var(--blue)] shadow-md" : ""}`}>
             <div className="flex items-stretch">
               <div className={`w-[4px] shrink-0 ${s.statut === "Active" ? "bg-gradient-to-b from-[var(--blue)] to-[var(--cyan)]" : "bg-[var(--line)]"}`} />
@@ -34,7 +98,7 @@ export default function SessionsPage() {
                       <EduBadge variant={statusBadge(s.statut)}>{s.statut}</EduBadge>
                       {s.statut === "Active" && (
                         <span className="flex items-center gap-1 text-[10.5px] text-[var(--success)] font-bold">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)]" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
                           En cours
                         </span>
                       )}
@@ -43,10 +107,29 @@ export default function SessionsPage() {
                       {formatDate(s.debut)} → {formatDate(s.fin)}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-3.5 h-3.5 text-[var(--ink-4)]" />
-                    <span className="text-[13px] font-bold text-[var(--ink)]">{s.effectif}</span>
-                    <span className="text-[11px] text-[var(--ink-4)]">étudiants inscrits</span>
+
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-[var(--ink-4)]" />
+                      <span className="text-[13px] font-bold text-[var(--ink)]">{s.effectif}</span>
+                      <span className="text-[11px] text-[var(--ink-4)]">étudiants</span>
+                    </div>
+
+                    {s.statut === "À venir" && (
+                      <Button size="sm" variant="outline" onClick={() => handleActivate(s.id)}>
+                        Activer
+                      </Button>
+                    )}
+                    {s.statut === "Active" && (
+                      <Button size="sm" variant="danger" onClick={() => handleClose(s)}>
+                        <Lock className="w-3.5 h-3.5" /> Clôturer
+                      </Button>
+                    )}
+                    {s.statut === "Clôturée" && (
+                      <span className="flex items-center gap-1 text-[11px] text-[var(--ink-4)]">
+                        <Lock className="w-3.5 h-3.5" /> Archivée
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -84,6 +167,84 @@ export default function SessionsPage() {
           ))}
         </div>
       </div>
+
+      {/* Create session dialog */}
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Nouvelle session scolaire</DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="lib">Libellé de la session *</Label>
+                <Input
+                  id="lib"
+                  placeholder="ex : 2026–2027"
+                  value={form.lib}
+                  onChange={e => setForm(prev => ({ ...prev, lib: e.target.value }))}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="debut">Date de début *</Label>
+                  <Input
+                    id="debut"
+                    type="date"
+                    value={form.debut}
+                    onChange={e => setForm(prev => ({ ...prev, debut: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="fin">Date de fin *</Label>
+                  <Input
+                    id="fin"
+                    type="date"
+                    value={form.fin}
+                    onChange={e => setForm(prev => ({ ...prev, fin: e.target.value }))}
+                  />
+                </div>
+              </div>
+              <div className="flex items-start gap-2 p-3 bg-[var(--blue-lighter)] border border-[var(--blue-light)] rounded-[8px] text-[11.5px] text-[var(--ink-2)]">
+                <AlertTriangle className="w-3.5 h-3.5 text-[var(--blue)] shrink-0 mt-0.5" />
+                La session sera créée avec le statut <strong>"À venir"</strong>. Une seule session peut être active à la fois (règle RG-SES-001).
+              </div>
+            </div>
+          </DialogBody>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>Annuler</Button>
+            <Button size="sm" onClick={handleCreate}>
+              <Plus className="w-3.5 h-3.5" /> Créer la session
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Close confirmation dialog */}
+      <Dialog open={!!showCloseConfirm} onOpenChange={() => setShowCloseConfirm(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Clôturer la session</DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <div className="flex items-start gap-3 p-4 bg-[var(--danger-light)] border border-[rgba(192,57,43,0.2)] rounded-[10px]">
+              <AlertTriangle className="w-5 h-5 text-[var(--danger)] shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-[13px] text-[var(--danger)] mb-1">Action irréversible</div>
+                <p className="text-[12.5px] text-[var(--ink-2)]">
+                  La clôture de la session <strong>{showCloseConfirm?.lib}</strong> est définitive. Toutes les données académiques seront archivées dans un snapshot historique (règle RG-SES-002).
+                </p>
+              </div>
+            </div>
+          </DialogBody>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={() => setShowCloseConfirm(null)}>Annuler</Button>
+            <Button variant="danger" size="sm" onClick={confirmClose}>
+              <Lock className="w-3.5 h-3.5" /> Confirmer la clôture
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

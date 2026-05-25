@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\(Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\('edit'\\) || k.toLowerCase\\(\\).includes\\('pencil'\\)\\).join\\(', '\\)\\)\")",
+      "Bash(del \"c:\\\\Users\\\\DELL\\\\Documents\\\\PROJECT\\\\sms\\\\edustar-frontend\\\\specs_text.txt\")",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

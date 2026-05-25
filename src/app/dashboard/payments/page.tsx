@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Download, MoreVertical, Eye, X, CreditCard, AlertTriangle, TrendingUp } from "lucide-react";
+import { Plus, Search, Download, MoreVertical, Eye, CreditCard, AlertTriangle, TrendingUp } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduAvatar } from "@/components/shared/EduAvatar";
 import { EduBadge, statusBadge } from "@/components/shared/EduBadge";
@@ -17,9 +17,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default function PaymentsPage() {
   const [query, setQuery] = useState("");
-  const [toast, setToast] = useState("");
-
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3500); };
+  const toast = useToast();
 
   const totalCollected = PAYMENTS.filter(p => p.statut === "Validé").reduce((s, p) => s + p.montant, 0);
   const totalPending = PAYMENTS.filter(p => p.statut === "En attente").reduce((s, p) => s + p.montant, 0);
@@ -208,16 +206,6 @@ export default function PaymentsPage() {
         </TabsContent>
       </Tabs>
 
-      <AnimatePresence>
-        {toast && (
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
-            className="fixed bottom-5 right-5 z-[9999] bg-[var(--ink)] text-white rounded-[10px] px-4 py-3 flex items-center gap-3 shadow-lg border-l-[3px] border-[var(--success)] text-[12.5px] font-medium"
-          >
-            <span>{toast}</span>
-            <button onClick={() => setToast("")}><X className="w-3.5 h-3.5 text-white/40 hover:text-white/80" /></button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

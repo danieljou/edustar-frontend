@@ -2,10 +2,11 @@
 import { useState } from "react";
 import { Plus, Filter } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { EduBadge } from "@/components/shared/EduBadge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { DataTable } from "@/components/data-table";
+import { scheduleColumns } from "@/components/data-table/columns/schedule-columns";
 import { EMPLOI_DU_TEMPS, CLASSES, MATIERES } from "@/constants/mock-data";
 import { cn } from "@/lib/utils";
 
@@ -119,36 +120,15 @@ export default function TimetablePage() {
         <CardHeader>
           <CardTitle>Liste des cours planifiés</CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-[12.5px]">
-              <thead>
-                <tr className="bg-[var(--ivory)]">
-                  {["Jour", "Horaire", "Matière", "Classe", "Salle", "Enseignant", "Type"].map(h => (
-                    <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filteredEDT.map(e => (
-                  <tr key={e.id} className="border-b border-[var(--line)] last:border-0 hover:bg-[var(--blue-lighter)] transition-colors cursor-pointer">
-                    <td className="px-3.5 py-[10px] font-semibold">{e.jour}</td>
-                    <td className="px-3.5 py-[10px] font-mono text-[11px] text-[var(--blue)]">{e.hDebut}–{e.hFin}</td>
-                    <td className="px-3.5 py-[10px]">
-                      <div className="font-semibold text-[11px]">{e.matCode}</div>
-                      <div className="text-[10px] text-[var(--ink-4)] truncate max-w-[160px]">{getMatLib(e.matCode)}</div>
-                    </td>
-                    <td className="px-3.5 py-[10px]"><EduBadge variant="blue">{e.classe}</EduBadge></td>
-                    <td className="px-3.5 py-[10px] text-[var(--ink-4)]">{e.salle}</td>
-                    <td className="px-3.5 py-[10px] font-medium">{e.ens}</td>
-                    <td className="px-3.5 py-[10px]">
-                      <EduBadge variant={e.type === "CM" ? "blue" : e.type === "TD" ? "green" : "amber"}>{e.type}</EduBadge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <CardContent>
+          <DataTable
+            columns={scheduleColumns}
+            data={filteredEDT}
+            searchKey="jour"
+            searchPlaceholder="Rechercher par jour ou matière…"
+            pagination
+            pageSize={10}
+          />
         </CardContent>
       </Card>
     </div>

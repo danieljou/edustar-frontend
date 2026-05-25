@@ -224,7 +224,7 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
                 </div>
                 <div className="p-1">
                   {[
-                    { icon: User, label: "Profil", href: "/dashboard/settings" },
+                    { icon: User, label: "Profil", href: "/dashboard/profile" },
                     { icon: Settings, label: "Paramètres", href: "/dashboard/settings" },
                   ].map(({ icon: Icon, label, href }) => (
                     <Link

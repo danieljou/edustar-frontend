@@ -1,14 +1,14 @@
 "use client";
 import { useState } from "react";
-import { Search, Plus, UserCog, Shield, Key } from "lucide-react";
+import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { EduBadge } from "@/components/shared/EduBadge";
-import { EduAvatar } from "@/components/shared/EduAvatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DataTable } from "@/components/data-table";
+import { usersColumns } from "@/components/data-table/columns/users-columns";
 import { APP_USERS } from "@/constants/mock-data";
+import type { AppUser } from "@/types";
 
 const PROFIL_LABELS: Record<string, string> = {
   ADM: "Administrateur",
@@ -104,66 +104,16 @@ export default function UsersPage() {
         </div>
       </div>
 
-      {/* Table */}
-      <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-[12.5px]">
-            <thead>
-              <tr className="bg-[var(--ivory)]">
-                {["Utilisateur", "Profil", "Email", "Téléphone", "Dernière connexion", "Statut", "Actions"].map(h => (
-                  <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map(user => (
-                <tr key={user.id} className="border-b border-[var(--line)] last:border-0 hover:bg-[var(--blue-lighter)] transition-colors">
-                  <td className="px-3.5 py-[10px]">
-                    <div className="flex items-center gap-2">
-                      <EduAvatar name={`${user.prenom} ${user.nom}`} size={28} />
-                      <div>
-                        <div className="font-semibold text-[var(--ink)]">{user.prenom} {user.nom}</div>
-                        <div className="text-[10px] font-mono text-[var(--ink-4)]">{user.id}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-6 h-6 rounded-[5px] flex items-center justify-center text-[9px] font-bold" style={{ background: `${PROFIL_COLOR[user.profil]}18`, color: PROFIL_COLOR[user.profil] }}>
-                        {user.profil}
-                      </div>
-                      <span className="text-[11.5px] text-[var(--ink-3)]">{PROFIL_LABELS[user.profil]}</span>
-                    </div>
-                  </td>
-                  <td className="px-3.5 py-[10px] text-[var(--ink-3)]">{user.email}</td>
-                  <td className="px-3.5 py-[10px] font-mono text-[11px] text-[var(--ink-4)]">{user.tel}</td>
-                  <td className="px-3.5 py-[10px] text-[11px] text-[var(--ink-4)]">
-                    {new Date(user.lastLogin).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    <EduBadge variant={STATUT_VARIANT[user.statut]}>{user.statut}</EduBadge>
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    <div className="flex gap-1">
-                      <Button variant="ghost" size="xs" title="Modifier">
-                        <UserCog className="w-3 h-3" />
-                      </Button>
-                      <Button variant="ghost" size="xs" title="Permissions">
-                        <Shield className="w-3 h-3" />
-                      </Button>
-                      <Button variant="ghost" size="xs" title="Réinitialiser mot de passe">
-                        <Key className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="px-3.5 py-3 bg-[var(--ivory)] border-t border-[var(--line)] text-[11px] text-[var(--ink-4)]">
-          {filtered.length} utilisateur{filtered.length > 1 ? "s" : ""} affiché{filtered.length > 1 ? "s" : ""}
-        </div>
+      {/* DataTable */}
+      <Card>
+        <DataTable
+          columns={usersColumns}
+          data={filtered}
+          searchKey="id"
+          searchPlaceholder="Rechercher par nom ou email…"
+          pagination
+          pageSize={10}
+        />
       </Card>
     </div>
   );

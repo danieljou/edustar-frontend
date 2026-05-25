@@ -1,18 +1,30 @@
 "use client";
-import { useState } from "react";
-import { Plus, Search, Download, Award, BarChart3 } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Plus, Search, Download, Award, Save, X } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduAvatar } from "@/components/shared/EduAvatar";
 import { EduBadge } from "@/components/shared/EduBadge";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { NOTES, MATIERES, STUDENTS, CLASSES } from "@/constants/mock-data";
+import { useToast } from "@/components/ui/toast";
+import { cn } from "@/lib/utils";
+
+type NoteEntry = { ds: string; tp: string; exam: string };
 
 export default function ExamsPage() {
+  const toast = useToast();
   const [query, setQuery] = useState("");
+  const [showSaisie, setShowSaisie] = useState(false);
+  const [saisieClasse, setSaisieClasse] = useState(CLASSES[0]?.code ?? "");
+  const [saisieMatiere, setSaisieMatiere] = useState(MATIERES[0]?.code ?? "");
+  const [entries, setEntries] = useState<Record<string, NoteEntry>>({});
 
   const getStudent = (code: string) => STUDENTS.find(s => s.code === code);
   const getMatiere = (code: string) => MATIERES.find(m => m.code === code);
@@ -25,6 +37,37 @@ export default function ExamsPage() {
       (stu && (`${stu.prenom} ${stu.nom}`).toLowerCase().includes(q));
   });
 
+  const classeStudents = useMemo(
+    () => STUDENTS.filter(s => s.classe === saisieClasse),
+    [saisieClasse]
+  );
+
+  const selectedMatiere = getMatiere(saisieMatiere);
+
+  const openSaisie = () => {
+    setEntries(Object.fromEntries(classeStudents.map(s => [s.code, { ds: "", tp: "", exam: "" }])));
+    setShowSaisie(true);
+  };
+
+  const updateEntry = (code: string, field: keyof NoteEntry, value: string) => {
+    const num = value === "" ? "" : Math.min(20, Math.max(0, parseFloat(value) || 0)).toString();
+    setEntries(prev => ({ ...prev, [code]: { ...prev[code], [field]: num } }));
+  };
+
+  const calcMoy = (e: NoteEntry) => {
+    const ds = parseFloat(e.ds) || 0;
+    const tp = parseFloat(e.tp) || null;
+    const exam = parseFloat(e.exam) || 0;
+    if (tp !== null) return ((ds * 0.3 + tp * 0.2 + exam * 0.5)).toFixed(2);
+    return ((ds * 0.4 + exam * 0.6)).toFixed(2);
+  };
+
+  const handleSave = () => {
+    const filled = Object.values(entries).filter(e => e.ds || e.exam).length;
+    setShowSaisie(false);
+    toast(`Notes saisies pour ${filled} étudiant(s) — ${selectedMatiere?.lib ?? saisieMatiere}`, "success");
+  };
+
   return (
     <div>
       <PageHeader
@@ -33,7 +76,7 @@ export default function ExamsPage() {
         actions={
           <>
             <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5" /> Export</Button>
-            <Button size="sm"><Plus className="w-3.5 h-3.5" /> Saisir notes</Button>
+            <Button size="sm" onClick={openSaisie}><Plus className="w-3.5 h-3.5" /> Saisir notes</Button>
           </>
         }
       />
@@ -167,6 +210,109 @@ export default function ExamsPage() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Grade entry dialog */}
+      <Dialog open={showSaisie} onOpenChange={setShowSaisie}>
+        <DialogContent size="lg">
+          <DialogHeader>
+            <DialogTitle>Saisie des notes</DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            {/* Selectors */}
+            <div className="grid grid-cols-2 gap-3 mb-5 p-4 bg-[var(--ivory)] rounded-[10px]">
+              <div>
+                <Label>Classe</Label>
+                <Select value={saisieClasse} onValueChange={val => {
+                  setSaisieClasse(val);
+                  const newStudents = STUDENTS.filter(s => s.classe === val);
+                  setEntries(Object.fromEntries(newStudents.map(s => [s.code, { ds: "", tp: "", exam: "" }])));
+                }}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {CLASSES.map(c => <SelectItem key={c.code} value={c.code}>{c.code}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Matière</Label>
+                <Select value={saisieMatiere} onValueChange={setSaisieMatiere}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {MATIERES.filter(m => m.filiere === CLASSES.find(c => c.code === saisieClasse)?.filiere || true).map(m => (
+                      <SelectItem key={m.code} value={m.code}>{m.code} — {m.lib}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Grade table */}
+            <div className="overflow-x-auto max-h-[380px] overflow-y-auto">
+              <table className="w-full text-[12.5px]">
+                <thead className="sticky top-0 bg-white z-10">
+                  <tr className="bg-[var(--ivory)]">
+                    <th className="px-3 py-2.5 text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)]">Étudiant</th>
+                    <th className="px-3 py-2.5 text-center text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] w-24">DS (/20)</th>
+                    <th className="px-3 py-2.5 text-center text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] w-24">TP (/20)</th>
+                    <th className="px-3 py-2.5 text-center text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] w-24">Exam (/20)</th>
+                    <th className="px-3 py-2.5 text-center text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] w-20">Moy.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {classeStudents.length === 0 && (
+                    <tr><td colSpan={5} className="py-8 text-center text-[var(--ink-4)] text-[12px]">Aucun étudiant dans cette classe</td></tr>
+                  )}
+                  {classeStudents.map(stu => {
+                    const e = entries[stu.code] ?? { ds: "", tp: "", exam: "" };
+                    const moy = (e.ds || e.exam) ? calcMoy(e) : "—";
+                    const moyNum = parseFloat(moy);
+                    return (
+                      <tr key={stu.code} className="border-b border-[var(--line)] last:border-0 hover:bg-[var(--blue-lighter)] transition-colors">
+                        <td className="px-3 py-2.5">
+                          <div className="flex items-center gap-2">
+                            <EduAvatar name={`${stu.prenom} ${stu.nom}`} size={24} />
+                            <div>
+                              <div className="font-semibold text-[var(--ink)]">{stu.prenom} {stu.nom}</div>
+                              <div className="text-[10px] text-[var(--ink-4)]">{stu.code}</div>
+                            </div>
+                          </div>
+                        </td>
+                        {(["ds", "tp", "exam"] as const).map(field => (
+                          <td key={field} className="px-3 py-2.5 text-center">
+                            <input
+                              type="number"
+                              min="0" max="20" step="0.25"
+                              value={e[field]}
+                              onChange={ev => updateEntry(stu.code, field, ev.target.value)}
+                              placeholder="—"
+                              className="w-20 h-8 text-center text-[12.5px] font-mono border border-[var(--line-dark)] rounded-[6px] bg-white text-[var(--ink)] focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[var(--blue)]/10 placeholder:text-[var(--ink-5)]"
+                            />
+                          </td>
+                        ))}
+                        <td className="px-3 py-2.5 text-center">
+                          {moy === "—" ? (
+                            <span className="text-[var(--ink-4)] font-mono">—</span>
+                          ) : (
+                            <span className={cn("font-bold text-[14px] font-serif", moyNum >= 14 ? "text-[var(--success)]" : moyNum >= 10 ? "text-[var(--warning)]" : "text-[var(--danger)]")}>
+                              {moy}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </DialogBody>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={() => setShowSaisie(false)}>Annuler</Button>
+            <Button size="sm" onClick={handleSave}>
+              <Save className="w-3.5 h-3.5" /> Enregistrer les notes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

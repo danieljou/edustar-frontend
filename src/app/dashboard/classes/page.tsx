@@ -1,14 +1,17 @@
 "use client";
 import { useState } from "react";
-import { Plus, Search, Users, BookOpen, TrendingUp } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { EduBadge } from "@/components/shared/EduBadge";
-import { EduAvatar } from "@/components/shared/EduAvatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DataTable } from "@/components/data-table";
+import { classesColumns } from "@/components/data-table/columns/classes-columns";
 import { CLASSES, STUDENTS, MATIERES } from "@/constants/mock-data";
+import type { Classe } from "@/types";
+
+const FILIERES = ["Toutes", "Informatique", "Gestion", "Droit"];
 
 const FILIERES = ["Toutes", "Informatique", "Gestion", "Droit"];
 
@@ -117,60 +120,15 @@ export default function ClassesPage() {
       </div>
 
       {/* Table */}
-      <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-[12.5px]">
-            <thead>
-              <tr className="bg-[var(--ivory)]">
-                {["Code classe", "Filière", "Niveau", "Effectif", "Délégué", "Responsable", "Salle", "Actions"].map(h => (
-                  <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map(c => {
-                const classStudents = STUDENTS.filter(s => s.classe === c.code);
-                const avg = classStudents.length > 0 ? classStudents.reduce((s, st) => s + st.moy, 0) / classStudents.length : 0;
-                return (
-                  <tr key={c.id} className="border-b border-[var(--line)] last:border-0 hover:bg-[var(--blue-lighter)] transition-colors">
-                    <td className="px-3.5 py-[10px]">
-                      <span className="font-mono font-bold text-[var(--blue)]">{c.code}</span>
-                    </td>
-                    <td className="px-3.5 py-[10px]">
-                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ background: `${FILIERE_COLORS[c.filiere]}18`, color: FILIERE_COLORS[c.filiere] }}>{c.filiere}</span>
-                    </td>
-                    <td className="px-3.5 py-[10px] text-[var(--ink-3)]">{c.niveau}</td>
-                    <td className="px-3.5 py-[10px]">
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 h-1.5 bg-[var(--line)] rounded-full overflow-hidden">
-                          <div className="h-full rounded-full" style={{ width: `${(c.effectif / 55) * 100}%`, background: FILIERE_COLORS[c.filiere] }} />
-                        </div>
-                        <span className="font-semibold text-[var(--ink)]">{c.effectif}</span>
-                      </div>
-                    </td>
-                    <td className="px-3.5 py-[10px]">
-                      {c.delegue !== "—" ? (
-                        <div className="flex items-center gap-1.5">
-                          <EduAvatar name={c.delegue} size={20} />
-                          <span className="text-[var(--ink-3)]">{c.delegue}</span>
-                        </div>
-                      ) : (
-                        <span className="text-[var(--ink-4)]">—</span>
-                      )}
-                    </td>
-                    <td className="px-3.5 py-[10px] text-[var(--ink-3)]">{c.responsable}</td>
-                    <td className="px-3.5 py-[10px]">
-                      <EduBadge variant="neutral">{c.salle}</EduBadge>
-                    </td>
-                    <td className="px-3.5 py-[10px]">
-                      <Button variant="ghost" size="xs">Détails</Button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+      <Card>
+        <DataTable
+          columns={classesColumns}
+          data={filtered}
+          searchKey="code"
+          searchPlaceholder="Rechercher une classe…"
+          pagination
+          pageSize={10}
+        />
       </Card>
     </div>
   );

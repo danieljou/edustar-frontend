@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { UserPlus, Search, Download, Filter, MoreVertical, Eye, Edit, Trash2, X } from "lucide-react";
+import { UserPlus, Search, Download, Edit } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduAvatar } from "@/components/shared/EduAvatar";
 import { EduBadge, statusBadge } from "@/components/shared/EduBadge";
@@ -11,8 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogBody } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Card } from "@/components/ui/card";
+import { DataTable } from "@/components/data-table";
+import { studentsColumns } from "@/components/data-table/columns/students-columns";
 import { STUDENTS } from "@/constants/mock-data";
 import { formatCurrency, age, formatDate } from "@/lib/utils";
 import type { Student } from "@/types";
@@ -28,16 +29,11 @@ export default function StudentsPage() {
   const [filter, setFilter] = useState<Filter>("all");
   const [showForm, setShowForm] = useState(false);
   const [selected, setSelected] = useState<Student | null>(null);
-  const [toast, setToast] = useState("");
+  const toast = useToast();
   const [formData, setFormData] = useState({
     nom: "", prenom: "", dob: "", sexe: "M", tel: "", email: "",
     adresse: "", classe: "", filiere: "", tuteurNom: "", tuteurTel: "", notes: "",
   });
-
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(""), 3500);
-  };
 
   const filtered = useMemo(() => {
     let list = STUDENTS;
@@ -91,81 +87,17 @@ export default function StudentsPage() {
         ))}
       </div>
 
-      {/* Table */}
-      <Card className="overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-[12.5px]">
-            <thead>
-              <tr className="bg-[var(--ivory)]">
-                {["Code", "Étudiant", "Classe", "Moy.", "Absences", "Solde", "Statut", ""].map(h => (
-                  <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap last:w-10">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 && (
-                <tr><td colSpan={8}><EmptyState title="Aucun étudiant trouvé" description="Ajustez les filtres ou créez un nouveau dossier étudiant." /></td></tr>
-              )}
-              {filtered.map(s => (
-                <motion.tr
-                  key={s.code}
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="border-b border-[var(--line)] last:border-0 hover:bg-[var(--blue-lighter)] transition-colors cursor-pointer"
-                  onClick={() => setSelected(s)}
-                >
-                  <td className="px-3.5 py-[10px]">
-                    <span className="font-mono text-[11px] text-[var(--blue)] font-semibold">{s.code}</span>
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    <div className="flex items-center gap-2">
-                      <EduAvatar name={`${s.prenom} ${s.nom}`} size={28} />
-                      <div>
-                        <div className="font-semibold text-[var(--ink)]">{s.prenom} {s.nom}</div>
-                        <div className="text-[10.5px] text-[var(--ink-4)]">{s.sexe === "F" ? "Féminin" : "Masculin"} · {age(s.dob)} ans</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    <div className="font-semibold text-[var(--ink)] text-[11px]">{s.classe}</div>
-                    <div className="text-[10px] text-[var(--ink-4)]">{s.filiere}</div>
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    <EduBadge variant={s.moy >= 14 ? "green" : s.moy >= 10 ? "amber" : "red"}>{s.moy}/20</EduBadge>
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    <EduBadge variant={s.absences >= 10 ? "red" : s.absences >= 5 ? "amber" : "neutral"}>{s.absences} abs.</EduBadge>
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    {s.solde > 0
-                      ? <span className="text-[var(--danger)] font-bold">{formatCurrency(s.solde)}</span>
-                      : <EduBadge variant="green">Soldé</EduBadge>
-                    }
-                  </td>
-                  <td className="px-3.5 py-[10px]">
-                    <EduBadge variant={statusBadge(s.statut)}>{s.statut}</EduBadge>
-                  </td>
-                  <td className="px-3.5 py-[10px]" onClick={e => e.stopPropagation()}>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon"><MoreVertical className="w-3.5 h-3.5" /></Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setSelected(s)}><Eye className="w-3.5 h-3.5" /> Voir dossier</DropdownMenuItem>
-                        <DropdownMenuItem><Edit className="w-3.5 h-3.5" /> Modifier</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem destructive><Trash2 className="w-3.5 h-3.5" /> Supprimer</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* DataTable */}
+      <Card>
+        <DataTable
+          columns={studentsColumns}
+          data={filtered}
+          searchKey="code"
+          searchPlaceholder="Rechercher par code…"
+          pagination
+          pageSize={10}
+          emptyContent={<EmptyState title="Aucun étudiant trouvé" description="Ajustez les filtres ou créez un nouveau dossier étudiant." />}
+        />
       </Card>
 
       {/* Student detail modal */}
@@ -312,27 +244,12 @@ export default function StudentsPage() {
           </DialogBody>
           <DialogFooter>
             <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>Annuler</Button>
-            <Button size="sm" onClick={() => { setShowForm(false); showToast("Étudiant créé avec succès !"); }}>
+            <Button size="sm" onClick={() => { setShowForm(false); toast("Étudiant créé avec succès !"); }}>
               <UserPlus className="w-3.5 h-3.5" /> Créer le dossier
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Toast */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            className="fixed bottom-5 right-5 z-[9999] bg-[var(--ink)] text-white rounded-[10px] px-4 py-3 flex items-center gap-3 shadow-lg border-l-[3px] border-[var(--success)] text-[12.5px] font-medium max-w-[300px]"
-          >
-            <span className="flex-1">{toast}</span>
-            <button onClick={() => setToast("")} className="text-white/40 hover:text-white/80"><X className="w-3.5 h-3.5" /></button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

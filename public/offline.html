@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hors ligne — EduStar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&family=DM+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple:      #6b48ff;
+      --purple-mid:  rgba(107,72,255,.55);
+      --purple-low:  rgba(107,72,255,.15);
+      --purple-line: rgba(107,72,255,.3);
+      --w90: rgba(255,255,255,.90);
+      --w70: rgba(255,255,255,.70);
+      --w40: rgba(255,255,255,.40);
+      --w18: rgba(255,255,255,.18);
+      --w07: rgba(255,255,255,.07);
+      --w14: rgba(255,255,255,.14);
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.5rem;
+      background: linear-gradient(145deg, #0e0620 0%, #250b5a 40%, #0a0318 100%);
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Background layers ─────────────────────────── */
+    .bg-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      opacity: .04;
+      background-image:
+        linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .bg-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 65% 55% at 50% 50%, rgba(107,72,255,.22) 0%, transparent 70%);
+    }
+    .bg-ghost {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; user-select: none; overflow: hidden;
+    }
+    .bg-ghost span {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(9rem, 26vw, 20rem);
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,.035);
+      letter-spacing: -.04em;
+      white-space: nowrap;
+    }
+
+    /* ── Particles ─────────────────────────────────── */
+    @keyframes float {
+      0%,100% { transform: translateY(0);     opacity: .22; }
+      50%      { transform: translateY(-18px); opacity: .65; }
+    }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: rgba(107,72,255,.45);
+      animation: float var(--d,3.5s) var(--dl,0s) infinite ease-in-out;
+    }
+
+    /* ── Content wrapper ───────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(22px); }
+      to   { opacity:1; transform:none; }
+    }
+    .content {
+      position: relative; z-index: 10;
+      display: flex; flex-direction: column; align-items: center;
+      max-width: 28rem; width: 100%;
+      animation: fadeUp .55s ease both;
+    }
+
+    /* ── Brand ─────────────────────────────────────── */
+    .brand {
+      display: inline-flex; align-items: center; gap: .75rem;
+      margin-bottom: 2.25rem; text-decoration: none;
+    }
+    .brand-logo {
+      width: 2.75rem; height: 2.75rem; border-radius: .75rem;
+      background: linear-gradient(135deg, #1a3c8f, #0099cc);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4); flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.25rem; color: var(--w90);
+    }
+
+    /* ── Illustration ──────────────────────────────── */
+    .illustration {
+      margin-bottom: 1.5rem;
+      animation: fadeUp .7s .1s ease both;
+    }
+
+    @keyframes scan {
+      0%,100% { opacity:.12; stroke-dashoffset:0; }
+      50%      { opacity:.5;  stroke-dashoffset:-22; }
+    }
+    .arc-outer { animation: scan 2.4s 0s   infinite ease-in-out; }
+    .arc-mid   { animation: scan 2.4s .35s infinite ease-in-out; }
+
+    @keyframes pulse-dot {
+      0%,100% { r: 6;   opacity: .9; }
+      50%      { r: 8.5; opacity: .5; }
+    }
+    .center-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+    /* ── "OFFLINE" word ────────────────────────────── */
+    .offline-word {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(2.6rem, 7.5vw, 3.75rem);
+      line-height: 1; letter-spacing: -.03em;
+      background: linear-gradient(160deg, #6b48ff, #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.45rem; color: var(--w90);
+      margin-bottom: .6rem; letter-spacing: -.02em;
+    }
+
+    .description {
+      color: var(--w40); font-size: .875rem; line-height: 1.65;
+      margin-bottom: 1.25rem; max-width: 19rem;
+    }
+
+    /* ── Status badge ──────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .375rem .9rem; border-radius: 9999px;
+      background: var(--purple-low); border: 1px solid var(--purple-line);
+      margin-bottom: 1.5rem; transition: background .3s, border-color .3s;
+    }
+    .badge.online {
+      background: rgba(16,185,129,.15);
+      border-color: rgba(16,185,129,.35);
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:.2; } }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #f59e0b;
+      animation: blink 1.2s infinite; flex-shrink: 0;
+      transition: background .3s;
+    }
+    .badge.online .dot { background: #10b981; animation: none; }
+    .badge-label {
+      font-size: .75rem; font-weight: 500;
+      color: rgba(167,139,250,.9);
+      transition: color .3s;
+    }
+    .badge.online .badge-label { color: rgba(52,211,153,.9); }
+
+    /* ── Offline timer ─────────────────────────────── */
+    .offline-meta {
+      display: flex; align-items: center; gap: 1.5rem;
+      margin-bottom: 1.75rem; flex-wrap: wrap; justify-content: center;
+    }
+    .meta-item {
+      display: flex; flex-direction: column; align-items: center; gap: .2rem;
+    }
+    .meta-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--w70); letter-spacing: .02em;
+    }
+    .meta-label { font-size: .68rem; color: var(--w40); text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ── Retry countdown bar ───────────────────────── */
+    .retry-track {
+      width: 100%; max-width: 18rem;
+      height: 3px; border-radius: 99px;
+      background: var(--w07); margin-bottom: 1.75rem; overflow: hidden;
+    }
+    .retry-bar {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, #6b48ff, #a78bfa);
+      transition: width .9s linear;
+    }
+    .retry-hint {
+      font-size: .75rem; color: var(--w40);
+      margin-top: -.5rem; margin-bottom: 1.75rem;
+    }
+
+    /* ── Actions ───────────────────────────────────── */
+    .actions { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .625rem 1.1rem; border-radius: .75rem;
+      font-size: .875rem; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: opacity .15s, transform .15s, box-shadow .15s;
+      border: none; text-decoration: none;
+      position: relative; overflow: hidden;
+    }
+    .btn:hover   { opacity: .88; transform: translateY(-1px); }
+    .btn:active  { transform: scale(.98); }
+
+    .btn-ghost {
+      background: var(--w07); border: 1px solid var(--w14); color: var(--w70);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #1a3c8f, #0099cc);
+      color: #fff; box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    }
+
+    /* Spinner inside retry button */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      display: none;
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: rgba(255,255,255,.9);
+      animation: spin .7s linear infinite; flex-shrink: 0;
+    }
+    .btn-ghost.checking .spinner  { display: block; }
+    .btn-ghost.checking .btn-icon { display: none; }
+    .btn-ghost.checking           { opacity: .75; pointer-events: none; }
+
+    /* ── Reconnected toast ─────────────────────────── */
+    @keyframes slideDown {
+      from { opacity:0; transform: translateY(-16px) translateX(-50%); }
+      to   { opacity:1; transform: translateY(0)    translateX(-50%); }
+    }
+    .toast {
+      position: fixed; top: 1.25rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; align-items: center; gap: .625rem;
+      padding: .625rem 1.1rem; border-radius: .75rem;
+      background: rgba(16,185,129,.18); border: 1px solid rgba(16,185,129,.4);
+      color: rgba(52,211,153,.95); font-size: .825rem; font-weight: 500;
+      white-space: nowrap; z-index: 100;
+      animation: slideDown .35s ease both;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+      pointer-events: none;
+    }
+    .toast.hidden { display: none; }
+
+    /* ── Footer ────────────────────────────────────── */
+    .footer-code {
+      margin-top: 2.5rem;
+      font-family: 'DM Mono', monospace; font-size: .7rem;
+      letter-spacing: .1em; color: var(--w18);
+    }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 420px) {
+      .brand { margin-bottom: 1.75rem; }
+      .offline-meta { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="bg-ghost"><span>OFFLINE</span></div>
+
+  <!-- Particles -->
+  <div class="particle" style="left:10%;top:20%;width:6px;height:6px;--d:3.5s;--dl:0s"></div>
+  <div class="particle" style="left:86%;top:14%;width:9px;height:9px;--d:4.2s;--dl:.8s"></div>
+  <div class="particle" style="left:76%;top:70%;width:5px;height:5px;--d:3.0s;--dl:1.3s"></div>
+  <div class="particle" style="left:20%;top:76%;width:7px;height:7px;--d:2.7s;--dl:1.9s"></div>
+  <div class="particle" style="left:50%;top:6%; width:4px;height:4px;--d:4.1s;--dl:1.0s"></div>
+  <div class="particle" style="left:92%;top:45%;width:6px;height:6px;--d:3.7s;--dl:2.3s"></div>
+  <div class="particle" style="left:5%; top:53%;width:8px;height:8px;--d:3.1s;--dl:.5s"></div>
+  <div class="particle" style="left:44%;top:88%;width:4px;height:4px;--d:2.9s;--dl:1.6s"></div>
+  <div class="particle" style="left:62%;top:28%;width:5px;height:5px;--d:4.5s;--dl:.3s"></div>
+
+  <!-- Reconnected toast (hidden initially) -->
+  <div class="toast hidden" id="toast">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    Connexion rétablie — redirection…
+  </div>
+
+  <!-- Main content -->
+  <div class="content">
+
+    <!-- Brand -->
+    <a href="/" class="brand">
+      <div class="brand-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+      <span class="brand-name">EduStar</span>
+    </a>
+
+    <!-- Illustration -->
+    <div class="illustration">
+      <svg width="148" height="138" viewBox="0 0 148 138" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="74" cy="71" r="61" fill="rgba(107,72,255,0.07)" stroke="rgba(107,72,255,0.18)" stroke-width="1.5"/>
+        <path class="arc-outer"
+          d="M 17 71 A 57 57 0 0 1 131 71"
+          stroke="rgba(107,72,255,0.4)" stroke-width="3.5"
+          fill="none" stroke-linecap="round" stroke-dasharray="10 7"/>
+        <path class="arc-mid"
+          d="M 33 71 A 41 41 0 0 1 115 71"
+          stroke="rgba(107,72,255,0.58)" stroke-width="3.5"
+          fill="none" stroke-linecap="round" stroke-dasharray="8 5"/>
+        <path
+          d="M 51 71 A 23 23 0 0 1 97 71"
+          stroke="rgba(107,72,255,0.88)" stroke-width="3.5"
+          fill="none" stroke-linecap="round"/>
+        <circle class="center-dot" cx="74" cy="96" r="6" fill="rgba(107,72,255,0.9)"/>
+
+        <!-- Error badge -->
+        <circle cx="74" cy="45" r="22"
+          fill="rgba(14,6,32,0.93)"
+          stroke="rgba(192,57,43,0.5)" stroke-width="1.5"/>
+        <line x1="64" y1="35" x2="84" y2="55"
+          stroke="rgba(192,57,43,0.95)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="84" y1="35" x2="64" y2="55"
+          stroke="rgba(192,57,43,0.95)" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- Ambient dots -->
+        <circle cx="46" cy="29" r="2.5" fill="rgba(107,72,255,0.32)"/>
+        <circle cx="102" cy="29" r="2.5" fill="rgba(107,72,255,0.32)"/>
+        <circle cx="29" cy="54" r="2"   fill="rgba(107,72,255,0.22)"/>
+        <circle cx="119" cy="54" r="2"  fill="rgba(107,72,255,0.22)"/>
+      </svg>
+    </div>
+
+    <!-- Heading -->
+    <p class="offline-word">OFFLINE</p>
+    <h1>Vous êtes hors ligne</h1>
+    <p class="description">
+      Vérifiez votre connexion Wi-Fi ou réseau mobile.<br>
+      Les pages déjà visitées restent disponibles en cache.
+    </p>
+
+    <!-- Status badge -->
+    <div class="badge" id="badge">
+      <div class="dot" id="dot"></div>
+      <span class="badge-label" id="badge-label">Aucune connexion détectée</span>
+    </div>
+
+    <!-- Live meta (temps hors ligne + tentatives) -->
+    <div class="offline-meta">
+      <div class="meta-item">
+        <span class="meta-value" id="offline-time">0:00</span>
+        <span class="meta-label">Hors ligne depuis</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-value" id="retry-count">0</span>
+        <span class="meta-label">Tentatives</span>
+      </div>
+    </div>
+
+    <!-- Countdown bar -->
+    <div class="retry-track">
+      <div class="retry-bar" id="retry-bar" style="width:100%"></div>
+    </div>
+    <p class="retry-hint" id="retry-hint">Prochaine tentative dans <span id="countdown">30</span>s</p>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-ghost" id="retry-btn" onclick="manualRetry()">
+        <svg class="btn-icon" id="retry-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        <div class="spinner" id="spinner"></div>
+        Réessayer
+      </button>
+      <a href="/" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Tableau de bord
+      </a>
+    </div>
+
+    <p class="footer-code">ERR_INTERNET_DISCONNECTED — No Internet Connection</p>
+  </div>
+
+  <script>
+    // ── Constants ──────────────────────────────────────
+    const RETRY_INTERVAL = 30; // seconds between auto-retries
+    const REDIRECT_DELAY = 1800; // ms before redirecting after reconnect
+
+    // ── State ──────────────────────────────────────────
+    const offlineSince  = Date.now();
+    const lastPage      = (()=>{
+      try { return sessionStorage.getItem('lastPage') || '/dashboard'; } catch { return '/dashboard'; }
+    })();
+    let retryCount      = 0;
+    let countdown       = RETRY_INTERVAL;
+    let checkTimer      = null;
+    let countdownTimer  = null;
+
+    // ── DOM refs ───────────────────────────────────────
+    const $badge       = document.getElementById('badge');
+    const $dot         = document.getElementById('dot');
+    const $badgeLabel  = document.getElementById('badge-label');
+    const $offlineTime = document.getElementById('offline-time');
+    const $retryCount  = document.getElementById('retry-count');
+    const $retryBar    = document.getElementById('retry-bar');
+    const $countdown   = document.getElementById('countdown');
+    const $retryHint   = document.getElementById('retry-hint');
+    const $retryBtn    = document.getElementById('retry-btn');
+    const $toast       = document.getElementById('toast');
+
+    // ── Format seconds → M:SS ─────────────────────────
+    function fmtTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return m + ':' + String(s).padStart(2, '0');
+    }
+
+    // ── Offline timer (updates every second) ──────────
+    function tickOfflineTimer() {
+      const elapsed = Math.floor((Date.now() - offlineSince) / 1000);
+      $offlineTime.textContent = fmtTime(elapsed);
+    }
+    setInterval(tickOfflineTimer, 1000);
+    tickOfflineTimer();
+
+    // ── Countdown bar + hint ───────────────────────────
+    function startCountdown() {
+      countdown = RETRY_INTERVAL;
+      updateCountdownUI();
+
+      clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        countdown = Math.max(0, countdown - 1);
+        updateCountdownUI();
+        if (countdown === 0) { clearInterval(countdownTimer); autoCheck(); }
+      }, 1000);
+    }
+
+    function updateCountdownUI() {
+      const pct = (countdown / RETRY_INTERVAL) * 100;
+      $retryBar.style.width = pct + '%';
+      $countdown.textContent = countdown;
+    }
+
+    // ── Connection check ───────────────────────────────
+    async function checkOnline() {
+      // Try fetching a tiny asset that's always fresh
+      try {
+        const res = await fetch('/favicon.ico?_=' + Date.now(), {
+          method: 'HEAD', cache: 'no-store', signal: AbortSignal.timeout(5000)
+        });
+        return res.ok;
+      } catch {
+        return false;
+      }
+    }
+
+    function setChecking(on) {
+      if (on) {
+        $retryBtn.classList.add('checking');
+      } else {
+        $retryBtn.classList.remove('checking');
+      }
+    }
+
+    async function autoCheck() {
+      setChecking(true);
+      const ok = await checkOnline();
+      setChecking(false);
+      retryCount++;
+      $retryCount.textContent = retryCount;
+
+      if (ok) {
+        onReconnected();
+      } else {
+        startCountdown();
+      }
+    }
+
+    function onReconnected() {
+      // Stop all timers
+      clearInterval(countdownTimer);
+
+      // Update badge
+      $badge.classList.add('online');
+      $badgeLabel.textContent = 'Connexion rétablie !';
+
+      // Hide retry bar
+      $retryHint.style.display = 'none';
+      $retryBar.style.width = '0';
+
+      // Show toast
+      $toast.classList.remove('hidden');
+
+      // Redirect after short delay
+      setTimeout(() => {
+        window.location.href = lastPage;
+      }, REDIRECT_DELAY);
+    }
+
+    // ── Manual retry button ────────────────────────────
+    async function manualRetry() {
+      clearInterval(countdownTimer);
+      countdown = 0;
+      updateCountdownUI();
+      await autoCheck();
+    }
+
+    // ── Browser online/offline events ─────────────────
+    window.addEventListener('online', async () => {
+      const ok = await checkOnline();
+      if (ok) onReconnected();
+    });
+
+    window.addEventListener('offline', () => {
+      $badge.classList.remove('online');
+      $badgeLabel.textContent = 'Aucune connexion détectée';
+    });
+
+    // ── Save current page before navigating away ───────
+    try {
+      if (document.referrer && !document.referrer.includes('/offline')) {
+        sessionStorage.setItem('lastPage', document.referrer);
+      }
+    } catch {}
+
+    // ── Kick off first auto-check cycle ───────────────
+    startCountdown();
+  </script>
+</body>
+</html>

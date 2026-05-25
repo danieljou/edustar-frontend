@@ -18,12 +18,12 @@ export function QuickActions() {
         <CardTitle>Actions rapides</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {ACTIONS.map((a) => (
             <Link
               key={a.label}
               href={a.href}
-              className="flex items-center gap-2.5 p-3 rounded-[10px] border border-[var(--line)] hover:border-[var(--blue)] hover:bg-[var(--blue-lighter)] transition-all group"
+              className="flex items-center gap-2.5 p-2.5 rounded-[10px] border border-[var(--line)] hover:border-[var(--blue)] hover:bg-[var(--blue-lighter)] transition-all group"
             >
               <div className={`w-8 h-8 rounded-[8px] flex items-center justify-center shrink-0 ${a.color}`}>
                 <a.icon className="w-3.5 h-3.5" />

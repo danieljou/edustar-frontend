@@ -15,7 +15,7 @@ export function RecentStudents() {
         <CardTitle>Étudiants récents</CardTitle>
         <Link
           href="/dashboard/students"
-          className="flex items-center gap-1 text-[12px] text-[var(--blue)] font-semibold hover:underline"
+          className="flex items-center gap-1 text-[12px] text-[var(--blue)] font-semibold hover:underline shrink-0"
         >
           Voir tout <ArrowRight className="w-3.5 h-3.5" />
         </Link>
@@ -24,29 +24,45 @@ export function RecentStudents() {
         <table className="w-full text-[12.5px]">
           <thead>
             <tr className="bg-[var(--ivory)]">
-              {["Code", "Étudiant", "Classe", "Moy.", "Solde", "Statut"].map(h => (
-                <th key={h} className="px-[14px] py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
-                  {h}
-                </th>
-              ))}
+              {/* Code — masqué sous sm */}
+              <th className="hidden sm:table-cell px-[14px] py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
+                Code
+              </th>
+              <th className="px-[14px] py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
+                Étudiant
+              </th>
+              {/* Classe — masqué sous md */}
+              <th className="hidden md:table-cell px-[14px] py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
+                Classe
+              </th>
+              <th className="px-[14px] py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
+                Moy.
+              </th>
+              {/* Solde — masqué sous sm */}
+              <th className="hidden sm:table-cell px-[14px] py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
+                Solde
+              </th>
+              <th className="px-[14px] py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
+                Statut
+              </th>
             </tr>
           </thead>
           <tbody>
             {recent.map(s => (
               <tr key={s.code} className="border-b border-[var(--line)] last:border-0 hover:bg-[var(--blue-lighter)] transition-colors cursor-pointer">
-                <td className="px-[14px] py-[10px]">
+                <td className="hidden sm:table-cell px-[14px] py-[10px]">
                   <span className="font-mono text-[11px] text-[var(--blue)] font-semibold">{s.code}</span>
                 </td>
                 <td className="px-[14px] py-[10px]">
                   <div className="flex items-center gap-2">
                     <EduAvatar name={`${s.prenom} ${s.nom}`} size={28} />
-                    <div>
-                      <div className="font-semibold text-[var(--ink)]">{s.prenom} {s.nom}</div>
+                    <div className="min-w-0">
+                      <div className="font-semibold text-[var(--ink)] truncate">{s.prenom} {s.nom}</div>
                       <div className="text-[10.5px] text-[var(--ink-4)]">{s.sexe === "F" ? "Féminin" : "Masculin"}</div>
                     </div>
                   </div>
                 </td>
-                <td className="px-[14px] py-[10px]">
+                <td className="hidden md:table-cell px-[14px] py-[10px]">
                   <div className="font-semibold text-[var(--ink)] text-[11px]">{s.classe}</div>
                   <div className="text-[10px] text-[var(--ink-4)]">{s.filiere}</div>
                 </td>
@@ -55,7 +71,7 @@ export function RecentStudents() {
                     {s.moy}/20
                   </EduBadge>
                 </td>
-                <td className="px-[14px] py-[10px]">
+                <td className="hidden sm:table-cell px-[14px] py-[10px]">
                   {s.solde > 0 ? (
                     <span className="text-[var(--danger)] font-bold text-[12px]">{formatCurrency(s.solde)}</span>
                   ) : (

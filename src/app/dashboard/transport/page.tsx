@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import { Bus, Users, MapPin, AlertTriangle, Wrench, CheckCircle2 } from "lucide-react";
+import { Bus, Users, AlertTriangle, Wrench, CheckCircle2, Plus } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { EduBadge } from "@/components/shared/EduBadge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { DataTable } from "@/components/data-table";
+import { transportColumns } from "@/components/data-table/columns/transport-columns";
 import { BUS_LIST } from "@/constants/mock-data";
 
 const STATUT_ICON: Record<string, React.ReactNode> = {
@@ -137,48 +138,15 @@ export default function TransportPage() {
           ))}
         </div>
       ) : (
-        <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-[12.5px]">
-              <thead>
-                <tr className="bg-[var(--ivory)]">
-                  {["Bus", "Immatriculation", "Chauffeur", "Itinéraire", "Départ", "Capacité", "Passagers", "Statut"].map(h => (
-                    <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {BUS_LIST.map(bus => (
-                  <tr key={bus.id} className="border-b border-[var(--line)] last:border-0 hover:bg-[var(--blue-lighter)] transition-colors">
-                    <td className="px-3.5 py-[10px]">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-[6px] flex items-center justify-center" style={{ background: `${STATUT_COLOR[bus.statut]}18`, color: STATUT_COLOR[bus.statut] }}>
-                          <Bus className="w-3.5 h-3.5" />
-                        </div>
-                        <span className="font-bold text-[var(--ink)]">Bus {bus.numero}</span>
-                      </div>
-                    </td>
-                    <td className="px-3.5 py-[10px] font-mono text-[11px] text-[var(--ink-4)]">{bus.immatriculation}</td>
-                    <td className="px-3.5 py-[10px] text-[var(--ink-3)]">{bus.chauffeur}</td>
-                    <td className="px-3.5 py-[10px] max-w-[200px]">
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className="w-3 h-3 text-[var(--ink-4)] shrink-0" />
-                        <span className="text-[11.5px] text-[var(--ink-3)] truncate">{bus.itineraire}</span>
-                      </div>
-                    </td>
-                    <td className="px-3.5 py-[10px] font-mono font-bold text-[var(--blue)]">{bus.depart}</td>
-                    <td className="px-3.5 py-[10px] text-center font-medium">{bus.capacite}</td>
-                    <td className="px-3.5 py-[10px] text-center">
-                      {bus.statut === "En service" ? (
-                        <span className={`font-bold ${bus.passagers / bus.capacite > 0.9 ? "text-[var(--warning)]" : "text-[var(--ink)]"}`}>{bus.passagers}</span>
-                      ) : <span className="text-[var(--ink-4)]">—</span>}
-                    </td>
-                    <td className="px-3.5 py-[10px]"><EduBadge variant={STATUT_VARIANT[bus.statut]}>{bus.statut}</EduBadge></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <Card>
+          <DataTable
+            columns={transportColumns}
+            data={BUS_LIST}
+            searchKey="numero"
+            searchPlaceholder="Rechercher un bus…"
+            pagination
+            pageSize={10}
+          />
         </Card>
       )}
     </div>

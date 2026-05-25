@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, CheckCircle, XCircle, Clock, FileText, MoreVertical, Eye, Check, X } from "lucide-react";
+import { Plus, Search, CheckCircle, XCircle, Clock, MoreVertical, Eye, Check, X } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduAvatar } from "@/components/shared/EduAvatar";
 import { EduBadge, statusBadge } from "@/components/shared/EduBadge";
@@ -19,9 +19,7 @@ import type { Admission } from "@/types";
 export default function AdmissionsPage() {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Admission | null>(null);
-  const [toast, setToast] = useState("");
-
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3500); };
+  const toast = useToast();
 
   const filtered = useMemo(() => {
     if (!query.trim()) return ADMISSIONS;
@@ -142,8 +140,8 @@ export default function AdmissionsPage() {
                                 <DropdownMenuItem onClick={() => setSelected(a)}><Eye className="w-3.5 h-3.5" /> Voir dossier</DropdownMenuItem>
                                 {a.statut === "En attente" && (
                                   <>
-                                    <DropdownMenuItem onClick={() => showToast(`Admission ${a.id} validée !`)}><Check className="w-3.5 h-3.5" /> Valider</DropdownMenuItem>
-                                    <DropdownMenuItem destructive onClick={() => showToast(`Admission ${a.id} rejetée.`)}><X className="w-3.5 h-3.5" /> Rejeter</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => toast(`Admission ${a.id} validée !`)}><Check className="w-3.5 h-3.5" /> Valider</DropdownMenuItem>
+                                    <DropdownMenuItem destructive onClick={() => toast(`Admission ${a.id} rejetée.`)}><X className="w-3.5 h-3.5" /> Rejeter</DropdownMenuItem>
                                   </>
                                 )}
                               </DropdownMenuContent>
@@ -215,8 +213,8 @@ export default function AdmissionsPage() {
                 <Button variant="outline" size="sm" onClick={() => setSelected(null)}>Fermer</Button>
                 {selected.statut === "En attente" && (
                   <>
-                    <Button variant="danger" size="sm" onClick={() => { setSelected(null); showToast("Admission rejetée."); }}><X className="w-3.5 h-3.5" /> Rejeter</Button>
-                    <Button variant="success" size="sm" onClick={() => { setSelected(null); showToast("Admission validée !"); }}><Check className="w-3.5 h-3.5" /> Valider</Button>
+                    <Button variant="danger" size="sm" onClick={() => { setSelected(null); toast("Admission rejetée."); }}><X className="w-3.5 h-3.5" /> Rejeter</Button>
+                    <Button variant="success" size="sm" onClick={() => { setSelected(null); toast("Admission validée !"); }}><Check className="w-3.5 h-3.5" /> Valider</Button>
                   </>
                 )}
               </DialogFooter>
@@ -225,16 +223,6 @@ export default function AdmissionsPage() {
         </DialogContent>
       </Dialog>
 
-      <AnimatePresence>
-        {toast && (
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
-            className="fixed bottom-5 right-5 z-[9999] bg-[var(--ink)] text-white rounded-[10px] px-4 py-3 flex items-center gap-3 shadow-lg border-l-[3px] border-[var(--success)] text-[12.5px] font-medium max-w-[300px]"
-          >
-            <span className="flex-1">{toast}</span>
-            <button onClick={() => setToast("")}><X className="w-3.5 h-3.5 text-white/40 hover:text-white/80" /></button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

@@ -5,11 +5,12 @@ import { Topbar } from "./Topbar";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--ivory)]">
       {/* Desktop sidebar */}
-      <SidebarDesktop />
+      <SidebarDesktop collapsed={sidebarCollapsed} onToggleCollapse={() => setSidebarCollapsed(c => !c)} />
 
       {/* Mobile sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />

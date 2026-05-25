@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "@/components/ui/toast";
+import { ServiceWorkerRegistration } from "@/components/layout/ServiceWorkerRegistration";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -32,7 +34,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${dmSans.variable} ${dmMono.variable} font-sans antialiased`}>
-        {children}
+        <ToastProvider>{children}</ToastProvider>
+        <ServiceWorkerRegistration />
       </body>
     </html>
   );
