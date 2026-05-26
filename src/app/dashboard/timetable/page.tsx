@@ -126,6 +126,29 @@ export default function TimetablePage() {
             data={filteredEDT}
             searchKey="jour"
             searchPlaceholder="Rechercher par jour ou matière…"
+            filterFields={[
+              { columnId: "jour", title: "Jour", options: [
+                { label: "Lundi", value: "Lundi" },
+                { label: "Mardi", value: "Mardi" },
+                { label: "Mercredi", value: "Mercredi" },
+                { label: "Jeudi", value: "Jeudi" },
+                { label: "Vendredi", value: "Vendredi" },
+              ]},
+              { columnId: "classe", title: "Classe", options: [
+                { label: "L1-INFO-A", value: "L1-INFO-A" },
+                { label: "L1-INFO-B", value: "L1-INFO-B" },
+                { label: "L2-INFO-B", value: "L2-INFO-B" },
+                { label: "L1-GESTION-A", value: "L1-GESTION-A" },
+                { label: "L2-GESTION-B", value: "L2-GESTION-B" },
+                { label: "L3-DROIT-A", value: "L3-DROIT-A" },
+                { label: "M1-INFO-A", value: "M1-INFO-A" },
+              ]},
+              { columnId: "type", title: "Type", options: [
+                { label: "CM", value: "CM" },
+                { label: "TD", value: "TD" },
+                { label: "TP", value: "TP" },
+              ]},
+            ]}
             pagination
             pageSize={10}
           />

@@ -36,7 +36,7 @@ export const scheduleColumns: ColumnDef<EmploiDuTemps>[] = [
       return (
         <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5 text-[var(--ink-4)]" />
-          <span className="font-mono font-bold text-[11px]">{emploi.debut} - {emploi.fin}</span>
+          <span className="font-mono font-bold text-[11px]">{emploi.hDebut} - {emploi.hFin}</span>
         </div>
       );
     },

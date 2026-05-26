@@ -34,6 +34,7 @@ export const hrColumns: ColumnDef<Personnel>[] = [
   },
   {
     id: "role",
+    accessorFn: (row) => row.role,
     header: ({ column }) => <DataTableColumnHeader column={column} title="Rôle / Dept." />,
     cell: ({ row }) => {
       const personnel = row.original;

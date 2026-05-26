@@ -16,9 +16,9 @@ type PresenceStatut = "Présent" | "Absent" | "Retard" | "Excusé";
 
 const STATUT_CONFIG: Record<PresenceStatut, { label: string; color: string; icon: React.ReactNode; bg: string }> = {
   Présent: { label: "Présent", color: "text-[var(--success)]", icon: <UserCheck className="w-3.5 h-3.5" />, bg: "bg-[var(--success-light)] border-[rgba(10,124,78,0.3)]" },
-  Absent:  { label: "Absent",  color: "text-[var(--danger)]",  icon: <UserX className="w-3.5 h-3.5" />,    bg: "bg-[var(--danger-light)] border-[rgba(192,57,43,0.3)]" },
-  Retard:  { label: "Retard",  color: "text-[var(--warning)]", icon: <Clock className="w-3.5 h-3.5" />,     bg: "bg-[var(--warning-light)] border-[rgba(180,83,9,0.3)]" },
-  Excusé:  { label: "Excusé",  color: "text-[var(--ink-3)]",   icon: <CheckSquare className="w-3.5 h-3.5" />, bg: "bg-[var(--ivory)] border-[var(--line-dark)]" },
+  Absent: { label: "Absent", color: "text-[var(--danger)]", icon: <UserX className="w-3.5 h-3.5" />, bg: "bg-[var(--danger-light)] border-[rgba(192,57,43,0.3)]" },
+  Retard: { label: "Retard", color: "text-[var(--warning)]", icon: <Clock className="w-3.5 h-3.5" />, bg: "bg-[var(--warning-light)] border-[rgba(180,83,9,0.3)]" },
+  Excusé: { label: "Excusé", color: "text-[var(--ink-3)]", icon: <CheckSquare className="w-3.5 h-3.5" />, bg: "bg-[var(--ivory)] border-[var(--line-dark)]" },
 };
 
 const TODAY = new Date().toISOString().split("T")[0];
@@ -142,10 +142,10 @@ export default function AttendancePage() {
       {/* Summary KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
         {[
-          { label: "Présents", value: counts.present, total: classeStudents.length, ...STATUT_CONFIG.Présent },
-          { label: "Absents", value: counts.absent, total: classeStudents.length, ...STATUT_CONFIG.Absent },
-          { label: "En retard", value: counts.retard, total: classeStudents.length, ...STATUT_CONFIG.Retard },
-          { label: "Excusés", value: counts.excuse, total: classeStudents.length, ...STATUT_CONFIG.Excusé },
+          { value: counts.present, total: classeStudents.length, ...STATUT_CONFIG.Présent },
+          { value: counts.absent, total: classeStudents.length, ...STATUT_CONFIG.Absent },
+          { value: counts.retard, total: classeStudents.length, ...STATUT_CONFIG.Retard },
+          { value: counts.excuse, total: classeStudents.length, ...STATUT_CONFIG.Excusé },
         ].map(c => (
           <div key={c.label} className={`border rounded-[12px] p-3.5 flex items-center gap-3 ${c.bg}`}>
             <div className={cn("w-9 h-9 rounded-[8px] flex items-center justify-center shrink-0", c.bg, "border")}>

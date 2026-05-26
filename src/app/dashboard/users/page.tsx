@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { DataTable } from "@/components/data-table";
 import { usersColumns } from "@/components/data-table/columns/users-columns";
 import { APP_USERS } from "@/constants/mock-data";
 import type { AppUser } from "@/types";
+import { Input } from "@/components/ui/input";
 
 const PROFIL_LABELS: Record<string, string> = {
   ADM: "Administrateur",
@@ -111,6 +112,21 @@ export default function UsersPage() {
           data={filtered}
           searchKey="id"
           searchPlaceholder="Rechercher par nom ou email…"
+          filterFields={[
+            { columnId: "profil", title: "Profil", options: [
+              { label: "Administrateur", value: "ADM" },
+              { label: "Direction", value: "DIR" },
+              { label: "Enseignant", value: "ENS" },
+              { label: "Scolarité", value: "SCO" },
+              { label: "Comptabilité", value: "CPT" },
+              { label: "Bibliothécaire", value: "BIB" },
+            ]},
+            { columnId: "statut", title: "Statut", options: [
+              { label: "Actif", value: "Actif" },
+              { label: "Inactif", value: "Inactif" },
+              { label: "Suspendu", value: "Suspendu" },
+            ]},
+          ]}
           pagination
           pageSize={10}
         />

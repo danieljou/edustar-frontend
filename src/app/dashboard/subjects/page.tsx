@@ -95,6 +95,26 @@ export default function SubjectsPage() {
           data={filtered}
           searchKey="code"
           searchPlaceholder="Rechercher une matière…"
+          filterFields={[
+            { columnId: "filiere", title: "Filière", options: [
+              { label: "Informatique", value: "Informatique" },
+              { label: "Gestion", value: "Gestion" },
+              { label: "Droit", value: "Droit" },
+              { label: "Toutes", value: "Toutes" },
+            ]},
+            { columnId: "niveau", title: "Niveau", options: [
+              { label: "L1", value: "L1" },
+              { label: "L2", value: "L2" },
+              { label: "L3", value: "L3" },
+            ]},
+            { columnId: "type", title: "Type", options: [
+              { label: "CM", value: "CM" },
+              { label: "CM+TD", value: "CM+TD" },
+              { label: "CM+TD+TP", value: "CM+TD+TP" },
+              { label: "CM+TP", value: "CM+TP" },
+              { label: "TD", value: "TD" },
+            ]},
+          ]}
           pagination
           pageSize={10}
         />

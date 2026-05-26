@@ -1,12 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Paiement } from "@/types";
+import { Payment } from "@/types";
 import { EduAvatar, EduBadge } from "@/components/shared";
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { formatCurrency } from "@/lib/utils";
 
-export const paymentsColumns: ColumnDef<Paiement>[] = [
+export const paymentsColumns: ColumnDef<Payment>[] = [
   {
     accessorKey: "ref",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Référence" />,

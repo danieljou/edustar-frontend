@@ -76,6 +76,23 @@ export default function HRPage() {
                   data={tabFiltered}
                   searchKey="nom"
                   searchPlaceholder="Rechercher un membre…"
+                  filterFields={[
+                    { columnId: "role", title: "Rôle", options: [
+                      { label: "Enseignant", value: "Enseignant" },
+                      { label: "Direction", value: "Direction" },
+                      { label: "Administratif", value: "Administratif" },
+                      { label: "Technicien", value: "Technicien" },
+                    ]},
+                    { columnId: "contrat", title: "Contrat", options: [
+                      { label: "CDI", value: "CDI" },
+                      { label: "CDD", value: "CDD" },
+                      { label: "Vacataire", value: "Vacataire" },
+                    ]},
+                    { columnId: "statut", title: "Statut", options: [
+                      { label: "Actif", value: "Actif" },
+                      { label: "Congé", value: "Congé" },
+                    ]},
+                  ]}
                   pagination
                   pageSize={10}
                 />

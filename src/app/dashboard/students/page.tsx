@@ -94,6 +94,27 @@ export default function StudentsPage() {
           data={filtered}
           searchKey="code"
           searchPlaceholder="Rechercher par code…"
+          filterFields={[
+            { columnId: "statut", title: "Statut", options: [
+              { label: "Actif", value: "Actif" },
+              { label: "Suspendu", value: "Suspendu" },
+            ]},
+            { columnId: "filiere", title: "Filière", options: [
+              { label: "Informatique", value: "Informatique" },
+              { label: "Gestion", value: "Gestion" },
+              { label: "Droit", value: "Droit" },
+            ]},
+            { columnId: "classe", title: "Classe", options: [
+              { label: "L1-INFO-A", value: "L1-INFO-A" },
+              { label: "L1-INFO-B", value: "L1-INFO-B" },
+              { label: "L2-INFO-B", value: "L2-INFO-B" },
+              { label: "L1-GESTION-A", value: "L1-GESTION-A" },
+              { label: "L2-GESTION-B", value: "L2-GESTION-B" },
+              { label: "L3-DROIT-A", value: "L3-DROIT-A" },
+              { label: "M1-INFO-A", value: "M1-INFO-A" },
+            ]},
+          ]}
+          initialColumnVisibility={{ filiere: false }}
           pagination
           pageSize={10}
           emptyContent={<EmptyState title="Aucun étudiant trouvé" description="Ajustez les filtres ou créez un nouveau dossier étudiant." />}

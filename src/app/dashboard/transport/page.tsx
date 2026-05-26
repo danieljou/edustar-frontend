@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { Bus, Users, AlertTriangle, Wrench, CheckCircle2, Plus } from "lucide-react";
+import { Bus, Users, AlertTriangle, Wrench, CheckCircle2, Plus, MapPin } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table";
 import { transportColumns } from "@/components/data-table/columns/transport-columns";
 import { BUS_LIST } from "@/constants/mock-data";
@@ -144,6 +144,13 @@ export default function TransportPage() {
             data={BUS_LIST}
             searchKey="numero"
             searchPlaceholder="Rechercher un bus…"
+            filterFields={[
+              { columnId: "statut", title: "Statut", options: [
+                { label: "En service", value: "En service" },
+                { label: "En panne", value: "En panne" },
+                { label: "En maintenance", value: "En maintenance" },
+              ]},
+            ]}
             pagination
             pageSize={10}
           />

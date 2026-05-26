@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { BookOpen, Plus, Search, TrendingUp, Users } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,6 @@ import type { Classe } from "@/types";
 
 const FILIERES = ["Toutes", "Informatique", "Gestion", "Droit"];
 
-const FILIERES = ["Toutes", "Informatique", "Gestion", "Droit"];
 
 const FILIERE_COLORS: Record<string, string> = {
   Informatique: "var(--blue)",
@@ -126,6 +125,23 @@ export default function ClassesPage() {
           data={filtered}
           searchKey="code"
           searchPlaceholder="Rechercher une classe…"
+          filterFields={[
+            {
+              columnId: "filiere", title: "Filière", options: [
+                { label: "Informatique", value: "Informatique" },
+                { label: "Gestion", value: "Gestion" },
+                { label: "Droit", value: "Droit" },
+              ]
+            },
+            {
+              columnId: "niveau", title: "Niveau", options: [
+                { label: "Licence 1", value: "Licence 1" },
+                { label: "Licence 2", value: "Licence 2" },
+                { label: "Licence 3", value: "Licence 3" },
+                { label: "Master 1", value: "Master 1" },
+              ]
+            },
+          ]}
           pagination
           pageSize={10}
         />

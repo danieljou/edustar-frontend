@@ -5,13 +5,10 @@ import { Check, PlusCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 export interface FilterOption {
   label: string;
@@ -64,7 +61,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                   return (
                     <Badge
                       key={v}
-                      variant="secondary"
+                      variant="purple"
                       className="rounded-sm px-1.5 py-0 text-[10px] font-medium"
                     >
                       {opt?.label ?? v}
@@ -73,7 +70,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 })
               ) : (
                 <Badge
-                  variant="secondary"
+                  variant="purple"
                   className="rounded-sm px-1.5 py-0 text-[10px] font-medium"
                 >
                   {selected.size} sélectionnés
