@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration Académique — EduStar ERP</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Inter', system-ui, sans-serif; background: #f1f5f9; color: #1e293b; }
+
+    :root {
+      --bg: #f1f5f9; --card: #ffffff; --border: #e2e8f0; --border2: #cbd5e1;
+      --text: #1e293b; --text2: #475569; --text3: #94a3b8;
+      --accent: #6366f1; --accent-h: #4f46e5; --accent-bg: #eef2ff;
+      --success: #10b981; --success-bg: #ecfdf5;
+      --warn: #f59e0b; --warn-bg: #fffbeb;
+      --danger: #ef4444; --danger-bg: #fef2f2;
+      --info: #0ea5e9; --info-bg: #f0f9ff;
+      --radius: 10px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.07);
+      --shadow: 0 4px 16px rgba(0,0,0,.08);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
+    }
+
+    /* Layout */
+    .module-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      color: #fff; padding: 28px 40px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .module-header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
+    .module-header p { color: #94a3b8; font-size: 0.9rem; }
+    .module-body { padding: 28px 40px; max-width: 1400px; margin: 0 auto; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 5px; width: fit-content; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+    .tab { padding: 9px 18px; border-radius: 8px; border: none; background: transparent; color: var(--text2); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 7px; font-family: inherit; }
+    .tab:hover { background: var(--bg); color: var(--text); }
+    .tab.active { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(99,102,241,.3); }
+
+    /* Cards */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+
+    /* UE Grid */
+    .ue-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+    .ue-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow .2s, border-color .2s; }
+    .ue-card:hover { box-shadow: var(--shadow); border-color: var(--border2); }
+    .ue-card-head { padding: 16px 20px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; }
+    .ue-card-body { padding: 14px 20px; }
+    .ue-code { font-family: 'Courier New', monospace; font-size: 0.72rem; font-weight: 700; color: var(--accent); background: var(--accent-bg); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(99,102,241,.2); }
+    .ue-name { font-weight: 600; font-size: 0.95rem; color: var(--text); margin: 7px 0 5px; }
+    .mat-list { list-style: none; margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+    .mat-item { display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; background: var(--bg); border-radius: 6px; font-size: 0.83rem; }
+    .mat-name { color: var(--text2); }
+    .mat-coeff { font-weight: 600; color: var(--accent); background: var(--accent-bg); padding: 1px 6px; border-radius: 4px; font-size: 0.78rem; }
+
+    /* Eval Grid */
+    .eval-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+    .eval-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; box-shadow: var(--shadow-sm); transition: all .2s; position: relative; overflow: hidden; }
+    .eval-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--eval-color, var(--accent)); }
+    .eval-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+    .eval-icon { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+    .eval-code { font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: 800; color: var(--eval-color, var(--accent)); margin-bottom: 4px; }
+    .eval-label { font-size: 0.82rem; color: var(--text2); font-weight: 500; }
+
+    /* Buttons */
+    .btn { padding: 9px 18px; border-radius: 8px; border: none; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: 7px; font-family: inherit; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-h); box-shadow: 0 2px 8px rgba(99,102,241,.35); }
+    .btn-secondary { background: var(--bg); color: var(--text2); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); color: var(--text); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover { background: #059669; }
+    .btn-ghost { background: transparent; color: var(--text2); padding: 6px; border-radius: 6px; border: none; font-family: inherit; }
+    .btn-ghost:hover { background: var(--bg); color: var(--text); }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+    .btn-icon { padding: 6px; }
+    .btn:disabled { opacity: .45; cursor: not-allowed !important; }
+
+    /* Badges */
+    .bdg { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 100px; font-size: 0.74rem; font-weight: 600; gap: 5px; }
+    .bdg-success { background: var(--success-bg); color: #059669; }
+    .bdg-warn { background: var(--warn-bg); color: #d97706; }
+    .bdg-danger { background: var(--danger-bg); color: #dc2626; }
+    .bdg-neutral { background: #f1f5f9; color: var(--text2); }
+    .bdg-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; display: inline-block; }
+
+    /* Table */
+    .tbl-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+    .tbl { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .tbl thead tr { background: #f8fafc; }
+    .tbl th { padding: 11px 16px; text-align: left; font-weight: 600; font-size: 0.78rem; color: var(--text3); text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--border); }
+    .tbl td { padding: 13px 16px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+    .tbl tbody tr:last-child td { border-bottom: none; }
+    .tbl tbody tr:hover td { background: #f8fafc; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn .15s ease; }
+    .modal { background: var(--card); border-radius: 16px; box-shadow: var(--shadow-lg); width: 100%; max-width: 620px; max-height: 92vh; overflow-y: auto; animation: slideUp .2s ease; }
+    .modal-xl { max-width: 1060px; }
+    .modal-header { padding: 22px 26px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--card); z-index: 1; border-radius: 16px 16px 0 0; }
+    .modal-title { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .modal-body { padding: 22px 26px; }
+    .modal-footer { padding: 18px 26px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; background: #f8fafc; border-radius: 0 0 16px 16px; position: sticky; bottom: 0; }
+
+    /* Form */
+    .form-grid { display: grid; gap: 16px; }
+    .form-2 { grid-template-columns: 1fr 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-label { font-size: 0.82rem; font-weight: 600; color: var(--text2); }
+    .form-control { padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.875rem; color: var(--text); background: #fff; transition: border-color .15s, box-shadow .15s; outline: none; font-family: inherit; }
+    .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,.1); }
+    .form-control::placeholder { color: var(--text3); }
+    select.form-control { cursor: pointer; }
+
+    /* Stepper */
+    .stepper { display: flex; align-items: flex-start; margin-bottom: 28px; }
+    .step-wrap { display: flex; flex-direction: column; align-items: center; }
+    .step-circle { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 700; flex-shrink: 0; transition: all .2s; }
+    .step-circle.done { background: var(--success); color: #fff; }
+    .step-circle.active { background: var(--accent); color: #fff; box-shadow: 0 0 0 4px rgba(99,102,241,.18); }
+    .step-circle.pending { background: var(--border); color: var(--text3); }
+    .step-label { font-size: 0.75rem; color: var(--text2); margin-top: 5px; text-align: center; font-weight: 500; white-space: nowrap; }
+    .step-connector { flex: 1; height: 2px; background: var(--border); margin: 16px 6px 0; transition: background .3s; min-width: 40px; }
+    .step-connector.done { background: var(--success); }
+
+    /* Percentage Panel */
+    .pct-panel { background: var(--bg); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+    .pct-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .pct-title { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+    .pct-total { font-size: 0.82rem; font-weight: 700; padding: 3px 10px; border-radius: 100px; transition: all .2s; }
+    .pct-total.ok { background: var(--success-bg); color: #059669; }
+    .pct-total.over { background: var(--danger-bg); color: var(--danger); }
+    .pct-total.under { background: var(--warn-bg); color: #d97706; }
+    .pct-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .pct-row-label { flex: 1; font-size: 0.82rem; color: var(--text2); display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .pct-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .pct-input { width: 66px; padding: 5px 8px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-align: center; color: var(--text); background: #fff; outline: none; font-family: inherit; transition: border-color .15s; }
+    .pct-input:focus { border-color: var(--accent); }
+    .pct-bar-wrap { flex: 2; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; min-width: 60px; }
+    .pct-bar { height: 100%; border-radius: 3px; transition: width .3s; }
+
+    /* Accordion */
+    .accord { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+    .accord-head { padding: 14px 18px; background: var(--card); display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; transition: background .15s; }
+    .accord-head:hover { background: #f8fafc; }
+    .accord-title { font-weight: 600; font-size: 0.9rem; color: var(--text); display: flex; align-items: center; gap: 9px; }
+    .accord-body { padding: 18px; background: #fafafa; border-top: 1px solid var(--border); }
+    .accord-chevron { transition: transform .2s; color: var(--text3); }
+    .accord-chevron.open { transform: rotate(180deg); }
+
+    /* Calendar mode cards */
+    .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+    .mode-card { border: 2px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; transition: all .2s; text-align: center; position: relative; }
+    .mode-card:hover { border-color: var(--accent); background: var(--accent-bg); }
+    .mode-card.selected { border-color: var(--accent); background: var(--accent-bg); box-shadow: 0 0 0 3px rgba(99,102,241,.1); }
+    .mode-card-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .mode-card-name { font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 5px; }
+    .mode-card-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.4; }
+    .mode-check { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; }
+    .mode-card.selected .mode-check { opacity: 1; }
+
+    /* Toast */
+    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast { background: var(--card); border-radius: 10px; padding: 12px 16px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px; font-size: 0.875rem; font-weight: 500; color: var(--text); border-left: 4px solid var(--accent); animation: slideLeft .25s ease, fadeOut .35s ease 2.65s forwards; pointer-events: all; max-width: 340px; }
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+    .toast.warning { border-color: var(--warn); }
+
+    /* Years */
+    .year-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 14px; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
+    .year-card:hover { box-shadow: var(--shadow); }
+    .year-card-head { padding: 18px 22px; display: flex; align-items: flex-start; justify-content: space-between; }
+    .year-label { font-size: 1.15rem; font-weight: 700; color: var(--text); }
+    .year-meta { display: flex; gap: 10px; align-items: center; margin-top: 5px; font-size: 0.83rem; color: var(--text2); flex-wrap: wrap; }
+    .year-periodes { padding: 0 22px 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .periode-chip { padding: 5px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 100px; font-size: 0.78rem; color: var(--text2); font-weight: 500; }
+
+    /* Recap */
+    .recap-section { margin-bottom: 20px; }
+    .recap-label { font-size: 0.75rem; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+    .recap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .recap-item { background: var(--bg); border-radius: 8px; padding: 10px 14px; }
+    .recap-item-label { font-size: 0.78rem; color: var(--text3); margin-bottom: 3px; }
+    .recap-item-value { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .recap-periode { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }
+    .recap-periode-title { font-weight: 600; color: var(--text); margin-bottom: 6px; font-size: 0.9rem; }
+
+    /* Mat row in modal */
+    .mat-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--bg); border-radius: 8px; margin-bottom: 6px; cursor: pointer; border: 1.5px solid transparent; transition: all .15s; }
+    .mat-row.selected { background: var(--accent-bg); border-color: rgba(99,102,241,.3); }
+    .mat-row-name { flex: 1; font-size: 0.875rem; color: var(--text); }
+    .coeff-btn { width: 26px; height: 26px; border-radius: 5px; border: 1px solid var(--border); background: var(--card); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text2); font-size: 0.9rem; line-height: 1; transition: all .15s; font-family: inherit; }
+    .coeff-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .coeff-display { width: 32px; text-align: center; font-weight: 700; color: var(--text); font-size: 0.9rem; }
+
+    /* Misc */
+    .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 14px; flex-wrap: wrap; }
+    .toolbar-left { display: flex; align-items: center; gap: 10px; }
+    .actions { display: flex; gap: 4px; }
+    .pill { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 100px; font-size: 0.76rem; font-weight: 600; }
+    .pill-primaire { background: #fef3c7; color: #d97706; }
+    .pill-secondaire { background: #ede9fe; color: #7c3aed; }
+    .pill-superieur { background: #dbeafe; color: #2563eb; }
+    .empty-state { text-align: center; padding: 56px 24px; color: var(--text3); }
+    .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    .empty-title { font-size: 1.05rem; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
+    .empty-desc { font-size: 0.875rem; }
+    .step-content { animation: fadeIn .2s ease; }
+    .step-section-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .step-section-desc { font-size: 0.85rem; color: var(--text2); margin-bottom: 20px; line-height: 1.5; }
+    .divider { height: 1px; background: var(--border); margin: 18px 0; }
+    .warn-box { padding: 11px 14px; background: var(--warn-bg); border: 1px solid #fde68a; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 9px; font-size: 0.85rem; color: #92400e; }
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type=number] { -moz-appearance: textfield; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: none } }
+    @keyframes slideLeft { from { opacity: 0; transform: translateX(50px) } to { opacity: 1; transform: none } }
+    @keyframes fadeOut { from { opacity: 1 } to { opacity: 0; transform: translateY(8px) } }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+  const { useState, useReducer, useEffect } = React;
+
+  /* ── UID ── */
+  let _uid = 1;
+  const uid = () => `id_${Date.now()}_${_uid++}`;
+
+  /* ── Mock Data ── */
+  const MOCK_MATIERES = [
+    { id: 'mat1', nom: 'Mathématiques', code: 'MATH' },
+    { id: 'mat2', nom: 'Français', code: 'FR' },
+    { id: 'mat3', nom: 'Sciences', code: 'SCI' },
+    { id: 'mat4', nom: 'Histoire-Géographie', code: 'HG' },
+    { id: 'mat5', nom: 'Anglais', code: 'ENG' },
+    { id: 'mat6', nom: 'Physique-Chimie', code: 'PHY' },
+    { id: 'mat7', nom: 'SVT', code: 'SVT' },
+    { id: 'mat8', nom: 'Informatique', code: 'INFO' },
+    { id: 'mat9', nom: 'Philosophie', code: 'PHILO' },
+    { id: 'mat10', nom: 'Éducation Physique', code: 'EPS' },
+  ];
+
+  const INITIAL_EVAL_TYPES = [
+    { id: 'et1', code: 'SN',   label: 'Séquence Notée',     color: '#6366f1', icon: '📝' },
+    { id: 'et2', code: 'CC',   label: 'Contrôle Continu',   color: '#0ea5e9', icon: '✏️' },
+    { id: 'et3', code: 'DS',   label: 'Devoir Surveillé',   color: '#8b5cf6', icon: '📋' },
+    { id: 'et4', code: 'COMP', label: 'Composition',        color: '#f59e0b', icon: '🏆' },
+    { id: 'et5', code: 'RAT',  label: 'Rattrapage',         color: '#ef4444', icon: '🔄' },
+    { id: 'et6', code: 'TP',   label: 'Travaux Pratiques',  color: '#10b981', icon: '🔬' },
+    { id: 'et7', code: 'ORAL', label: 'Épreuve Orale',      color: '#ec4899', icon: '🎤' },
+    { id: 'et8', code: 'PROJ', label: 'Projet',             color: '#f97316', icon: '🚀' },
+  ];
+
+  const INITIAL_UES = [
+    {
+      id: 'ue1', nom: 'UE Sciences Fondamentales', code: 'USF', niveau: 'SECONDAIRE',
+      matieres: [
+        { matiereId: 'mat1', coeff: 4 },
+        { matiereId: 'mat3', coeff: 3 },
+        { matiereId: 'mat6', coeff: 3 },
+      ]
+    },
+    {
+      id: 'ue2', nom: 'UE Langues et Lettres', code: 'ULL', niveau: 'SECONDAIRE',
+      matieres: [
+        { matiereId: 'mat2', coeff: 4 },
+        { matiereId: 'mat5', coeff: 3 },
+      ]
+    },
+    {
+      id: 'ue3', nom: 'UE Sciences Humaines', code: 'USH', niveau: 'PRIMAIRE',
+      matieres: [
+        { matiereId: 'mat4', coeff: 2 },
+        { matiereId: 'mat9', coeff: 1 },
+      ]
+    },
+    {
+      id: 'ue4', nom: 'UE Technologies & Numérique', code: 'UTN', niveau: 'SUPERIEUR',
+      matieres: [
+        { matiereId: 'mat8', coeff: 4 },
+        { matiereId: 'mat6', coeff: 2 },
+      ]
+    },
+  ];
+
+  /* ── Calendar Templates ── */
+  const CALENDAR_TEMPLATES = {
+    TRIMESTRIEL: {
+      label: 'Trimestriel', icon: '📅',
+      desc: '3 trimestres · 2 séquences par trimestre — Primaire / Secondaire',
+      periodes: ['Trimestre 1', 'Trimestre 2', 'Trimestre 3'],
+      seqPerPeriode: 2, seqPrefix: 'Séquence',
+    },
+    SEMESTRIEL: {
+      label: 'Semestriel', icon: '📆',
+      desc: '2 semestres · sessions normales — Supérieur, BTS, Licences',
+      periodes: ['Semestre 1', 'Semestre 2'],
+      seqPerPeriode: 2, seqPrefix: 'Session',
+    },
+    QUADRIMESTRIEL: {
+      label: 'Quadrimestriel', icon: '🗓️',
+      desc: '4 périodes · 1 épreuve par période — Calendriers spéciaux',
+      periodes: ['Période 1', 'Période 2', 'Période 3', 'Période 4'],
+      seqPerPeriode: 1, seqPrefix: 'Épreuve',
+    },
+  };
+
+  const buildFromTemplate = (templateId, evalTypes) => {
+    const tpl = CALENDAR_TEMPLATES[templateId];
+    const defaultConfig = evalTypes.slice(0, 2).map((et, i) => ({
+      evalTypeId: et.id, pct: i === 0 ? 60 : 40,
+    }));
+    return tpl.periodes.map((nom, pi) => ({
+      id: uid(), nom, startDate: '', endDate: '',
+      sequences: Array.from({ length: tpl.seqPerPeriode }, (_, si) => ({
+        id: uid(),
+        nom: `${tpl.seqPrefix} ${pi * tpl.seqPerPeriode + si + 1}`,
+        evalConfig: defaultConfig.map(ec => ({ ...ec })),
+      })),
+    }));
+  };
+
+  const buildMockYears = () => [
+    {
+      id: 'ay1', label: '2023-2024', type: 'SECONDAIRE',
+      startDate: '2023-09-04', endDate: '2024-07-05',
+      calendarMode: 'TRIMESTRIEL', status: 'ARCHIVE',
+      periodes: [
+        { id: 'p1', nom: 'Trimestre 1', startDate: '2023-09-04', endDate: '2023-12-08' },
+        { id: 'p2', nom: 'Trimestre 2', startDate: '2024-01-08', endDate: '2024-03-22' },
+        { id: 'p3', nom: 'Trimestre 3', startDate: '2024-04-08', endDate: '2024-07-05' },
+      ],
+    },
+    {
+      id: 'ay2', label: '2024-2025', type: 'SECONDAIRE',
+      startDate: '2024-09-02', endDate: '2025-07-04',
+      calendarMode: 'TRIMESTRIEL', status: 'ACTIF',
+      periodes: [
+        { id: 'p4', nom: 'Trimestre 1', startDate: '2024-09-02', endDate: '2024-12-06' },
+        { id: 'p5', nom: 'Trimestre 2', startDate: '2025-01-06', endDate: '2025-03-21' },
+        { id: 'p6', nom: 'Trimestre 3', startDate: '2025-04-07', endDate: '2025-07-04' },
+      ],
+    },
+  ];
+
+  /* ── Helpers ── */
+  const getTotalPct = (evalConfig) => evalConfig.reduce((s, e) => s + (parseInt(e.pct) || 0), 0);
+  const getPctStatus = (total) => total === 100 ? 'ok' : total > 100 ? 'over' : 'under';
+  const getMatiereNom = (id) => MOCK_MATIERES.find(m => m.id === id)?.nom ?? id;
+  const NIVEAU_LABELS = { PRIMAIRE: 'Primaire', SECONDAIRE: 'Secondaire', SUPERIEUR: 'Supérieur' };
+  const NIVEAU_CLASS  = { PRIMAIRE: 'pill-primaire', SECONDAIRE: 'pill-secondaire', SUPERIEUR: 'pill-superieur' };
+  const STATUS_LABELS = { ACTIF: 'Actif', ARCHIVE: 'Archivé', BROUILLON: 'Brouillon' };
+  const STATUS_CLASS  = { ACTIF: 'bdg-success', ARCHIVE: 'bdg-neutral', BROUILLON: 'bdg-warn' };
+
+  /* ── Reducer ── */
+  const initialState = {
+    activeTab: 'ues',
+    ues: INITIAL_UES,
+    evalTypes: INITIAL_EVAL_TYPES,
+    academicYears: buildMockYears(),
+    toast: null,
+    ueModal: null,
+    evalModal: null,
+    wizard: null,
+  };
+
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'SET_TAB': return { ...state, activeTab: action.tab };
+
+      case 'SHOW_TOAST': return { ...state, toast: { msg: action.msg, kind: action.kind } };
+      case 'CLEAR_TOAST': return { ...state, toast: null };
+
+      case 'OPEN_UE_MODAL': return { ...state, ueModal: action.modal };
+      case 'CLOSE_UE_MODAL': return { ...state, ueModal: null };
+      case 'SAVE_UE': {
+        const ue = action.ue;
+        const idx = state.ues.findIndex(u => u.id === ue.id);
+        return { ...state, ues: idx >= 0 ? state.ues.map((u, i) => i === idx ? ue : u) : [...state.ues, ue], ueModal: null };
+      }
+      case 'DELETE_UE': return { ...state, ues: state.ues.filter(u => u.id !== action.id) };
+
+      case 'OPEN_EVAL_MODAL': return { ...state, evalModal: action.modal };
+      case 'CLOSE_EVAL_MODAL': return { ...state, evalModal: null };
+      case 'SAVE_EVAL_TYPE': {
+        const et = action.evalType;
+        const idx = state.evalTypes.findIndex(e => e.id === et.id);
+        return { ...state, evalTypes: idx >= 0 ? state.evalTypes.map((e, i) => i === idx ? et : e) : [...state.evalTypes, et], evalModal: null };
+      }
+      case 'DELETE_EVAL_TYPE': return { ...state, evalTypes: state.evalTypes.filter(e => e.id !== action.id) };
+
+      case 'OPEN_WIZARD': return {
+        ...state, wizard: {
+          step: 1,
+          yearInfo: { label: '', type: 'SECONDAIRE', startDate: '', endDate: '' },
+          calendarMode: 'TRIMESTRIEL',
+          periodes: buildFromTemplate('TRIMESTRIEL', state.evalTypes),
+        }
+      };
+      case 'CLOSE_WIZARD': return { ...state, wizard: null };
+      case 'WIZARD_NEXT': return { ...state, wizard: { ...state.wizard, step: state.wizard.step + 1 } };
+      case 'WIZARD_PREV': return { ...state, wizard: { ...state.wizard, step: state.wizard.step - 1 } };
+      case 'WIZARD_SET_YEAR_INFO': return { ...state, wizard: { ...state.wizard, yearInfo: { ...state.wizard.yearInfo, ...action.yearInfo } } };
+      case 'WIZARD_SET_MODE': return {
+        ...state, wizard: {
+          ...state.wizard, calendarMode: action.mode,
+          periodes: buildFromTemplate(action.mode, state.evalTypes),
+        }
+      };
+      case 'WIZARD_SET_PERIODE_DATES': {
+        const periodes = state.wizard.periodes.map(p =>
+          p.id === action.periodeId ? { ...p, startDate: action.startDate, endDate: action.endDate } : p
+        );
+        return { ...state, wizard: { ...state.wizard, periodes } };
+      }
+      case 'WIZARD_SET_SEQ_PCT': {
+        const periodes = state.wizard.periodes.map(p =>
+          p.id === action.periodeId ? {
+            ...p, sequences: p.sequences.map(s =>
+              s.id === action.seqId ? {
+                ...s, evalConfig: s.evalConfig.map(ec =>
+                  ec.evalTypeId === action.evalTypeId ? { ...ec, pct: action.pct } : ec
+                )
+              } : s
+            )
+          } : p
+        );
+        return { ...state, wizard: { ...state.wizard, periodes } };
+      }
+      case 'WIZARD_SET_SEQ_EVAL_CONFIG': {
+        const periodes = state.wizard.periodes.map(p =>
+          p.id === action.periodeId ? {
+            ...p, sequences: p.sequences.map(s =>
+              s.id === action.seqId ? { ...s, evalConfig: action.evalConfig } : s
+            )
+          } : p
+        );
+        return { ...state, wizard: { ...state.wizard, periodes } };
+      }
+      case 'SAVE_YEAR': {
+        const w = state.wizard;
+        const newYear = {
+          id: uid(), label: w.yearInfo.label, type: w.yearInfo.type,
+          startDate: w.yearInfo.startDate, endDate: w.yearInfo.endDate,
+          calendarMode: w.calendarMode, status: 'BROUILLON',
+          periodes: w.periodes.map(p => ({ id: p.id, nom: p.nom, startDate: p.startDate, endDate: p.endDate })),
+        };
+        return { ...state, academicYears: [...state.academicYears, newYear], wizard: null };
+      }
+
+      default: return state;
+    }
+  }
+
+  /* ── SVG Icons ── */
+  const IcoPlus    = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>;
+  const IcoEdit    = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>;
+  const IcoTrash   = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>;
+  const IcoChevron = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>;
+  const IcoX       = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>;
+  const IcoCheck   = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>;
+  const IcoRefresh = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>;
+  const IcoSearch  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>;
+  const IcoCalendar= () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>;
+  const IcoBook    = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>;
+  const IcoList    = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>;
+
+  /* ── Toast ── */
+  function Toast({ toast, dispatch }) {
+    useEffect(() => {
+      if (!toast) return;
+      const t = setTimeout(() => dispatch({ type: 'CLEAR_TOAST' }), 3000);
+      return () => clearTimeout(t);
+    }, [toast]);
+    if (!toast) return null;
+    const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+    return (
+      <div className="toast-container">
+        <div className={`toast ${toast.kind}`}>
+          <span>{icons[toast.kind] || 'ℹ️'}</span>
+          <span>{toast.msg}</span>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Stepper ── */
+  function Stepper({ step, steps }) {
+    return (
+      <div className="stepper">
+        {steps.map((label, i) => {
+          const n = i + 1;
+          const status = n < step ? 'done' : n === step ? 'active' : 'pending';
+          return (
+            <React.Fragment key={i}>
+              <div className="step-wrap">
+                <div className={`step-circle ${status}`}>
+                  {status === 'done' ? <IcoCheck /> : n}
+                </div>
+                <div className="step-label">{label}</div>
+              </div>
+              {i < steps.length - 1 && (
+                <div className={`step-connector ${n < step ? 'done' : ''}`} />
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
+  }
+
+  /* ── Percentage Panel ── */
+  function PctPanel({ sequence, evalTypes, periodeId, dispatch }) {
+    const total = getTotalPct(sequence.evalConfig);
+    const status = getPctStatus(total);
+
+    const changePct = (evalTypeId, pct) => {
+      dispatch({ type: 'WIZARD_SET_SEQ_PCT', periodeId, seqId: sequence.id, evalTypeId, pct });
+    };
+
+    const distribute = () => {
+      const n = sequence.evalConfig.length;
+      const base = Math.floor(100 / n);
+      const rem = 100 - base * n;
+      const evalConfig = sequence.evalConfig.map((ec, i) => ({ ...ec, pct: base + (i === 0 ? rem : 0) }));
+      dispatch({ type: 'WIZARD_SET_SEQ_EVAL_CONFIG', periodeId, seqId: sequence.id, evalConfig });
+    };
+
+    return (
+      <div className="pct-panel">
+        <div className="pct-header">
+          <span className="pct-title">{sequence.nom}</span>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button className="btn btn-secondary btn-sm" onClick={distribute} title="Distribuer équitablement">
+              <IcoRefresh /> Auto
+            </button>
+            <span className={`pct-total ${status}`}>
+              {total}% {status === 'ok' ? '✓' : status === 'over' ? '▲' : '▼'}
+            </span>
+          </div>
+        </div>
+        {sequence.evalConfig.map(ec => {
+          const et = evalTypes.find(e => e.id === ec.evalTypeId);
+          if (!et) return null;
+          return (
+            <div key={ec.evalTypeId} className="pct-row">
+              <div className="pct-row-label">
+                <div className="pct-dot" style={{ background: et.color }} />
+                <strong style={{ fontSize: '0.8rem', fontFamily: 'Courier New' }}>{et.code}</strong>
+                <span style={{ color: '#94a3b8', fontSize: '0.76rem' }}>— {et.label}</span>
+              </div>
+              <div className="pct-bar-wrap">
+                <div className="pct-bar" style={{ width: `${Math.min(ec.pct, 100)}%`, background: et.color }} />
+              </div>
+              <input
+                type="number" className="pct-input" min="0" max="100" value={ec.pct}
+                onChange={e => changePct(ec.evalTypeId, parseInt(e.target.value) || 0)}
+                style={{ borderColor: status !== 'ok' && total > 0 ? (status === 'over' ? '#ef4444' : '#f59e0b') : '' }}
+              />
+              <span style={{ color: '#94a3b8', fontSize: '0.78rem', width: '14px' }}>%</span>
+            </div>
+          );
+        })}
+        {status !== 'ok' && total > 0 && (
+          <div style={{ marginTop: '8px', padding: '7px 10px', borderRadius: '6px', background: status === 'over' ? '#fef2f2' : '#fffbeb', fontSize: '0.78rem', color: status === 'over' ? '#dc2626' : '#d97706' }}>
+            {status === 'over'
+              ? `Dépassement de ${total - 100}% — réduisez les pourcentages`
+              : `Manque ${100 - total}% — le total doit atteindre exactement 100%`}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  /* ── UE Modal ── */
+  function UEModal({ modal, dispatch }) {
+    const [ue, setUE] = useState(
+      modal.mode === 'edit'
+        ? { ...modal.ue, matieres: modal.ue.matieres.map(m => ({ ...m })) }
+        : { id: uid(), nom: '', code: '', niveau: 'SECONDAIRE', matieres: [] }
+    );
+
+    const toggleMat = (matiereId) => {
+      setUE(u => ({
+        ...u,
+        matieres: u.matieres.find(m => m.matiereId === matiereId)
+          ? u.matieres.filter(m => m.matiereId !== matiereId)
+          : [...u.matieres, { matiereId, coeff: 2 }]
+      }));
+    };
+
+    const setCoeff = (matiereId, delta) => {
+      setUE(u => ({
+        ...u,
+        matieres: u.matieres.map(m =>
+          m.matiereId === matiereId ? { ...m, coeff: Math.max(1, Math.min(10, m.coeff + delta)) } : m
+        )
+      }));
+    };
+
+    const save = () => {
+      if (!ue.nom.trim() || !ue.code.trim()) {
+        dispatch({ type: 'SHOW_TOAST', msg: 'Nom et code sont requis', kind: 'error' });
+        return;
+      }
+      dispatch({ type: 'SAVE_UE', ue });
+      dispatch({ type: 'SHOW_TOAST', msg: modal.mode === 'edit' ? 'UE mise à jour' : 'UE créée avec succès', kind: 'success' });
+    };
+
+    return (
+      <div className="modal-overlay" onClick={e => e.target === e.currentTarget && dispatch({ type: 'CLOSE_UE_MODAL' })}>
+        <div className="modal">
+          <div className="modal-header">
+            <span className="modal-title">{modal.mode === 'edit' ? 'Modifier l\'UE' : 'Nouvelle Unité d\'Enseignement'}</span>
+            <button className="btn btn-ghost btn-icon" onClick={() => dispatch({ type: 'CLOSE_UE_MODAL' })}><IcoX /></button>
+          </div>
+          <div className="modal-body">
+            <div className="form-grid" style={{ marginBottom: '18px' }}>
+              <div className="form-grid form-2">
+                <div className="form-group">
+                  <label className="form-label">Nom de l'UE *</label>
+                  <input className="form-control" placeholder="ex: UE Sciences Fondamentales" value={ue.nom} onChange={e => setUE(u => ({ ...u, nom: e.target.value }))} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Code *</label>
+                  <input className="form-control" placeholder="ex: USF" value={ue.code} onChange={e => setUE(u => ({ ...u, code: e.target.value.toUpperCase() }))} maxLength={8} />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Niveau</label>
+                <select className="form-control" value={ue.niveau} onChange={e => setUE(u => ({ ...u, niveau: e.target.value }))}>
+                  <option value="PRIMAIRE">Primaire</option>
+                  <option value="SECONDAIRE">Secondaire</option>
+                  <option value="SUPERIEUR">Supérieur</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-label" style={{ marginBottom: '10px' }}>
+              Matières et coefficients
+              <span style={{ color: '#94a3b8', fontWeight: 400, marginLeft: '8px' }}>({ue.matieres.length} sélectionnée{ue.matieres.length > 1 ? 's' : ''})</span>
+            </div>
+            {MOCK_MATIERES.map(m => {
+              const entry = ue.matieres.find(e => e.matiereId === m.id);
+              const sel = !!entry;
+              return (
+                <div key={m.id} className={`mat-row ${sel ? 'selected' : ''}`} onClick={() => toggleMat(m.id)}>
+                  <div style={{ width: '17px', height: '17px', borderRadius: '4px', border: '2px solid', borderColor: sel ? '#6366f1' : '#cbd5e1', background: sel ? '#6366f1' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all .15s' }}>
+                    {sel && <IcoCheck />}
+                  </div>
+                  <span className="mat-row-name">{m.nom}</span>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>({m.code})</span>
+                  {sel && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }} onClick={e => e.stopPropagation()}>
+                      <button className="coeff-btn" onClick={() => setCoeff(m.id, -1)}>−</button>
+                      <span className="coeff-display">{entry.coeff}</span>
+                      <button className="coeff-btn" onClick={() => setCoeff(m.id, 1)}>+</button>
+                      <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>coeff</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {ue.matieres.length > 0 && (
+              <div style={{ marginTop: '12px', padding: '10px 14px', background: '#f8fafc', borderRadius: '8px', fontSize: '0.82rem', color: '#64748b' }}>
+                Coefficient total :&nbsp;
+                <strong style={{ color: '#1e293b' }}>{ue.matieres.reduce((s, m) => s + m.coeff, 0)}</strong>
+              </div>
+            )}
+          </div>
+          <div className="modal-footer">
+            <button className="btn btn-secondary" onClick={() => dispatch({ type: 'CLOSE_UE_MODAL' })}>Annuler</button>
+            <button className="btn btn-primary" onClick={save}>
+              <IcoCheck /> {modal.mode === 'edit' ? 'Enregistrer' : 'Créer l\'UE'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Eval Type Modal ── */
+  function EvalTypeModal({ modal, dispatch }) {
+    const [et, setET] = useState(
+      modal.mode === 'edit' ? { ...modal.et } : { id: uid(), code: '', label: '', color: '#6366f1', icon: '📝' }
+    );
+    const COLORS = ['#6366f1','#0ea5e9','#8b5cf6','#f59e0b','#ef4444','#10b981','#ec4899','#f97316','#14b8a6','#a855f7'];
+
+    const save = () => {
+      if (!et.code.trim() || !et.label.trim()) {
+        dispatch({ type: 'SHOW_TOAST', msg: 'Code et libellé sont requis', kind: 'error' });
+        return;
+      }
+      dispatch({ type: 'SAVE_EVAL_TYPE', evalType: et });
+      dispatch({ type: 'SHOW_TOAST', msg: modal.mode === 'edit' ? 'Type mis à jour' : 'Type créé', kind: 'success' });
+    };
+
+    return (
+      <div className="modal-overlay" onClick={e => e.target === e.currentTarget && dispatch({ type: 'CLOSE_EVAL_MODAL' })}>
+        <div className="modal">
+          <div className="modal-header">
+            <span className="modal-title">{modal.mode === 'edit' ? 'Modifier le type' : 'Nouveau type d\'évaluation'}</span>
+            <button className="btn btn-ghost btn-icon" onClick={() => dispatch({ type: 'CLOSE_EVAL_MODAL' })}><IcoX /></button>
+          </div>
+          <div className="modal-body">
+            <div className="form-grid">
+              <div className="form-grid form-2">
+                <div className="form-group">
+                  <label className="form-label">Code *</label>
+                  <input className="form-control" placeholder="ex: SN" value={et.code} onChange={e => setET(t => ({ ...t, code: e.target.value.toUpperCase() }))} maxLength={6} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Icône (emoji)</label>
+                  <input className="form-control" placeholder="📝" value={et.icon} onChange={e => setET(t => ({ ...t, icon: e.target.value }))} />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Libellé complet *</label>
+                <input className="form-control" placeholder="ex: Séquence Notée" value={et.label} onChange={e => setET(t => ({ ...t, label: e.target.value }))} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Couleur d'identité</label>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', marginTop: '4px' }}>
+                  {COLORS.map(c => (
+                    <div key={c} onClick={() => setET(t => ({ ...t, color: c }))} style={{ width: '28px', height: '28px', borderRadius: '50%', background: c, cursor: 'pointer', outline: et.color === c ? `3px solid ${c}` : 'none', outlineOffset: '2px', border: et.color === c ? '2px solid #fff' : '2px solid transparent', boxShadow: et.color === c ? `0 0 0 3px ${c}40` : 'none', transition: 'all .15s', flexShrink: 0 }} />
+                  ))}
+                </div>
+              </div>
+              <div style={{ padding: '14px 18px', background: '#f8fafc', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid #e2e8f0' }}>
+                <div style={{ fontSize: '2rem' }}>{et.icon || '?'}</div>
+                <div>
+                  <div style={{ fontFamily: 'Courier New', fontWeight: 800, fontSize: '1.2rem', color: et.color }}>{et.code || 'CODE'}</div>
+                  <div style={{ fontSize: '0.85rem', color: '#64748b' }}>{et.label || 'Libellé du type'}</div>
+                </div>
+                <div style={{ marginLeft: 'auto', width: '12px', height: '12px', borderRadius: '50%', background: et.color }} />
+              </div>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button className="btn btn-secondary" onClick={() => dispatch({ type: 'CLOSE_EVAL_MODAL' })}>Annuler</button>
+            <button className="btn btn-primary" onClick={save}>
+              <IcoCheck /> {modal.mode === 'edit' ? 'Enregistrer' : 'Créer'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Wizard Steps ── */
+  function WizardStep1({ wizard, dispatch }) {
+    const { yearInfo } = wizard;
+    const up = (k, v) => dispatch({ type: 'WIZARD_SET_YEAR_INFO', yearInfo: { [k]: v } });
+    const valid = yearInfo.label.trim() && yearInfo.startDate && yearInfo.endDate;
+    return (
+      <div className="step-content">
+        <div className="step-section-title">Informations de l'année académique</div>
+        <div className="step-section-desc">Renseignez le libellé, le type d'établissement et les dates de l'année.</div>
+        <div className="form-grid">
+          <div className="form-grid form-2">
+            <div className="form-group">
+              <label className="form-label">Libellé *</label>
+              <input className="form-control" placeholder="ex: 2025-2026" value={yearInfo.label} onChange={e => up('label', e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Type d'établissement</label>
+              <select className="form-control" value={yearInfo.type} onChange={e => up('type', e.target.value)}>
+                <option value="PRIMAIRE">Primaire</option>
+                <option value="SECONDAIRE">Secondaire</option>
+                <option value="SUPERIEUR">Supérieur</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-grid form-2">
+            <div className="form-group">
+              <label className="form-label">Date de début *</label>
+              <input type="date" className="form-control" value={yearInfo.startDate} onChange={e => up('startDate', e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Date de fin *</label>
+              <input type="date" className="form-control" value={yearInfo.endDate} onChange={e => up('endDate', e.target.value)} />
+            </div>
+          </div>
+        </div>
+        <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
+          <button className="btn btn-primary" onClick={() => valid && dispatch({ type: 'WIZARD_NEXT' })} disabled={!valid}>
+            Suivant →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function WizardStep2({ wizard, dispatch }) {
+    const selectMode = (mode) => {
+      dispatch({ type: 'WIZARD_SET_MODE', mode });
+      dispatch({ type: 'WIZARD_NEXT' });
+    };
+    return (
+      <div className="step-content">
+        <div className="step-section-title">Mode de calendrier scolaire</div>
+        <div className="step-section-desc">Choisissez la structure temporelle. La sélection génère automatiquement les périodes et séquences.</div>
+        <div className="mode-grid">
+          {Object.entries(CALENDAR_TEMPLATES).map(([key, tpl]) => (
+            <div key={key} className={`mode-card ${wizard.calendarMode === key ? 'selected' : ''}`} onClick={() => selectMode(key)}>
+              <div className="mode-check"><IcoCheck /></div>
+              <div className="mode-card-icon">{tpl.icon}</div>
+              <div className="mode-card-name">{tpl.label}</div>
+              <div className="mode-card-desc">{tpl.desc}</div>
+              <div style={{ marginTop: '10px', display: 'flex', gap: '4px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                {tpl.periodes.map(p => (
+                  <span key={p} style={{ fontSize: '0.7rem', padding: '2px 7px', background: '#f1f5f9', borderRadius: '4px', color: '#64748b', fontWeight: 500 }}>{p}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <button className="btn btn-secondary" onClick={() => dispatch({ type: 'WIZARD_PREV' })}>← Précédent</button>
+        </div>
+      </div>
+    );
+  }
+
+  function WizardStep3({ wizard, dispatch, evalTypes }) {
+    const [open, setOpen] = useState({ [wizard.periodes[0]?.id]: true });
+    const toggle = id => setOpen(s => ({ ...s, [id]: !s[id] }));
+
+    const allValid = wizard.periodes.every(p => p.sequences.every(s => getTotalPct(s.evalConfig) === 100));
+    const badCount = wizard.periodes.reduce((n, p) => n + p.sequences.filter(s => getTotalPct(s.evalConfig) !== 100).length, 0);
+
+    return (
+      <div className="step-content">
+        <div className="step-section-title">Configuration des périodes et évaluations</div>
+        <div className="step-section-desc">Pour chaque séquence, définissez la pondération des types d'évaluation. Le total doit être exactement <strong>100%</strong>.</div>
+
+        {!allValid && badCount > 0 && (
+          <div className="warn-box">
+            <span>⚠️</span>
+            <span><strong>{badCount} séquence{badCount > 1 ? 's' : ''}</strong> ont un total ≠ 100% — utilisez le bouton <strong>Auto</strong> pour équilibrer.</span>
+          </div>
+        )}
+
+        {wizard.periodes.map(periode => {
+          const seqStatuses = periode.sequences.map(s => getTotalPct(s.evalConfig) === 100);
+          return (
+            <div key={periode.id} className="accord">
+              <div className="accord-head" onClick={() => toggle(periode.id)}>
+                <span className="accord-title">
+                  📅 {periode.nom}
+                  <span style={{ display: 'flex', gap: '5px' }}>
+                    {seqStatuses.map((ok, i) => (
+                      <span key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: ok ? '#10b981' : '#f59e0b', display: 'inline-block' }} title={`${periode.sequences[i].nom}: ${getTotalPct(periode.sequences[i].evalConfig)}%`} />
+                    ))}
+                  </span>
+                </span>
+                <span className={`accord-chevron ${open[periode.id] ? 'open' : ''}`}><IcoChevron /></span>
+              </div>
+              {open[periode.id] && (
+                <div className="accord-body">
+                  <div className="form-grid form-2" style={{ marginBottom: '14px' }}>
+                    <div className="form-group">
+                      <label className="form-label">Début de la période</label>
+                      <input type="date" className="form-control" value={periode.startDate}
+                        onChange={e => dispatch({ type: 'WIZARD_SET_PERIODE_DATES', periodeId: periode.id, startDate: e.target.value, endDate: periode.endDate })} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Fin de la période</label>
+                      <input type="date" className="form-control" value={periode.endDate}
+                        onChange={e => dispatch({ type: 'WIZARD_SET_PERIODE_DATES', periodeId: periode.id, startDate: periode.startDate, endDate: e.target.value })} />
+                    </div>
+                  </div>
+                  {periode.sequences.map(seq => (
+                    <PctPanel key={seq.id} sequence={seq} evalTypes={evalTypes} periodeId={periode.id} dispatch={dispatch} />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '14px' }}>
+          <button className="btn btn-secondary" onClick={() => dispatch({ type: 'WIZARD_PREV' })}>← Précédent</button>
+          <button className="btn btn-primary" onClick={() => allValid && dispatch({ type: 'WIZARD_NEXT' })} disabled={!allValid}>
+            Récapitulatif →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function WizardStep4({ wizard, dispatch, evalTypes }) {
+    const { yearInfo, calendarMode } = wizard;
+    const tpl = CALENDAR_TEMPLATES[calendarMode];
+    const save = () => {
+      dispatch({ type: 'SAVE_YEAR' });
+      dispatch({ type: 'SHOW_TOAST', msg: `Année ${yearInfo.label} créée avec succès`, kind: 'success' });
+      dispatch({ type: 'SET_TAB', tab: 'years' });
+    };
+    return (
+      <div className="step-content">
+        <div className="step-section-title">Récapitulatif</div>
+        <div className="step-section-desc">Vérifiez la configuration avant de valider l'année.</div>
+
+        <div className="recap-section">
+          <div className="recap-label">Informations générales</div>
+          <div className="recap-grid">
+            <div className="recap-item">
+              <div className="recap-item-label">Libellé</div>
+              <div className="recap-item-value">{yearInfo.label}</div>
+            </div>
+            <div className="recap-item">
+              <div className="recap-item-label">Niveau</div>
+              <div className="recap-item-value"><span className={`pill ${NIVEAU_CLASS[yearInfo.type]}`}>{NIVEAU_LABELS[yearInfo.type]}</span></div>
+            </div>
+            <div className="recap-item">
+              <div className="recap-item-label">Début</div>
+              <div className="recap-item-value">{yearInfo.startDate || '—'}</div>
+            </div>
+            <div className="recap-item">
+              <div className="recap-item-label">Fin</div>
+              <div className="recap-item-value">{yearInfo.endDate || '—'}</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="recap-section">
+          <div className="recap-label">Calendrier — {tpl.label}</div>
+          {wizard.periodes.map(p => (
+            <div key={p.id} className="recap-periode">
+              <div className="recap-periode-title">📅 {p.nom}{p.startDate ? ` · ${p.startDate} → ${p.endDate}` : ''}</div>
+              {p.sequences.map(s => {
+                const total = getTotalPct(s.evalConfig);
+                return (
+                  <div key={s.id} style={{ fontSize: '0.83rem', color: '#64748b', marginLeft: '14px', margin: '4px 0 4px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>• {s.nom}</span>
+                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', alignItems: 'center' }}>
+                      {s.evalConfig.filter(ec => ec.pct > 0).map(ec => {
+                        const et = evalTypes.find(e => e.id === ec.evalTypeId);
+                        return et ? (
+                          <span key={ec.evalTypeId} style={{ fontSize: '0.73rem', padding: '1px 7px', borderRadius: '100px', background: et.color + '22', color: et.color, fontWeight: 700 }}>
+                            {et.code} {ec.pct}%
+                          </span>
+                        ) : null;
+                      })}
+                      <span style={{ fontSize: '0.73rem', color: total === 100 ? '#10b981' : '#ef4444', fontWeight: 700, marginLeft: '2px' }}>= {total}%</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
+          <button className="btn btn-secondary" onClick={() => dispatch({ type: 'WIZARD_PREV' })}>← Précédent</button>
+          <button className="btn btn-success" onClick={save}>
+            ✅ Valider et créer l'année
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Wizard Modal ── */
+  function WizardModal({ wizard, dispatch, evalTypes }) {
+    const STEPS = ['Informations', 'Calendrier', 'Périodes', 'Récapitulatif'];
+    return (
+      <div className="modal-overlay" onClick={e => e.target === e.currentTarget && dispatch({ type: 'CLOSE_WIZARD' })}>
+        <div className="modal modal-xl">
+          <div className="modal-header">
+            <span className="modal-title">📅 Nouvelle Année Académique</span>
+            <button className="btn btn-ghost btn-icon" onClick={() => dispatch({ type: 'CLOSE_WIZARD' })}><IcoX /></button>
+          </div>
+          <div className="modal-body">
+            <Stepper step={wizard.step} steps={STEPS} />
+            {wizard.step === 1 && <WizardStep1 wizard={wizard} dispatch={dispatch} />}
+            {wizard.step === 2 && <WizardStep2 wizard={wizard} dispatch={dispatch} />}
+            {wizard.step === 3 && <WizardStep3 wizard={wizard} dispatch={dispatch} evalTypes={evalTypes} />}
+            {wizard.step === 4 && <WizardStep4 wizard={wizard} dispatch={dispatch} evalTypes={evalTypes} />}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Tab: UEs ── */
+  function UETab({ ues, dispatch }) {
+    const [search, setSearch] = useState('');
+    const [filter, setFilter] = useState('ALL');
+    const filtered = ues.filter(u =>
+      (filter === 'ALL' || u.niveau === filter) &&
+      (u.nom.toLowerCase().includes(search.toLowerCase()) || u.code.toLowerCase().includes(search.toLowerCase()))
+    );
+    return (
+      <div>
+        <div className="toolbar">
+          <div className="toolbar-left">
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '11px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }}><IcoSearch /></span>
+              <input className="form-control" placeholder="Rechercher une UE…" value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: '34px', width: '240px' }} />
+            </div>
+            <select className="form-control" value={filter} onChange={e => setFilter(e.target.value)} style={{ width: 'auto' }}>
+              <option value="ALL">Tous niveaux</option>
+              <option value="PRIMAIRE">Primaire</option>
+              <option value="SECONDAIRE">Secondaire</option>
+              <option value="SUPERIEUR">Supérieur</option>
+            </select>
+            <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>{filtered.length} UE{filtered.length > 1 ? 's' : ''}</span>
+          </div>
+          <button className="btn btn-primary" onClick={() => dispatch({ type: 'OPEN_UE_MODAL', modal: { mode: 'create' } })}>
+            <IcoPlus /> Nouvelle UE
+          </button>
+        </div>
+
+        {filtered.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">📚</div>
+            <div className="empty-title">Aucune UE trouvée</div>
+            <div className="empty-desc">{search ? 'Modifiez votre recherche' : 'Créez votre première Unité d\'Enseignement'}</div>
+          </div>
+        ) : (
+          <div className="ue-grid">
+            {filtered.map(ue => (
+              <div key={ue.id} className="ue-card">
+                <div className="ue-card-head">
+                  <div>
+                    <span className="ue-code">{ue.code}</span>
+                    <div className="ue-name">{ue.nom}</div>
+                    <span className={`pill ${NIVEAU_CLASS[ue.niveau]}`}>{NIVEAU_LABELS[ue.niveau]}</span>
+                  </div>
+                  <div className="actions">
+                    <button className="btn btn-ghost btn-icon" title="Modifier" onClick={() => dispatch({ type: 'OPEN_UE_MODAL', modal: { mode: 'edit', ue } })}><IcoEdit /></button>
+                    <button className="btn btn-ghost btn-icon" title="Supprimer" style={{ color: '#ef4444' }}
+                      onClick={() => { if (confirm(`Supprimer "${ue.nom}" ?`)) { dispatch({ type: 'DELETE_UE', id: ue.id }); dispatch({ type: 'SHOW_TOAST', msg: 'UE supprimée', kind: 'success' }); } }}>
+                      <IcoTrash />
+                    </button>
+                  </div>
+                </div>
+                <div className="ue-card-body">
+                  <div style={{ fontSize: '0.73rem', color: '#94a3b8', marginBottom: '7px', textTransform: 'uppercase', letterSpacing: '.04em', fontWeight: 600 }}>
+                    {ue.matieres.length} matière{ue.matieres.length > 1 ? 's' : ''}
+                  </div>
+                  <ul className="mat-list">
+                    {ue.matieres.map(m => (
+                      <li key={m.matiereId} className="mat-item">
+                        <span className="mat-name">{getMatiereNom(m.matiereId)}</span>
+                        <span className="mat-coeff">Coeff {m.coeff}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div style={{ marginTop: '10px', fontSize: '0.78rem', color: '#94a3b8', borderTop: '1px solid #f1f5f9', paddingTop: '8px' }}>
+                    Coeff total : <strong style={{ color: '#1e293b' }}>{ue.matieres.reduce((s, m) => s + m.coeff, 0)}</strong>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  /* ── Tab: Eval Types ── */
+  function EvalTypesTab({ evalTypes, dispatch }) {
+    return (
+      <div>
+        <div className="toolbar">
+          <div>
+            <div style={{ fontWeight: 600, color: '#1e293b' }}>Catalogue des types d'évaluation</div>
+            <div style={{ fontSize: '0.83rem', color: '#94a3b8', marginTop: '2px' }}>
+              Ces types sont utilisés pour pondérer les notes dans le calendrier.
+            </div>
+          </div>
+          <button className="btn btn-primary" onClick={() => dispatch({ type: 'OPEN_EVAL_MODAL', modal: { mode: 'create' } })}>
+            <IcoPlus /> Nouveau type
+          </button>
+        </div>
+        <div className="eval-grid">
+          {evalTypes.map(et => (
+            <div key={et.id} className="eval-card" style={{ '--eval-color': et.color }}>
+              <div style={{ position: 'absolute', top: '9px', right: '9px', display: 'flex', gap: '3px' }}>
+                <button className="btn btn-ghost btn-icon btn-sm" onClick={() => dispatch({ type: 'OPEN_EVAL_MODAL', modal: { mode: 'edit', et } })}><IcoEdit /></button>
+                <button className="btn btn-ghost btn-icon btn-sm" style={{ color: '#ef4444' }}
+                  onClick={() => { if (confirm(`Supprimer "${et.label}" ?`)) { dispatch({ type: 'DELETE_EVAL_TYPE', id: et.id }); dispatch({ type: 'SHOW_TOAST', msg: 'Type supprimé', kind: 'success' }); } }}>
+                  <IcoTrash />
+                </button>
+              </div>
+              <span className="eval-icon">{et.icon}</span>
+              <div className="eval-code">{et.code}</div>
+              <div className="eval-label">{et.label}</div>
+            </div>
+          ))}
+          <div className="eval-card" style={{ border: '2px dashed #e2e8f0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: .55, transition: 'opacity .2s', minHeight: '140px' }}
+            onClick={() => dispatch({ type: 'OPEN_EVAL_MODAL', modal: { mode: 'create' } })}
+            onMouseEnter={e => e.currentTarget.style.opacity = 1}
+            onMouseLeave={e => e.currentTarget.style.opacity = .55}>
+            <div style={{ fontSize: '1.4rem', marginBottom: '6px' }}>➕</div>
+            <div style={{ fontSize: '0.82rem', color: '#94a3b8', fontWeight: 500 }}>Ajouter un type</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Tab: Years ── */
+  function YearsTab({ academicYears, dispatch }) {
+    return (
+      <div>
+        <div className="toolbar">
+          <div>
+            <div style={{ fontWeight: 600, color: '#1e293b' }}>Années académiques</div>
+            <div style={{ fontSize: '0.83rem', color: '#94a3b8', marginTop: '2px' }}>Historique et gestion des années scolaires configurées.</div>
+          </div>
+          <button className="btn btn-primary" onClick={() => dispatch({ type: 'OPEN_WIZARD' })}>
+            <IcoCalendar /> Nouvelle année
+          </button>
+        </div>
+
+        {academicYears.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">🗓️</div>
+            <div className="empty-title">Aucune année configurée</div>
+            <div className="empty-desc">Lancez l'assistant pour configurer votre première année académique.</div>
+            <button className="btn btn-primary" style={{ marginTop: '14px' }} onClick={() => dispatch({ type: 'OPEN_WIZARD' })}>
+              <IcoCalendar /> Configurer une année
+            </button>
+          </div>
+        ) : (
+          academicYears.map(ay => {
+            const tpl = CALENDAR_TEMPLATES[ay.calendarMode];
+            return (
+              <div key={ay.id} className="year-card">
+                <div className="year-card-head">
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span className="year-label">{ay.label}</span>
+                      <span className={`bdg ${STATUS_CLASS[ay.status]}`}>
+                        <span className="bdg-dot" />{STATUS_LABELS[ay.status]}
+                      </span>
+                    </div>
+                    <div className="year-meta">
+                      <span className={`pill ${NIVEAU_CLASS[ay.type]}`}>{NIVEAU_LABELS[ay.type]}</span>
+                      <span>·</span>
+                      <span>{tpl?.label || ay.calendarMode}</span>
+                      <span>·</span>
+                      <span style={{ fontFamily: 'Courier New', fontSize: '0.8rem' }}>{ay.startDate} → {ay.endDate}</span>
+                    </div>
+                  </div>
+                  <div className="actions">
+                    <button className="btn btn-secondary btn-sm"><IcoEdit /> Modifier</button>
+                  </div>
+                </div>
+                <div className="year-periodes">
+                  {ay.periodes.map(p => (
+                    <span key={p.id} className="periode-chip">📅 {p.nom}</span>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    );
+  }
+
+  /* ── App Root ── */
+  function App() {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { activeTab, ues, evalTypes, academicYears, toast, ueModal, evalModal, wizard } = state;
+
+    const TABS = [
+      { id: 'ues',       label: "Unités d'Enseignement", icon: <IcoBook /> },
+      { id: 'evaltypes', label: "Types d'évaluation",    icon: <IcoList /> },
+      { id: 'years',     label: "Années académiques",    icon: <IcoCalendar /> },
+    ];
+
+    return (
+      <div>
+        <div className="module-header">
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '6px' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '11px', background: 'rgba(255,255,255,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>⚙️</div>
+                <h1>Configuration Académique</h1>
+              </div>
+              <p>Gérez les UE, les types d'évaluation et les années académiques de l'établissement.</p>
+            </div>
+            <button className="btn" style={{ background: 'rgba(255,255,255,.12)', color: '#fff', border: '1px solid rgba(255,255,255,.2)', marginTop: '4px' }} onClick={() => dispatch({ type: 'OPEN_WIZARD' })}>
+              <IcoCalendar /> Nouvelle année
+            </button>
+          </div>
+        </div>
+
+        <div className="module-body">
+          <div className="tabs">
+            {TABS.map(t => (
+              <button key={t.id} className={`tab ${activeTab === t.id ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_TAB', tab: t.id })}>
+                {t.icon} {t.label}
+              </button>
+            ))}
+          </div>
+
+          {activeTab === 'ues'       && <UETab ues={ues} dispatch={dispatch} />}
+          {activeTab === 'evaltypes' && <EvalTypesTab evalTypes={evalTypes} dispatch={dispatch} />}
+          {activeTab === 'years'     && <YearsTab academicYears={academicYears} dispatch={dispatch} />}
+        </div>
+
+        {ueModal   && <UEModal modal={ueModal} dispatch={dispatch} />}
+        {evalModal && <EvalTypeModal modal={evalModal} dispatch={dispatch} />}
+        {wizard    && <WizardModal wizard={wizard} dispatch={dispatch} evalTypes={evalTypes} />}
+
+        <Toast toast={toast} dispatch={dispatch} />
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
