@@ -1067,7 +1067,7 @@ export default function ConfigAcademiquePage() {
   const { ues, evalTypes, academicYears, ueModal, evalModal, wizard } = state;
   const toast = useToast();
 
-  const showToast = (m: string, v: "success" | "error" = "success") => toast.toast(m, v);
+  const showToast = (m: string, v: "success" | "error" = "success") => toast(m, v);
 
   return (
     <div>

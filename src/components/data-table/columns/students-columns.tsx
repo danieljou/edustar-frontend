@@ -52,7 +52,7 @@ export const studentsColumns: ColumnDef<Student>[] = [
                 </div>
             );
         },
-        filterFn: includesOneOf,
+        // filterFn: includesOneOf,
     },
     {
         accessorKey: "filiere",
@@ -60,7 +60,7 @@ export const studentsColumns: ColumnDef<Student>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Filière" />,
         cell: ({ row }) => <span className="text-[var(--ink-3)] text-[11px]">{row.getValue("filiere") as string}</span>,
         size: 100,
-        filterFn: includesOneOf,
+        // filterFn: includesOneOf,
     },
     {
         accessorKey: "moy",
@@ -97,7 +97,7 @@ export const studentsColumns: ColumnDef<Student>[] = [
             return <EduBadge variant={statusBadge(statut)}>{statut}</EduBadge>;
         },
         size: 90,
-        filterFn: includesOneOf,
+        // filterFn: includesOneOf,
     },
     {
         id: "actions",
