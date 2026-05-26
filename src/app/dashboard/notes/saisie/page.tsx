@@ -257,8 +257,11 @@ export default function SaisieNotesPage() {
 
   // Derived
   const periodeCourante = periodes.find(p => p.id === selectedPeriodeId);
-  const typesEvalPeriode = useEvaluationStore(s =>
-    selectTypesEvalPeriode(s, selectedPeriodeId)
+  const typesEvalPeriode = useMemo(() =>
+    typesEval
+      .filter(t => t.periodeId === selectedPeriodeId && t.statut === "ACTIF")
+      .sort((a, b) => a.ordre - b.ordre),
+    [typesEval, selectedPeriodeId]
   );
   const validation = useMemo(
     () => validateTypesEvaluation(typesEvalPeriode),
