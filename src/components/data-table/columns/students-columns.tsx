@@ -1,7 +1,13 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, FilterFn } from "@tanstack/react-table";
+
+// row value must be included in the filter array (for faceted filters)
+const includesOneOf: FilterFn<any> = (row, columnId, filterValues: string[]) =>
+  filterValues.includes(row.getValue(columnId));
+includesOneOf.autoRemove = (val: unknown) => !Array.isArray(val) || val.length === 0;
 import { MoreVertical, Eye, Edit, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { Student } from "@/types";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -45,12 +51,14 @@ export const studentsColumns: ColumnDef<Student>[] = [
                 </div>
             );
         },
+        filterFn: includesOneOf,
     },
     {
         accessorKey: "filiere",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Filière" />,
         cell: ({ row }) => <span className="text-[var(--ink-3)] text-[11px]">{row.getValue("filiere") as string}</span>,
         size: 100,
+        filterFn: includesOneOf,
     },
     {
         accessorKey: "moy",
@@ -86,9 +94,11 @@ export const studentsColumns: ColumnDef<Student>[] = [
             return <EduBadge variant={statusBadge(statut)}>{statut}</EduBadge>;
         },
         size: 90,
+        filterFn: includesOneOf,
     },
     {
         id: "actions",
+        enableHiding: false,
         header: () => null,
         cell: ({ row }) => (
             <DropdownMenu>
@@ -96,7 +106,9 @@ export const studentsColumns: ColumnDef<Student>[] = [
                     <Button variant="ghost" size="icon"><MoreVertical className="w-3.5 h-3.5" /></Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem><Eye className="w-3.5 h-3.5" /> Voir dossier</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href={`/dashboard/students/${row.original.code}`}><Eye className="w-3.5 h-3.5" /> Voir dossier</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem><Edit className="w-3.5 h-3.5" /> Modifier</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem destructive><Trash2 className="w-3.5 h-3.5" /> Supprimer</DropdownMenuItem>

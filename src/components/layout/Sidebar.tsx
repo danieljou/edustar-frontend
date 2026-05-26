@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Bell, GraduationCap, ClipboardList, CalendarRange, School, BookOpen,
   UserCheck, FileText, Award, Clock, CreditCard, Users, Library, Bus,
-  MessageSquare, Megaphone, BarChart3, Settings, DoorOpen, UserCog,
+  MessageSquare, Megaphone, BarChart3, Settings, DoorOpen, UserCog, Layers,
   ChevronRight, X, Menu, LogOut, User, HelpCircle,
 } from "lucide-react";
 import { NAV_SECTIONS } from "@/constants/navigation";
@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 const ICON_MAP: Record<string, React.ElementType> = {
   LayoutDashboard, Bell, GraduationCap, ClipboardList, CalendarRange, School, BookOpen,
   UserCheck, FileText, Award, Clock, CreditCard, Users, Library, Bus,
-  MessageSquare, Megaphone, BarChart3, Settings, DoorOpen, UserCog,
+  MessageSquare, Megaphone, BarChart3, Settings, DoorOpen, UserCog, Layers,
 };
 
 interface SidebarProps {

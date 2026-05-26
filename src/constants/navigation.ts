@@ -16,6 +16,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { label: "Sessions", href: "/dashboard/sessions", icon: "CalendarRange" },
       { label: "Classes", href: "/dashboard/classes", icon: "School" },
       { label: "Matières", href: "/dashboard/subjects", icon: "BookOpen" },
+      { label: "Config Académique", href: "/dashboard/config-academique", icon: "Layers" },
     ],
   },
   {
@@ -61,6 +62,7 @@ export const BREADCRUMB_MAP: Record<string, string> = {
   sessions: "Sessions",
   classes: "Classes",
   subjects: "Matières",
+  "config-academique": "Configuration Académique",
   attendance: "Présences",
   exams: "Examens",
   bulletins: "Bulletins",
