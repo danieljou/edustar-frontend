@@ -79,6 +79,7 @@ export const transportColumns: ColumnDef<BusType>[] = [
   },
   {
     accessorKey: "statut",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
     cell: ({ row }) => {
       const statut = row.getValue("statut") as string;

@@ -43,11 +43,13 @@ export const matieresColumns: ColumnDef<Matiere>[] = [
   },
   {
     accessorKey: "filiere",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Filière" />,
     cell: ({ row }) => <span className="text-[var(--ink-3)]">{row.getValue("filiere")}</span>,
   },
   {
     accessorKey: "niveau",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Niveau" />,
     cell: ({ row }) => <EduBadge variant="neutral">{row.getValue("niveau")}</EduBadge>,
     size: 90,
@@ -66,6 +68,7 @@ export const matieresColumns: ColumnDef<Matiere>[] = [
   },
   {
     accessorKey: "type",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => {
       const type = row.getValue("type") as string;

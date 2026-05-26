@@ -7,6 +7,7 @@ import {
   LayoutDashboard, Bell, GraduationCap, ClipboardList, CalendarRange, School, BookOpen,
   UserCheck, FileText, Award, Clock, CreditCard, Users, Library, Bus,
   MessageSquare, Megaphone, BarChart3, Settings, DoorOpen, UserCog,
+  Building2, Settings2, Layers, PenLine,
   ChevronRight, X, Menu, LogOut, User, HelpCircle,
 } from "lucide-react";
 import { NAV_SECTIONS } from "@/constants/navigation";
@@ -16,6 +17,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   LayoutDashboard, Bell, GraduationCap, ClipboardList, CalendarRange, School, BookOpen,
   UserCheck, FileText, Award, Clock, CreditCard, Users, Library, Bus,
   MessageSquare, Megaphone, BarChart3, Settings, DoorOpen, UserCog,
+  Building2, Settings2, Layers, PenLine,
 };
 
 interface SidebarProps {

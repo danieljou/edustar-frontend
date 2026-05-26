@@ -35,6 +35,7 @@ export const studentsColumns: ColumnDef<Student>[] = [
     {
         id: "classe",
         accessorFn: (row) => row.classe,
+        filterFn: 'arrIncludes',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Classe" />,
         cell: ({ row }) => {
             const student = row.original;
@@ -48,6 +49,7 @@ export const studentsColumns: ColumnDef<Student>[] = [
     },
     {
         accessorKey: "filiere",
+        filterFn: 'arrIncludes',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Filière" />,
         cell: ({ row }) => <span className="text-[var(--ink-3)] text-[11px]">{row.getValue("filiere") as string}</span>,
         size: 100,
@@ -80,6 +82,7 @@ export const studentsColumns: ColumnDef<Student>[] = [
     },
     {
         accessorKey: "statut",
+        filterFn: 'arrIncludes',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
         cell: ({ row }) => {
             const statut = row.getValue("statut") as string;

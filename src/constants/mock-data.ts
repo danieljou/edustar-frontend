@@ -196,6 +196,7 @@ export const ANNONCES: Annonce[] = [
 ];
 
 export const BULLETINS: Bulletin[] = [
+  // ── ETU-001 Mballa Christian · L1-INFO-A ──────────────────────
   {
     id: "BUL-001", etuCode: "ETU-001", session: "2025-2026", semestre: "S1",
     notes: [
@@ -207,6 +208,17 @@ export const BULLETINS: Bulletin[] = [
     appreciation: "Bon travail. Continue sur cette lancée.", statut: "Publié",
   },
   {
+    id: "BUL-004", etuCode: "ETU-001", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "INF101", matLib: "Algorithmique & Structures de données", credits: 6, coeff: 3, ds: 13, tp: 15, exam: 13, moy: 13.5, statut: "Validé" },
+      { matCode: "INF102", matLib: "Programmation Orientée Objet", credits: 4, coeff: 2, ds: 14, tp: 16, exam: 13, moy: 14.3, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 13, exam: 15, moy: 14.0, statut: "Validé" },
+    ],
+    moyGeneral: 13.9, totalCredits: 13, creditsValides: 13, rang: 9, effectifClasse: 48,
+    appreciation: "Progression régulière. Bonne maîtrise des bases. Continuez ainsi.", statut: "Publié",
+  },
+  // ── ETU-002 Nguema Laetitia · L1-INFO-A ──────────────────────
+  {
     id: "BUL-002", etuCode: "ETU-002", session: "2025-2026", semestre: "S1",
     notes: [
       { matCode: "INF101", matLib: "Algorithmique & Structures de données", credits: 6, coeff: 3, ds: 17, tp: 18, exam: 16, moy: 16.8, statut: "Validé" },
@@ -217,14 +229,206 @@ export const BULLETINS: Bulletin[] = [
     appreciation: "Excellence. Major de promotion. Félicitations !", statut: "Publié",
   },
   {
+    id: "BUL-005", etuCode: "ETU-002", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "INF101", matLib: "Algorithmique & Structures de données", credits: 6, coeff: 3, ds: 17, tp: 18, exam: 16, moy: 17.0, statut: "Validé" },
+      { matCode: "INF102", matLib: "Programmation Orientée Objet", credits: 4, coeff: 2, ds: 18, tp: 19, exam: 17, moy: 17.8, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 15, exam: 17, moy: 16.0, statut: "Validé" },
+    ],
+    moyGeneral: 17.1, totalCredits: 13, creditsValides: 13, rang: 1, effectifClasse: 48,
+    appreciation: "Résultats remarquables. Major confirmée. Excellent niveau académique.", statut: "Publié",
+  },
+  // ── ETU-003 Tamba Rodrigue · L2-GESTION-B ────────────────────
+  {
+    id: "BUL-006", etuCode: "ETU-003", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "GES201", matLib: "Finance d'entreprise", credits: 5, coeff: 2, ds: 11, exam: 11, moy: 11.0, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 12, exam: 12, moy: 12.0, statut: "Validé" },
+    ],
+    moyGeneral: 11.3, totalCredits: 8, creditsValides: 8, rang: 22, effectifClasse: 40,
+    appreciation: "Résultats moyens. Des efforts supplémentaires sont attendus.", statut: "Publié",
+  },
+  {
+    id: "BUL-007", etuCode: "ETU-003", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "GES201", matLib: "Finance d'entreprise", credits: 5, coeff: 2, ds: 10, exam: 12, moy: 11.0, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 12, exam: 13, moy: 12.5, statut: "Validé" },
+    ],
+    moyGeneral: 11.5, totalCredits: 8, creditsValides: 8, rang: 21, effectifClasse: 40,
+    appreciation: "Légère progression. Dossier à compléter urgemment. Investissement à renforcer.", statut: "Brouillon",
+  },
+  // ── ETU-004 Fouda Bekolo Sylvie · L3-DROIT-A ─────────────────
+  {
+    id: "BUL-008", etuCode: "ETU-004", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "DRT101", matLib: "Droit civil des obligations", credits: 6, coeff: 3, ds: 15, exam: 15, moy: 15.0, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 16, exam: 16, moy: 16.0, statut: "Validé" },
+    ],
+    moyGeneral: 15.3, totalCredits: 9, creditsValides: 9, rang: 4, effectifClasse: 35,
+    appreciation: "Très bons résultats. Rigueur et sérieux appréciés. Excellent niveau.", statut: "Publié",
+  },
+  {
+    id: "BUL-009", etuCode: "ETU-004", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "DRT101", matLib: "Droit civil des obligations", credits: 6, coeff: 3, ds: 16, exam: 15, moy: 15.5, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 15, exam: 15, moy: 15.0, statut: "Validé" },
+    ],
+    moyGeneral: 15.4, totalCredits: 9, creditsValides: 9, rang: 4, effectifClasse: 35,
+    appreciation: "Performance constante et excellente. Félicitations pour cette belle régularité.", statut: "Publié",
+  },
+  // ── ETU-005 Kamdem Boris · L1-GESTION-A ──────────────────────
+  {
+    id: "BUL-010", etuCode: "ETU-005", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "GES101", matLib: "Comptabilité générale", credits: 6, coeff: 3, ds: 13, exam: 13, moy: 13.0, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 13, exam: 13, moy: 13.0, statut: "Validé" },
+    ],
+    moyGeneral: 13.0, totalCredits: 9, creditsValides: 9, rang: 18, effectifClasse: 52,
+    appreciation: "Résultats satisfaisants. Régularité à maintenir. Attention aux absences.", statut: "Publié",
+  },
+  {
+    id: "BUL-011", etuCode: "ETU-005", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "GES101", matLib: "Comptabilité générale", credits: 6, coeff: 3, ds: 12, exam: 14, moy: 13.0, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 13, exam: 14, moy: 13.5, statut: "Validé" },
+    ],
+    moyGeneral: 13.1, totalCredits: 9, creditsValides: 9, rang: 17, effectifClasse: 52,
+    appreciation: "Résultats stables. Moratoire à régulariser. Engagement académique apprécié.", statut: "Brouillon",
+  },
+  // ── ETU-006 Onana Cécile · M1-INFO-A ─────────────────────────
+  {
+    id: "BUL-012", etuCode: "ETU-006", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "INF301", matLib: "Intelligence Artificielle", credits: 5, coeff: 3, ds: 18, tp: 19, exam: 17, moy: 17.5, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 17, exam: 16, moy: 16.5, statut: "Validé" },
+    ],
+    moyGeneral: 17.3, totalCredits: 8, creditsValides: 8, rang: 1, effectifClasse: 22,
+    appreciation: "Excellence académique remarquable. Boursière confirmée. Félicitations chaleureuses.", statut: "Publié",
+  },
+  {
+    id: "BUL-013", etuCode: "ETU-006", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "INF301", matLib: "Intelligence Artificielle", credits: 5, coeff: 3, ds: 17, tp: 18, exam: 17, moy: 17.2, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 17, exam: 17, moy: 17.0, statut: "Validé" },
+    ],
+    moyGeneral: 17.2, totalCredits: 8, creditsValides: 8, rang: 1, effectifClasse: 22,
+    appreciation: "Niveau d'excellence maintenu. Major de promotion M1. Référence académique.", statut: "Publié",
+  },
+  // ── ETU-007 Atangana Kevin · L2-INFO-B ───────────────────────
+  {
     id: "BUL-003", etuCode: "ETU-007", session: "2025-2026", semestre: "S1",
     notes: [
-      { matCode: "INF101", matLib: "Algorithmique & Structures de données", credits: 6, coeff: 3, ds: 8, tp: 10, exam: 9, moy: 9.0, statut: "Rattrapage" },
-      { matCode: "INF102", matLib: "Programmation Orientée Objet", credits: 4, coeff: 2, ds: 8, tp: 10, exam: 9, moy: 9.0, statut: "Rattrapage" },
+      { matCode: "INF201", matLib: "Bases de données avancées", credits: 6, coeff: 3, ds: 8, tp: 10, exam: 9, moy: 9.0, statut: "Rattrapage" },
       { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 10, exam: 9, moy: 9.5, statut: "Rattrapage" },
     ],
-    moyGeneral: 9.2, totalCredits: 13, creditsValides: 0, rang: 38, effectifClasse: 38,
+    moyGeneral: 9.2, totalCredits: 9, creditsValides: 0, rang: 38, effectifClasse: 38,
     appreciation: "Résultats insuffisants. Passage en rattrapage. Travail sérieux requis.", statut: "Publié",
+  },
+  {
+    id: "BUL-014", etuCode: "ETU-007", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "INF201", matLib: "Bases de données avancées", credits: 6, coeff: 3, ds: 8, tp: 9, exam: 8, moy: 8.3, statut: "Ajourné" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 10, exam: 9, moy: 9.5, statut: "Rattrapage" },
+    ],
+    moyGeneral: 8.6, totalCredits: 9, creditsValides: 0, rang: 38, effectifClasse: 38,
+    appreciation: "Situation critique. Présence et engagement indispensables. Entretien requis.", statut: "Brouillon",
+  },
+  // ── ETU-008 Mvondo Diane · L2-INFO-B ─────────────────────────
+  {
+    id: "BUL-015", etuCode: "ETU-008", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "INF201", matLib: "Bases de données avancées", credits: 6, coeff: 3, ds: 12, tp: 13, exam: 12, moy: 12.3, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 13, exam: 13, moy: 13.0, statut: "Validé" },
+    ],
+    moyGeneral: 12.4, totalCredits: 9, creditsValides: 9, rang: 18, effectifClasse: 38,
+    appreciation: "Résultats corrects. Potentiel à développer. Bonne participation aux TP.", statut: "Publié",
+  },
+  {
+    id: "BUL-016", etuCode: "ETU-008", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "INF201", matLib: "Bases de données avancées", credits: 6, coeff: 3, ds: 12, tp: 14, exam: 13, moy: 12.8, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 12, exam: 13, moy: 12.5, statut: "Validé" },
+    ],
+    moyGeneral: 12.7, totalCredits: 9, creditsValides: 9, rang: 16, effectifClasse: 38,
+    appreciation: "Progression notable. Travail régulier apprécié. Continuez dans cette voie.", statut: "Publié",
+  },
+  // ── ETU-009 Beti Armand · L1-INFO-A ──────────────────────────
+  {
+    id: "BUL-017", etuCode: "ETU-009", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "INF101", matLib: "Algorithmique & Structures de données", credits: 6, coeff: 3, ds: 14, tp: 14, exam: 13, moy: 13.7, statut: "Validé" },
+      { matCode: "INF102", matLib: "Programmation Orientée Objet", credits: 4, coeff: 2, ds: 14, tp: 15, exam: 13, moy: 13.8, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 14, exam: 14, moy: 14.0, statut: "Validé" },
+    ],
+    moyGeneral: 13.8, totalCredits: 13, creditsValides: 13, rang: 12, effectifClasse: 48,
+    appreciation: "Bon niveau général. Travail assidu et régulier. Encouragements.", statut: "Publié",
+  },
+  {
+    id: "BUL-018", etuCode: "ETU-009", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "INF101", matLib: "Algorithmique & Structures de données", credits: 6, coeff: 3, ds: 14, tp: 15, exam: 13, moy: 14.0, statut: "Validé" },
+      { matCode: "INF102", matLib: "Programmation Orientée Objet", credits: 4, coeff: 2, ds: 13, tp: 14, exam: 14, moy: 13.7, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 14, exam: 14, moy: 14.0, statut: "Validé" },
+    ],
+    moyGeneral: 13.9, totalCredits: 13, creditsValides: 13, rang: 11, effectifClasse: 48,
+    appreciation: "Régularité et constance appréciées. Potentiel à concrétiser davantage.", statut: "Publié",
+  },
+  // ── ETU-010 Nkoa Estelle · L3-DROIT-A ───────────────────────
+  {
+    id: "BUL-019", etuCode: "ETU-010", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "DRT101", matLib: "Droit civil des obligations", credits: 6, coeff: 3, ds: 15, exam: 14, moy: 14.5, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 16, exam: 15, moy: 15.5, statut: "Validé" },
+    ],
+    moyGeneral: 14.8, totalCredits: 9, creditsValides: 9, rang: 5, effectifClasse: 35,
+    appreciation: "Excellents résultats. Rigueur analytique remarquable. Continuez.", statut: "Publié",
+  },
+  {
+    id: "BUL-020", etuCode: "ETU-010", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "DRT101", matLib: "Droit civil des obligations", credits: 6, coeff: 3, ds: 15, exam: 15, moy: 15.0, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 15, exam: 15, moy: 15.0, statut: "Validé" },
+    ],
+    moyGeneral: 15.0, totalCredits: 9, creditsValides: 9, rang: 5, effectifClasse: 35,
+    appreciation: "Très bon niveau maintenu. Profil solide pour la suite du parcours.", statut: "Publié",
+  },
+  // ── ETU-011 Owono Serge · L2-GESTION-B ──────────────────────
+  {
+    id: "BUL-021", etuCode: "ETU-011", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "GES201", matLib: "Finance d'entreprise", credits: 5, coeff: 2, ds: 7, exam: 8, moy: 7.5, statut: "Rattrapage" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 9, exam: 8, moy: 8.5, statut: "Rattrapage" },
+    ],
+    moyGeneral: 7.8, totalCredits: 8, creditsValides: 0, rang: 40, effectifClasse: 40,
+    appreciation: "Résultats très insuffisants. Avertissement disciplinaire en cours. Suivi requis.", statut: "Publié",
+  },
+  {
+    id: "BUL-022", etuCode: "ETU-011", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "GES201", matLib: "Finance d'entreprise", credits: 5, coeff: 2, ds: 7, exam: 7, moy: 7.0, statut: "Ajourné" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 8, exam: 8, moy: 8.0, statut: "Rattrapage" },
+    ],
+    moyGeneral: 7.3, totalCredits: 8, creditsValides: 0, rang: 40, effectifClasse: 40,
+    appreciation: "Situation alarmante. Risque d'exclusion. Présence aux rattrapages obligatoire.", statut: "Brouillon",
+  },
+  // ── ETU-012 Mveng Claire · M1-INFO-A ─────────────────────────
+  {
+    id: "BUL-023", etuCode: "ETU-012", session: "2025-2026", semestre: "S1",
+    notes: [
+      { matCode: "INF301", matLib: "Intelligence Artificielle", credits: 5, coeff: 3, ds: 16, tp: 16, exam: 15, moy: 15.5, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 16, exam: 16, moy: 16.0, statut: "Validé" },
+    ],
+    moyGeneral: 15.6, totalCredits: 8, creditsValides: 8, rang: 2, effectifClasse: 22,
+    appreciation: "Excellence académique. Profil remarquable. Encouragements à la recherche.", statut: "Publié",
+  },
+  {
+    id: "BUL-024", etuCode: "ETU-012", session: "2025-2026", semestre: "S2",
+    notes: [
+      { matCode: "INF301", matLib: "Intelligence Artificielle", credits: 5, coeff: 3, ds: 16, tp: 17, exam: 16, moy: 16.0, statut: "Validé" },
+      { matCode: "COM101", matLib: "Communication professionnelle", credits: 3, coeff: 1, ds: 16, exam: 15, moy: 15.5, statut: "Validé" },
+    ],
+    moyGeneral: 15.9, totalCredits: 8, creditsValides: 8, rang: 2, effectifClasse: 22,
+    appreciation: "Progression confirmée. Résultats d'excellence. Félicitations sincères.", statut: "Publié",
   },
 ];
 

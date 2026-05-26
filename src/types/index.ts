@@ -232,6 +232,73 @@ export type Bulletin = {
   statut: "Publié" | "Brouillon";
 };
 
+export type Campus = {
+  id: string;
+  code: string;
+  lib: string;
+  type: "Principal" | "Annexe" | "Partenaire";
+  adresse: string;
+  ville: string;
+  tel: string;
+  email: string;
+  directeur: string;
+  statut: "Actif" | "Inactif";
+  effectif: number;
+  nbClasses: number;
+  nbEnseignants: number;
+  couleur: string;
+  sessionActive: string;
+};
+
+export type TransfertEleve = {
+  id: string;
+  etuCode: string;
+  etuNom: string;
+  campusSourceId: string;
+  campusDestId: string;
+  date: string;
+  motif: string;
+  statut: "En attente" | "Approuvé" | "Rejeté";
+  approvedBy?: string;
+};
+
+export type Niveau = {
+  id: string;
+  code: string;
+  lib: string;
+  ordre: number;
+  sessionId: string;
+};
+
+export type Filiere = {
+  id: string;
+  code: string;
+  lib: string;
+  description: string;
+  sessionId: string;
+};
+
+export type UniteEnseignement = {
+  id: string;
+  matiereCode: string;
+  niveauId: string;
+  coeff: number;
+  volumeH: number;
+  credits: number;
+  isObligatoire: boolean;
+};
+
+export type ParticulariteMatiere = {
+  id: string;
+  matiereCode: string;
+  classeId: string;
+  coeff: number | null;
+  isOptionnel: boolean;
+  enseignantId: string;
+  volumeH: number | null;
+  note: string;
+};
+
 export type NavItem = {
   label: string;
   href: string;
