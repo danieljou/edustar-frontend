@@ -23,6 +23,7 @@ export const classesColumns: ColumnDef<Classe>[] = [
   },
   {
     accessorKey: "filiere",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Filière" />,
     cell: ({ row }) => {
       const filiere = row.getValue("filiere") as string;
@@ -31,6 +32,7 @@ export const classesColumns: ColumnDef<Classe>[] = [
   },
   {
     accessorKey: "niveau",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Niveau" />,
     cell: ({ row }) => <span className="text-[var(--ink-3)]">{row.getValue("niveau")}</span>,
   },

@@ -10,6 +10,7 @@ const COLORS = [
 ];
 
 function colorIndex(str: string): number {
+  if (!str) return 0;
   let hash = 0;
   for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
   return Math.abs(hash) % COLORS.length;
@@ -22,7 +23,7 @@ interface EduAvatarProps {
 }
 
 export function EduAvatar({ name, size = 28, className }: EduAvatarProps) {
-  const idx = colorIndex(name);
+  const idx = colorIndex(name ?? "");
   const fontSize = Math.round(size * 0.38);
 
   return (
@@ -33,7 +34,7 @@ export function EduAvatar({ name, size = 28, className }: EduAvatarProps) {
       )}
       style={{ width: size, height: size, fontSize }}
     >
-      {initials(name)}
+      {initials(name ?? "")}
     </div>
   );
 }

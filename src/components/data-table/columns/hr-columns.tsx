@@ -35,6 +35,7 @@ export const hrColumns: ColumnDef<Personnel>[] = [
   {
     id: "role",
     accessorFn: (row) => row.role,
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Rôle / Dept." />,
     cell: ({ row }) => {
       const personnel = row.original;
@@ -66,6 +67,7 @@ export const hrColumns: ColumnDef<Personnel>[] = [
   },
   {
     accessorKey: "contrat",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Contrat" />,
     cell: ({ row }) => {
       const contrat = row.getValue("contrat") as string;
@@ -75,6 +77,7 @@ export const hrColumns: ColumnDef<Personnel>[] = [
   },
   {
     accessorKey: "statut",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
     cell: ({ row }) => {
       const statut = row.getValue("statut") as string;

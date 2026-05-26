@@ -14,9 +14,18 @@ export const NAV_SECTIONS: NavSection[] = [
       { label: "Étudiants", href: "/dashboard/students", icon: "GraduationCap" },
       { label: "Admissions", href: "/dashboard/admissions", icon: "ClipboardList" },
       { label: "Sessions", href: "/dashboard/sessions", icon: "CalendarRange" },
+      { label: "Configuration", href: "/dashboard/configuration", icon: "Settings2" },
       { label: "Classes", href: "/dashboard/classes", icon: "School" },
       { label: "Matières", href: "/dashboard/subjects", icon: "BookOpen" },
       { label: "Config Académique", href: "/dashboard/config-academique", icon: "Layers" },
+    ],
+  },
+  {
+    title: "Évaluations",
+    items: [
+      { label: "Système d'évaluation", href: "/dashboard/academique/evaluation-system", icon: "Layers" },
+      { label: "Saisie des notes", href: "/dashboard/notes/saisie", icon: "PenLine" },
+      { label: "Bulletins", href: "/dashboard/bulletins", icon: "Award" },
     ],
   },
   {
@@ -24,13 +33,13 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Présences", href: "/dashboard/attendance", icon: "UserCheck" },
       { label: "Examens", href: "/dashboard/exams", icon: "FileText" },
-      { label: "Bulletins", href: "/dashboard/bulletins", icon: "Award" },
       { label: "Emplois du temps", href: "/dashboard/timetable", icon: "Clock" },
     ],
   },
   {
     title: "Administration",
     items: [
+      { label: "Établissements", href: "/dashboard/campus", icon: "Building2" },
       { label: "Paiements", href: "/dashboard/payments", icon: "CreditCard" },
       { label: "Ressources Humaines", href: "/dashboard/hr", icon: "Users" },
       { label: "Bibliothèque", href: "/dashboard/library", icon: "Library" },
@@ -60,6 +69,8 @@ export const BREADCRUMB_MAP: Record<string, string> = {
   students: "Étudiants",
   admissions: "Admissions",
   sessions: "Sessions",
+  configuration: "Configuration année scolaire",
+  campus: "Réseau d'établissements",
   classes: "Classes",
   subjects: "Matières",
   "config-academique": "Configuration Académique",

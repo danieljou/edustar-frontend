@@ -51,6 +51,7 @@ export const usersColumns: ColumnDef<AppUser>[] = [
   },
   {
     accessorKey: "profil",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Profil" />,
     cell: ({ row }) => {
       const profil = row.getValue("profil") as string;
@@ -84,6 +85,7 @@ export const usersColumns: ColumnDef<AppUser>[] = [
   },
   {
     accessorKey: "statut",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
     cell: ({ row }) => {
       const statut = row.getValue("statut") as string;

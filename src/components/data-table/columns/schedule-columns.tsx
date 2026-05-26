@@ -17,6 +17,7 @@ const JOUR_ORDER: Record<string, number> = {
 export const scheduleColumns: ColumnDef<EmploiDuTemps>[] = [
   {
     accessorKey: "jour",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Jour" />,
     cell: ({ row }) => {
       const jour = row.getValue("jour") as string;
@@ -48,6 +49,7 @@ export const scheduleColumns: ColumnDef<EmploiDuTemps>[] = [
   },
   {
     accessorKey: "classe",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Classe" />,
     cell: ({ row }) => <span className="text-[11px] font-medium">{row.getValue("classe")}</span>,
     size: 80,
@@ -69,6 +71,7 @@ export const scheduleColumns: ColumnDef<EmploiDuTemps>[] = [
   },
   {
     accessorKey: "type",
+    filterFn: 'arrIncludes',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => {
       const type = row.getValue("type") as string;

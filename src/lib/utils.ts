@@ -27,12 +27,13 @@ export function age(dob: string): number {
 }
 
 export function initials(name: string): string {
+  if (!name) return "?";
   return name
     .split(" ")
-    .map((n) => n[0])
+    .map((n) => n[0] ?? "")
     .join("")
     .toUpperCase()
-    .slice(0, 2);
+    .slice(0, 2) || "?";
 }
 
 export function avatarColor(str: string): string {
