@@ -1,0 +1,337 @@
+{
+  "campus": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "networkTitle": "",
+    "networkSubtitle": "",
+    "addCampus": "",
+    "editCampus": "Edit location",
+    "newCampus": "",
+    "searchPlaceholder": "",
+    "activeContext": "",
+    "switchBtn": "",
+    "kpi": {
+      "activeCampuses": "",
+      "totalStudents": "",
+      "totalClasses": "",
+      "totalTeachers": ""
+    },
+    "tabs": {
+      "overview": "",
+      "stats": "",
+      "transfers": ""
+    },
+    "director": "",
+    "switchTo": "",
+    "isActive": "Active establishment",
+    "transferLink": "",
+    "compareTable": "",
+    "tableCol": {
+      "establishment": "",
+      "type": "",
+      "city": "",
+      "students": "",
+      "classes": "",
+      "teachers": "",
+      "status": ""
+    },
+    "networkTotal": "",
+    "studentsUnit": "",
+    "classesUnit": "",
+    "teachersUnit": "",
+    "distribution": {
+      "students": "",
+      "classes": "",
+      "teachers": "Distribution of teachers"
+    },
+    "columns": {
+      "name": "",
+      "type": "",
+      "address": "",
+      "director": "",
+      "phone": "",
+      "email": "E-mail",
+      "studentsCount": "",
+      "status": ""
+    },
+    "types": {
+      "Principal": "",
+      "Annexe": "",
+      "Partenaire": "",
+      "primary": "",
+      "secondary": "",
+      "highSchool": "",
+      "university": "",
+      "vocational": ""
+    },
+    "transfers": {
+      "title": "",
+      "subtitle": "",
+      "newTransfer": "",
+      "pendingAlert": "",
+      "noRecords": "",
+      "columns": {
+        "student": "",
+        "from": "",
+        "to": "",
+        "date": "",
+        "reason": "",
+        "status": ""
+      },
+      "statuses": {
+        "approved": "",
+        "pending": "",
+        "rejected": ""
+      }
+    },
+    "deleteDlg": {
+      "title": "",
+      "warning": "",
+      "message": ""
+    },
+    "switchDlg": {
+      "title": "",
+      "subtitle": ""
+    },
+    "dialog": {
+      "editTitle": "",
+      "newTitle": "New establishment",
+      "fields": {
+        "code": "",
+        "type": "Kind *",
+        "name": "",
+        "city": "",
+        "address": "",
+        "phone": "",
+        "email": "",
+        "director": "",
+        "status": "Status",
+        "session": "Active session",
+        "color": ""
+      },
+      "codePlaceholder": "",
+      "namePlaceholder": "ex: East Annex",
+      "cityPlaceholder": "",
+      "addressPlaceholder": "",
+      "phonePlaceholder": "",
+      "emailPlaceholder": "",
+      "directorPlaceholder": "",
+      "sessionPlaceholder": ""
+    },
+    "transferDialog": {
+      "title": "",
+      "fields": {
+        "student": "",
+        "source": "",
+        "dest": "",
+        "date": "",
+        "reason": ""
+      },
+      "reasonPlaceholder": "",
+      "studentPlaceholder": "",
+      "sourcePlaceholder": "",
+      "destPlaceholder": "",
+      "notice": "",
+      "submitBtn": ""
+    },
+    "toasts": {
+      "modified": "",
+      "added": "",
+      "deleted": "",
+      "cannotDelete": "",
+      "switched": "",
+      "transferPending": "",
+      "transferApproved": "",
+      "transferRejected": "",
+      "codeRequired": ""
+    },
+    "errors": {
+      "requiredFields": "All required fields must be completed.",
+      "sameLocation": "Source and destination must be different."
+    }
+  },
+  "payments": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "addPayment": "",
+    "editPayment": "",
+    "generateReceipt": "",
+    "searchPlaceholder": "",
+    "columns": {
+      "reference": "",
+      "student": "",
+      "amount": "",
+      "date": "",
+      "method": "",
+      "type": "",
+      "status": "",
+      "receipt": ""
+    },
+    "methods": {
+      "cash": "",
+      "bankTransfer": "",
+      "mobileMoney": "",
+      "check": ""
+    },
+    "types": {
+      "tuition": "",
+      "registration": "",
+      "transport": "",
+      "canteen": "",
+      "library": "",
+      "exam": "",
+      "other": ""
+    },
+    "status": {
+      "paid": "",
+      "pending": "",
+      "partial": "",
+      "overdue": "",
+      "cancelled": ""
+    },
+    "stats": {
+      "totalRevenue": "",
+      "totalPaid": "",
+      "totalPending": "",
+      "totalOverdue": ""
+    }
+  },
+  "hr": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "addStaff": "",
+    "editStaff": "",
+    "searchPlaceholder": "",
+    "columns": {
+      "matricule": "",
+      "firstName": "",
+      "lastName": "",
+      "role": "",
+      "department": "",
+      "hireDate": "",
+      "salary": "",
+      "phone": "",
+      "email": "",
+      "status": "",
+      "contract": ""
+    },
+    "roles": {
+      "teacher": "",
+      "admin": "",
+      "secretary": "",
+      "accountant": "",
+      "guard": "",
+      "cleaner": "",
+      "librarian": "",
+      "driver": ""
+    },
+    "contracts": {
+      "permanent": "",
+      "fixedTerm": "",
+      "partTime": "",
+      "intern": ""
+    },
+    "leaveBalance": "",
+    "leaveRequest": ""
+  },
+  "library": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "addBook": "",
+    "editBook": "",
+    "borrowBook": "",
+    "returnBook": "",
+    "searchPlaceholder": "",
+    "columns": {
+      "isbn": "",
+      "title": "",
+      "author": "",
+      "category": "",
+      "quantity": "",
+      "available": "",
+      "borrowed": "",
+      "borrower": "",
+      "borrowDate": "",
+      "dueDate": "",
+      "status": ""
+    },
+    "status": {
+      "available": "",
+      "borrowed": "",
+      "reserved": "",
+      "lost": "",
+      "overdue": ""
+    }
+  },
+  "transport": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "addRoute": "",
+    "editRoute": "",
+    "searchPlaceholder": "",
+    "columns": {
+      "routeName": "",
+      "driver": "",
+      "vehicle": "",
+      "licensePlate": "",
+      "capacity": "",
+      "stops": "",
+      "departureTime": "",
+      "arrivalTime": "",
+      "studentsCount": "",
+      "status": ""
+    },
+    "status": {
+      "active": "",
+      "inactive": "",
+      "maintenance": ""
+    }
+  },
+  "salles": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "networkTitle": "",
+    "networkSubtitle": "",
+    "addRoom": "",
+    "editRoom": "",
+    "searchPlaceholder": "",
+    "kpi": {
+      "totalSpaces": "",
+      "available": "",
+      "occupied": "",
+      "totalCapacity": ""
+    },
+    "allTypes": "",
+    "allStatuses": "",
+    "building": "",
+    "capacity": "",
+    "equipment": "",
+    "places": "",
+    "details": "",
+    "reserve": "",
+    "columns": {
+      "name": "",
+      "type": "",
+      "capacity": "",
+      "floor": "",
+      "building": "",
+      "equipment": "",
+      "status": ""
+    },
+    "types": {
+      "classroom": "",
+      "laboratory": "",
+      "amphitheater": "",
+      "sportsHall": "",
+      "computerRoom": "",
+      "meetingRoom": "",
+      "library": ""
+    },
+    "status": {
+      "available": "",
+      "occupied": "",
+      "maintenance": "",
+      "reserved": ""
+    }
+  }
+}

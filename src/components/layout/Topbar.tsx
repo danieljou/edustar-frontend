@@ -5,10 +5,12 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu, Search, Bell, Sun, Moon, ChevronRight, User, Settings, LogOut,
-  GraduationCap, CreditCard, FileText, X,
+  GraduationCap, FileText, X,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { BREADCRUMB_MAP } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const SEARCH_RESULTS = [
   { label: "Christian Mballa", sub: "ETU-001 · L1-INFO-A", type: "Étudiant", href: "/dashboard/students" },
@@ -23,6 +25,7 @@ interface TopbarProps {
 }
 
 export function Topbar({ onMenuOpen }: TopbarProps) {
+  const { t } = useTranslation("dashboard");
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -89,7 +92,7 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[var(--ink-4)] pointer-events-none" />
         <input
           type="search"
-          placeholder="Rechercher… (⌘K)"
+          placeholder={t("search.placeholder")}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           onFocus={() => setShowSearch(true)}
@@ -146,6 +149,9 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
           2025–2026
         </div>
 
+        {/* Language switcher */}
+        <LanguageSwitcher />
+
         {/* Dark mode toggle */}
         <button
           onClick={() => setDarkMode(!darkMode)}
@@ -176,8 +182,10 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
                 className="absolute right-0 top-[calc(100%+8px)] w-[300px] bg-white border-[1.5px] border-[var(--line-dark)] rounded-[10px] shadow-lg z-[300] overflow-hidden"
               >
                 <div className="px-4 py-3 border-b border-[var(--line)] flex items-center justify-between">
-                  <span className="text-[12.5px] font-bold text-[var(--ink)]">Notifications</span>
-                  <span className="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded-[3px] bg-[var(--danger-light)] text-[var(--danger)]">7 nouvelles</span>
+                  <span className="text-[12.5px] font-bold text-[var(--ink)]">{t("notifications.title")}</span>
+                  <span className="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded-[3px] bg-[var(--danger-light)] text-[var(--danger)]">
+                    {t("notifications.newCount", { count: 7 })}
+                  </span>
                 </div>
                 <div className="max-h-[320px] overflow-y-auto">
                   {NOTIFS.map(n => (
@@ -185,14 +193,16 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
                       <span className={cn("w-2 h-2 rounded-full mt-1.5 shrink-0", n.color)} />
                       <div>
                         <div className="text-[12px] font-medium text-[var(--ink)]">{n.text}</div>
-                        <div className="text-[11px] text-[var(--ink-4)] mt-0.5">Il y a {n.time}</div>
+                        <div className="text-[11px] text-[var(--ink-4)] mt-0.5">
+                          {t("notifications.ago", { time: n.time })}
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="px-4 py-2.5 text-center">
                   <Link href="/dashboard/notifications" onClick={() => setShowNotifs(false)} className="text-[12px] text-[var(--blue)] font-semibold hover:underline">
-                    Voir toutes les notifications
+                    {t("notifications.viewAll")}
                   </Link>
                 </div>
               </motion.div>
@@ -224,23 +234,23 @@ export function Topbar({ onMenuOpen }: TopbarProps) {
                 </div>
                 <div className="p-1">
                   {[
-                    { icon: User, label: "Profil", href: "/dashboard/profile" },
-                    { icon: Settings, label: "Paramètres", href: "/dashboard/settings" },
-                  ].map(({ icon: Icon, label, href }) => (
+                    { icon: User, labelKey: "userMenu.profile", href: "/dashboard/profile" },
+                    { icon: Settings, labelKey: "userMenu.settings", href: "/dashboard/settings" },
+                  ].map(({ icon: Icon, labelKey, href }) => (
                     <Link
-                      key={label}
+                      key={labelKey}
                       href={href}
                       onClick={() => setShowUser(false)}
                       className="flex items-center gap-2.5 px-3 py-[7px] rounded-[6px] text-[12.5px] font-medium text-[var(--ink)] hover:bg-[var(--blue-lighter)] hover:text-[var(--blue)] transition-colors"
                     >
                       <Icon className="w-3.5 h-3.5" />
-                      {label}
+                      {t(labelKey)}
                     </Link>
                   ))}
                   <div className="h-px bg-[var(--line)] my-1" />
                   <button className="w-full flex items-center gap-2.5 px-3 py-[7px] rounded-[6px] text-[12.5px] font-medium text-[var(--danger)] hover:bg-[var(--danger-light)] transition-colors">
                     <LogOut className="w-3.5 h-3.5" />
-                    Déconnexion
+                    {t("userMenu.logout")}
                   </button>
                 </div>
               </motion.div>

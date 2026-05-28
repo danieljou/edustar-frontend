@@ -1,0 +1,12 @@
+{
+    "i18n-ally.localesPaths": [
+        "src/locales",
+        "**/locales",
+        "src/**/locales",
+        "public/locales"
+    ],
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.namespace": true,
+    "i18n-ally.defaultNamespace": "common",
+    "i18n-ally.pathMatcher": "{namespace}/{locale}.json"
+}

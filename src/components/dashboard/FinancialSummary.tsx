@@ -1,3 +1,5 @@
+"use client";
+import { useTranslation } from "react-i18next";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PAYMENTS, MORATORIUMS } from "@/constants/mock-data";
 import { formatCurrency } from "@/lib/utils";
@@ -11,28 +13,33 @@ const MODE_STYLES: Record<string, { bar: string; badge: string }> = {
   Chèque: { bar: "bg-purple-500", badge: "bg-purple-50 text-purple-700" },
 };
 
-const MORAT_STATUS = [
-  {
-    statut: "En cours",
-    icon: <Clock className="w-3.5 h-3.5" />,
-    color: "text-[var(--cyan)]",
-    bg: "bg-cyan-50",
-  },
-  {
-    statut: "En retard",
-    icon: <AlertCircle className="w-3.5 h-3.5" />,
-    color: "text-[var(--warning)]",
-    bg: "bg-amber-50",
-  },
-  {
-    statut: "Critique",
-    icon: <Flame className="w-3.5 h-3.5" />,
-    color: "text-[var(--danger)]",
-    bg: "bg-red-50",
-  },
-];
-
 export function FinancialSummary() {
+  const { t } = useTranslation("dashboard");
+
+  const MORAT_STATUS = [
+    {
+      statut: "En cours",
+      label: t("financial.statuses.enCours"),
+      icon: <Clock className="w-3.5 h-3.5" />,
+      color: "text-[var(--cyan)]",
+      bg: "bg-cyan-50",
+    },
+    {
+      statut: "En retard",
+      label: t("financial.statuses.enRetard"),
+      icon: <AlertCircle className="w-3.5 h-3.5" />,
+      color: "text-[var(--warning)]",
+      bg: "bg-amber-50",
+    },
+    {
+      statut: "Critique",
+      label: t("financial.statuses.critique"),
+      icon: <Flame className="w-3.5 h-3.5" />,
+      color: "text-[var(--danger)]",
+      bg: "bg-red-50",
+    },
+  ];
+
   const validatedPayments = PAYMENTS.filter((p) => p.statut === "Validé");
   const pendingPayments = PAYMENTS.filter((p) => p.statut === "En attente");
 
@@ -63,8 +70,8 @@ export function FinancialSummary() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Synthèse financière</CardTitle>
-        <span className="text-[10.5px] text-[var(--ink-4)]">Session 2025–2026</span>
+        <CardTitle>{t("financial.title")}</CardTitle>
+        <span className="text-[10.5px] text-[var(--ink-4)]">{t("financial.session")}</span>
       </CardHeader>
 
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -72,7 +79,7 @@ export function FinancialSummary() {
         <div className="space-y-3">
           <div className="flex items-end justify-between">
             <p className="text-[9.5px] font-bold uppercase tracking-[0.08em] text-[var(--ink-4)]">
-              Modes de paiement
+              {t("financial.paymentModes")}
             </p>
             <div className="text-right">
               <p className="text-[11px] font-bold text-[var(--ink)]">
@@ -80,7 +87,7 @@ export function FinancialSummary() {
               </p>
               {totalPending > 0 && (
                 <p className="text-[9.5px] text-[var(--warning)]">
-                  +{formatCurrency(totalPending)} en attente
+                  {t("financial.pending", { amount: formatCurrency(totalPending) })}
                 </p>
               )}
             </div>
@@ -125,11 +132,11 @@ export function FinancialSummary() {
         {/* Right: moratoriums */}
         <div className="space-y-3">
           <p className="text-[9.5px] font-bold uppercase tracking-[0.08em] text-[var(--ink-4)]">
-            Moratoriums de paiement
+            {t("financial.moratoriums")}
           </p>
 
           <div className="space-y-1.5">
-            {MORAT_STATUS.map(({ statut, icon, color, bg }) => {
+            {MORAT_STATUS.map(({ statut, label, icon, color, bg }) => {
               const count = MORATORIUMS.filter((m) => m.statut === statut).length;
               const amount = MORATORIUMS.filter((m) => m.statut === statut).reduce(
                 (s, m) => s + (m.montantTotal - m.montantPaye),
@@ -145,7 +152,7 @@ export function FinancialSummary() {
                 >
                   <div className={cn("flex items-center gap-2 text-[12px] font-semibold", color)}>
                     {icon}
-                    <span>{statut}</span>
+                    <span>{label}</span>
                   </div>
                   <div className="text-right">
                     <p className="text-[13px] font-bold text-[var(--ink)]">{count}</p>
@@ -162,13 +169,13 @@ export function FinancialSummary() {
 
           <div className="rounded-[10px] border border-[var(--line)] px-3.5 py-3 bg-[var(--ivory)] mt-1">
             <p className="text-[9.5px] font-bold uppercase tracking-[0.08em] text-[var(--ink-4)] mb-1">
-              Total restant à recouvrer
+              {t("financial.remainingToRecover")}
             </p>
             <p className="font-serif text-[22px] leading-none text-[var(--ink)] tracking-[-0.02em]">
               {formatCurrency(totalMoratDebt)}
             </p>
             <p className="text-[10px] text-[var(--ink-4)] mt-1">
-              sur {MORATORIUMS.length} moratoriums actifs
+              {t("financial.activeMoratoriums", { count: MORATORIUMS.length })}
             </p>
           </div>
         </div>

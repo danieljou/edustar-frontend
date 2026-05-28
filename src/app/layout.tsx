@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
 import { ServiceWorkerRegistration } from "@/components/layout/ServiceWorkerRegistration";
+import { I18nProvider } from "@/components/providers/I18nProvider";
 
 export const metadata: Metadata = {
   title: { default: "EduStar — Gestion Scolaire", template: "%s · EduStar" },
@@ -18,7 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="font-sans antialiased">
-        <ToastProvider>{children}</ToastProvider>
+        <I18nProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </I18nProvider>
         <ServiceWorkerRegistration />
       </body>
     </html>

@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Plus, Search } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DataTable } from "@/components/data-table";
-import { matieresColumns } from "@/components/data-table/columns/matieres-columns";
+import { getMatieresColumns } from "@/components/data-table/columns/matieres-columns";
 import { MATIERES } from "@/constants/mock-data";
 
 const TYPE_COLORS: Record<string, string> = {
@@ -24,9 +25,14 @@ const TYPE_BADGE: Record<string, "blue" | "cyan" | "purple" | "green"> = {
 };
 
 export default function SubjectsPage() {
+  const { t } = useTranslation("academique");
+  const { t: tc } = useTranslation("common");
+
   const [query, setQuery] = useState("");
   const [filiere, setFiliere] = useState("all");
   const [niveau, setNiveau] = useState("all");
+
+  const columns = useMemo(() => getMatieresColumns(t), [t]);
 
   const filieres = ["all", ...Array.from(new Set(MATIERES.map(m => m.filiere)))];
   const niveaux = ["all", ...Array.from(new Set(MATIERES.map(m => m.niveau)))];
@@ -44,18 +50,18 @@ export default function SubjectsPage() {
   return (
     <div>
       <PageHeader
-        title="Matières & Unités d'enseignement"
+        title={t("subjects.pageTitle")}
         subtitle={`${MATIERES.length} matières au programme`}
-        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> Ajouter une matière</Button>}
+        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> {t("subjects.addSubject")}</Button>}
       />
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-5">
         {[
-          { label: "Total matières", value: MATIERES.length, color: "var(--blue)" },
+          { label: t("subjects.pageTitle"), value: MATIERES.length, color: "var(--blue)" },
           { label: "Total crédits", value: totalCredits, color: "var(--cyan)" },
           { label: "Enseignants", value: new Set(MATIERES.map(m => m.ens)).size, color: "var(--purple)" },
-          { label: "Filieres", value: new Set(MATIERES.map(m => m.filiere)).size, color: "var(--success)" },
+          { label: "Filières", value: new Set(MATIERES.map(m => m.filiere)).size, color: "var(--success)" },
         ].map(k => (
           <div key={k.label} className="bg-white border border-[var(--line)] rounded-[14px] p-4 text-center">
             <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-4)] mb-1">{k.label}</div>
@@ -72,7 +78,7 @@ export default function SubjectsPage() {
         </div>
         <div className="w-40">
           <Select value={filiere} onValueChange={setFiliere}>
-            <SelectTrigger><SelectValue placeholder="Filière" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={t("students.columns.filiere")} /></SelectTrigger>
             <SelectContent>
               {filieres.map(f => <SelectItem key={f} value={f}>{f === "all" ? "Toutes filières" : f}</SelectItem>)}
             </SelectContent>
@@ -80,7 +86,7 @@ export default function SubjectsPage() {
         </div>
         <div className="w-32">
           <Select value={niveau} onValueChange={setNiveau}>
-            <SelectTrigger><SelectValue placeholder="Niveau" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={t("classes.columns.level")} /></SelectTrigger>
             <SelectContent>
               {niveaux.map(n => <SelectItem key={n} value={n}>{n === "all" ? "Tous niveaux" : n}</SelectItem>)}
             </SelectContent>
@@ -91,23 +97,23 @@ export default function SubjectsPage() {
       {/* Table */}
       <Card>
         <DataTable
-          columns={matieresColumns}
+          columns={columns}
           data={filtered}
           searchKey="code"
           searchPlaceholder="Rechercher une matière…"
           filterFields={[
-            { columnId: "filiere", title: "Filière", options: [
+            { columnId: "filiere", title: t("students.columns.filiere"), options: [
               { label: "Informatique", value: "Informatique" },
               { label: "Gestion", value: "Gestion" },
               { label: "Droit", value: "Droit" },
               { label: "Toutes", value: "Toutes" },
             ]},
-            { columnId: "niveau", title: "Niveau", options: [
+            { columnId: "niveau", title: t("classes.columns.level"), options: [
               { label: "L1", value: "L1" },
               { label: "L2", value: "L2" },
               { label: "L3", value: "L3" },
             ]},
-            { columnId: "type", title: "Type", options: [
+            { columnId: "type", title: tc("fields.type"), options: [
               { label: "CM", value: "CM" },
               { label: "CM+TD", value: "CM+TD" },
               { label: "CM+TD+TP", value: "CM+TD+TP" },

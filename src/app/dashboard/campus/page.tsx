@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Plus, Pencil, Trash2, Building2, MapPin, Phone, Mail,
   Users, School, GraduationCap, ArrowRightLeft, AlertTriangle,
@@ -99,6 +100,7 @@ function Bar({ value, max, color }: { value: number; max: number; color: string 
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CampusPage() {
+  const { t } = useTranslation("administration");
   const toast = useToast();
   const [campus, setCampus] = useState<Campus[]>(INIT_CAMPUS);
   const [transferts, setTransferts] = useState<TransfertEleve[]>(INIT_TRANSFERTS);
@@ -117,49 +119,49 @@ export default function CampusPage() {
   const maxEffectif = Math.max(...campus.map(c => c.effectif));
 
   const saveCampus = (data: Omit<Campus, "id">) => {
-    if (!data.code || !data.lib) { toast("Code et nom requis.", "error"); return; }
+    if (!data.code || !data.lib) { toast(t("campus.toasts.codeRequired"), "error"); return; }
     if (campusDlg.data) {
       setCampus(p => p.map(c => c.id === campusDlg.data!.id ? { ...c, ...data } : c));
-      toast("Établissement modifié.", "success");
+      toast(t("campus.toasts.modified"), "success");
     } else {
       setCampus(p => [...p, { ...data, id: uid() }]);
-      toast("Établissement ajouté.", "success");
+      toast(t("campus.toasts.added"), "success");
     }
     setCampusDlg({ open: false, data: null });
   };
 
   const deleteCampus = (id: string) => {
-    if (id === activeId) { toast("Impossible de supprimer l'établissement actif.", "error"); setDeleteDlg(null); return; }
+    if (id === activeId) { toast(t("campus.toasts.cannotDelete"), "error"); setDeleteDlg(null); return; }
     setCampus(p => p.filter(c => c.id !== id));
-    setTransferts(p => p.filter(t => t.campusSourceId !== id && t.campusDestId !== id));
+    setTransferts(p => p.filter(tr => tr.campusSourceId !== id && tr.campusDestId !== id));
     setDeleteDlg(null);
-    toast("Établissement supprimé.", "info");
+    toast(t("campus.toasts.deleted"), "info");
   };
 
   const switchContext = (id: string) => {
     setActiveId(id);
     setSwitchDlg(null);
-    toast(`Contexte basculé sur : ${campus.find(c => c.id === id)?.lib}`, "success");
+    toast(t("campus.toasts.switched", { name: campus.find(c => c.id === id)?.lib }), "success");
   };
 
   const approveTransfert = (id: string) => {
-    setTransferts(p => p.map(t => t.id === id ? { ...t, statut: "Approuvé" as const, approvedBy: "Admin" } : t));
-    toast("Transfert approuvé.", "success");
+    setTransferts(p => p.map(tr => tr.id === id ? { ...tr, statut: "Approuvé" as const, approvedBy: "Admin" } : tr));
+    toast(t("campus.toasts.transferApproved"), "success");
   };
 
   const rejectTransfert = (id: string) => {
-    setTransferts(p => p.map(t => t.id === id ? { ...t, statut: "Rejeté" as const } : t));
-    toast("Transfert rejeté.", "info");
+    setTransferts(p => p.map(tr => tr.id === id ? { ...tr, statut: "Rejeté" as const } : tr));
+    toast(t("campus.toasts.transferRejected"), "info");
   };
 
   return (
     <div>
       <PageHeader
-        title="Réseau d'établissements"
-        subtitle={`${campus.length} établissements · ${actifs.length} actifs · ${totalEffectif.toLocaleString("fr-FR")} élèves au total`}
+        title={t("campus.networkTitle")}
+        subtitle={t("campus.networkSubtitle", { count: campus.length, active: actifs.length, total: totalEffectif.toLocaleString("fr-FR") })}
         actions={
           <Button size="sm" onClick={() => setCampusDlg({ open: true, data: null })}>
-            <Plus className="w-3.5 h-3.5" /> Ajouter un établissement
+            <Plus className="w-3.5 h-3.5" /> {t("campus.addCampus")}
           </Button>
         }
       />
@@ -169,13 +171,13 @@ export default function CampusPage() {
         <div className="flex items-center gap-3 p-3 mb-5 bg-[var(--blue-lighter)] border border-[var(--blue-light)] rounded-[10px]">
           <div className="w-2.5 h-2.5 rounded-full animate-pulse shrink-0" style={{ backgroundColor: activeCampus.couleur }} />
           <span className="text-[12.5px] text-[var(--ink-2)]">
-            Contexte actif : <strong>{activeCampus.lib}</strong> — {activeCampus.ville}
+            {t("campus.activeContext")} <strong>{activeCampus.lib}</strong> — {activeCampus.ville}
           </span>
           <button
             onClick={() => setSwitchDlg(campus.find(c => c.id !== activeId && c.statut === "Actif") ?? null)}
             className="ml-auto text-[11.5px] text-[var(--blue)] font-medium flex items-center gap-1 hover:underline"
           >
-            Changer <ChevronRight className="w-3 h-3" />
+            {t("campus.switchBtn")} <ChevronRight className="w-3 h-3" />
           </button>
         </div>
       )}
@@ -183,10 +185,10 @@ export default function CampusPage() {
       {/* KPI strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "Établissements actifs", value: actifs.length, icon: Building2, color: "var(--blue)" },
-          { label: "Élèves total", value: totalEffectif.toLocaleString("fr-FR"), icon: GraduationCap, color: "var(--cyan)" },
-          { label: "Classes total", value: totalClasses, icon: School, color: "var(--purple)" },
-          { label: "Enseignants total", value: totalEns, icon: Users, color: "var(--success)" },
+          { label: t("campus.kpi.activeCampuses"), value: actifs.length, icon: Building2, color: "var(--blue)" },
+          { label: t("campus.kpi.totalStudents"), value: totalEffectif.toLocaleString("fr-FR"), icon: GraduationCap, color: "var(--cyan)" },
+          { label: t("campus.kpi.totalClasses"), value: totalClasses, icon: School, color: "var(--purple)" },
+          { label: t("campus.kpi.totalTeachers"), value: totalEns, icon: Users, color: "var(--success)" },
         ].map(kpi => (
           <Card key={kpi.label} className="p-4">
             <div className="flex items-start justify-between mb-2">
@@ -202,9 +204,9 @@ export default function CampusPage() {
 
       <Tabs defaultValue="vue">
         <TabsList>
-          <TabsTrigger value="vue"><Building2 className="w-3.5 h-3.5" />Vue d'ensemble</TabsTrigger>
-          <TabsTrigger value="stats"><BarChart3 className="w-3.5 h-3.5" />Statistiques comparatives</TabsTrigger>
-          <TabsTrigger value="transferts"><ArrowRightLeft className="w-3.5 h-3.5" />Transferts ({transferts.filter(t => t.statut === "En attente").length})</TabsTrigger>
+          <TabsTrigger value="vue"><Building2 className="w-3.5 h-3.5" />{t("campus.tabs.overview")}</TabsTrigger>
+          <TabsTrigger value="stats"><BarChart3 className="w-3.5 h-3.5" />{t("campus.tabs.stats")}</TabsTrigger>
+          <TabsTrigger value="transferts"><ArrowRightLeft className="w-3.5 h-3.5" />{t("campus.tabs.transfers")} ({transferts.filter(tr => tr.statut === "En attente").length})</TabsTrigger>
         </TabsList>
 
         {/* ── VUE D'ENSEMBLE ─────────────────────────────────────────────── */}
@@ -252,15 +254,15 @@ export default function CampusPage() {
                         <InfoRow icon={<MapPin className="w-3 h-3" />} text={`${c.adresse}, ${c.ville}`} />
                         <InfoRow icon={<Phone className="w-3 h-3" />} text={c.tel} />
                         <InfoRow icon={<Mail className="w-3 h-3" />} text={c.email} />
-                        <InfoRow icon={<Users className="w-3 h-3" />} text={`Directeur : ${c.directeur}`} />
+                        <InfoRow icon={<Users className="w-3 h-3" />} text={`${t("campus.director")} ${c.directeur}`} />
                       </div>
 
                       {/* Metrics */}
                       <div className="flex items-center gap-4 py-3 border-t border-[var(--line)]">
                         {[
-                          { label: "Élèves", value: c.effectif, color: "var(--blue)" },
-                          { label: "Classes", value: c.nbClasses, color: "var(--cyan)" },
-                          { label: "Enseignants", value: c.nbEnseignants, color: "var(--purple)" },
+                          { label: t("campus.tableCol.students"), value: c.effectif, color: "var(--blue)" },
+                          { label: t("campus.tableCol.classes"), value: c.nbClasses, color: "var(--cyan)" },
+                          { label: t("campus.tableCol.teachers"), value: c.nbEnseignants, color: "var(--purple)" },
                         ].map(m => (
                           <div key={m.label} className="text-center flex-1">
                             <div className="text-[18px] font-bold" style={{ color: m.color }}>{m.value}</div>
@@ -273,19 +275,19 @@ export default function CampusPage() {
                       <div className="flex items-center gap-2 pt-2">
                         {!isActive && c.statut === "Actif" && (
                           <Button size="sm" variant="outline" onClick={() => switchContext(c.id)}>
-                            <ArrowRightLeft className="w-3.5 h-3.5" /> Basculer vers cet établissement
+                            <ArrowRightLeft className="w-3.5 h-3.5" /> {t("campus.switchTo")}
                           </Button>
                         )}
                         {isActive && (
                           <span className="flex items-center gap-1.5 text-[11.5px] text-[var(--blue)] font-medium">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Établissement actif
+                            <CheckCircle2 className="w-3.5 h-3.5" /> {t("campus.isActive")}
                           </span>
                         )}
                         <button
                           onClick={() => setTransferDlg(true)}
                           className="ml-auto text-[11.5px] text-[var(--ink-4)] hover:text-[var(--ink-2)] flex items-center gap-1 transition-colors"
                         >
-                          Transfert d'élèves <ArrowRightLeft className="w-3 h-3" />
+                          {t("campus.transferLink")} <ArrowRightLeft className="w-3 h-3" />
                         </button>
                       </div>
                     </div>
@@ -302,19 +304,19 @@ export default function CampusPage() {
             {/* Summary table */}
             <Card className="overflow-hidden">
               <div className="border-b border-[var(--line)] bg-[var(--ivory)] px-4 py-2.5">
-                <span className="text-[11px] font-semibold text-[var(--ink-3)]">Tableau comparatif — Session 2025–2026</span>
+                <span className="text-[11px] font-semibold text-[var(--ink-3)]">{t("campus.compareTable")}</span>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-[12.5px]">
                   <thead>
                     <tr className="border-b border-[var(--line)] bg-[var(--ivory)]">
-                      <th className="text-left px-4 py-2.5 font-medium text-[var(--ink-3)]">Établissement</th>
-                      <th className="text-left px-4 py-2.5 font-medium text-[var(--ink-3)]">Type</th>
-                      <th className="px-4 py-2.5 font-medium text-[var(--ink-3)]">Ville</th>
-                      <th className="px-4 py-2.5 font-medium text-[var(--ink-3)] w-[160px]">Élèves</th>
-                      <th className="px-4 py-2.5 font-medium text-[var(--ink-3)] w-[130px]">Classes</th>
-                      <th className="px-4 py-2.5 font-medium text-[var(--ink-3)] w-[140px]">Enseignants</th>
-                      <th className="text-center px-4 py-2.5 font-medium text-[var(--ink-3)]">Statut</th>
+                      <th className="text-left px-4 py-2.5 font-medium text-[var(--ink-3)]">{t("campus.tableCol.establishment")}</th>
+                      <th className="text-left px-4 py-2.5 font-medium text-[var(--ink-3)]">{t("campus.tableCol.type")}</th>
+                      <th className="px-4 py-2.5 font-medium text-[var(--ink-3)]">{t("campus.tableCol.city")}</th>
+                      <th className="px-4 py-2.5 font-medium text-[var(--ink-3)] w-[160px]">{t("campus.tableCol.students")}</th>
+                      <th className="px-4 py-2.5 font-medium text-[var(--ink-3)] w-[130px]">{t("campus.tableCol.classes")}</th>
+                      <th className="px-4 py-2.5 font-medium text-[var(--ink-3)] w-[140px]">{t("campus.tableCol.teachers")}</th>
+                      <th className="text-center px-4 py-2.5 font-medium text-[var(--ink-3)]">{t("campus.tableCol.status")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -343,10 +345,10 @@ export default function CampusPage() {
                   </tbody>
                   <tfoot>
                     <tr className="bg-[var(--blue-lighter)] border-t-2 border-[var(--blue-light)]">
-                      <td colSpan={3} className="px-4 py-2.5 font-bold text-[var(--ink-2)] text-[12px]">Total réseau</td>
-                      <td className="px-4 py-2.5 font-bold text-[var(--blue)]">{totalEffectif.toLocaleString("fr-FR")} élèves</td>
-                      <td className="px-4 py-2.5 font-bold text-[var(--blue)]">{totalClasses} classes</td>
-                      <td className="px-4 py-2.5 font-bold text-[var(--blue)]">{totalEns} enseignants</td>
+                      <td colSpan={3} className="px-4 py-2.5 font-bold text-[var(--ink-2)] text-[12px]">{t("campus.networkTotal")}</td>
+                      <td className="px-4 py-2.5 font-bold text-[var(--blue)]">{totalEffectif.toLocaleString("fr-FR")} {t("campus.studentsUnit")}</td>
+                      <td className="px-4 py-2.5 font-bold text-[var(--blue)]">{totalClasses} {t("campus.classesUnit")}</td>
+                      <td className="px-4 py-2.5 font-bold text-[var(--blue)]">{totalEns} {t("campus.teachersUnit")}</td>
                       <td />
                     </tr>
                   </tfoot>
@@ -357,9 +359,9 @@ export default function CampusPage() {
             {/* Visual share bars */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { label: "Répartition des élèves", key: "effectif" as keyof Campus },
-                { label: "Répartition des classes", key: "nbClasses" as keyof Campus },
-                { label: "Répartition des enseignants", key: "nbEnseignants" as keyof Campus },
+                { label: t("campus.distribution.students"), key: "effectif" as keyof Campus },
+                { label: t("campus.distribution.classes"), key: "nbClasses" as keyof Campus },
+                { label: t("campus.distribution.teachers"), key: "nbEnseignants" as keyof Campus },
               ].map(({ label, key }) => {
                 const total = campus.reduce((s, c) => s + (c[key] as number), 0);
                 return (
@@ -393,19 +395,19 @@ export default function CampusPage() {
         <TabsContent value="transferts">
           <div className="flex items-start justify-between gap-4 mb-5">
             <div>
-              <p className="text-[13px] font-medium text-[var(--ink)]">Transferts d'élèves inter-établissements</p>
-              <p className="text-[12px] text-[var(--ink-4)]">Chaque transfert est soumis à validation administrative.</p>
+              <p className="text-[13px] font-medium text-[var(--ink)]">{t("campus.transfers.title")}</p>
+              <p className="text-[12px] text-[var(--ink-4)]">{t("campus.transfers.subtitle")}</p>
             </div>
             <Button size="sm" onClick={() => setTransferDlg(true)}>
-              <ArrowRightLeft className="w-3.5 h-3.5" /> Nouveau transfert
+              <ArrowRightLeft className="w-3.5 h-3.5" /> {t("campus.transfers.newTransfer")}
             </Button>
           </div>
 
           {/* Pending alert */}
-          {transferts.filter(t => t.statut === "En attente").length > 0 && (
+          {transferts.filter(tr => tr.statut === "En attente").length > 0 && (
             <div className="flex items-start gap-2 p-3 mb-4 bg-[var(--warning-light)] border border-[rgba(180,83,9,0.2)] rounded-[10px] text-[12px] text-[var(--warning)]">
               <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-              <span><strong>{transferts.filter(t => t.statut === "En attente").length}</strong> transfert(s) en attente de validation.</span>
+              <span><strong>{transferts.filter(tr => tr.statut === "En attente").length}</strong> {t("campus.transfers.pendingAlert", { count: transferts.filter(tr => tr.statut === "En attente").length })}</span>
             </div>
           )}
 
@@ -413,51 +415,59 @@ export default function CampusPage() {
             <table className="w-full text-[12.5px]">
               <thead>
                 <tr className="bg-[var(--ivory)] border-b border-[var(--line)]">
-                  {["Élève", "De", "Vers", "Date", "Motif", "Statut", ""].map(h => (
-                    <th key={h} className={`px-3 py-2.5 font-medium text-[var(--ink-3)] ${h === "" || h === "Statut" ? "text-center" : "text-left"}`}>{h}</th>
+                  {[
+                    t("campus.transfers.columns.student"),
+                    t("campus.transfers.columns.from"),
+                    t("campus.transfers.columns.to"),
+                    t("campus.transfers.columns.date"),
+                    t("campus.transfers.columns.reason"),
+                    t("campus.transfers.columns.status"),
+                    "",
+                  ].map((h, i) => (
+                    <th key={i} className={`px-3 py-2.5 font-medium text-[var(--ink-3)] ${h === "" || i === 5 ? "text-center" : "text-left"}`}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {transferts.length === 0 && (
-                  <tr><td colSpan={7} className="py-10 text-center text-[var(--ink-4)]">Aucun transfert enregistré.</td></tr>
+                  <tr><td colSpan={7} className="py-10 text-center text-[var(--ink-4)]">{t("campus.transfers.noRecords")}</td></tr>
                 )}
-                {transferts.map((t, i) => {
-                  const src = campus.find(c => c.id === t.campusSourceId);
-                  const dst = campus.find(c => c.id === t.campusDestId);
+                {transferts.map((tr, i) => {
+                  const src = campus.find(c => c.id === tr.campusSourceId);
+                  const dst = campus.find(c => c.id === tr.campusDestId);
                   const badgeMap: Record<TransfertEleve["statut"], "green" | "amber" | "red"> = {
                     "Approuvé": "green", "En attente": "amber", "Rejeté": "red",
                   };
                   return (
-                    <tr key={t.id} className={`border-b border-[var(--line)] last:border-0 ${i % 2 ? "bg-[var(--ivory)]" : ""}`}>
+                    <tr key={tr.id} className={`border-b border-[var(--line)] last:border-0 ${i % 2 ? "bg-[var(--ivory)]" : ""}`}>
                       <td className="px-3 py-2.5">
-                        <div className="font-medium text-[var(--ink)]">{t.etuNom}</div>
-                        <div className="text-[11px] text-[var(--ink-4)] font-mono">{t.etuCode}</div>
+                        <div className="font-medium text-[var(--ink)]">{tr.etuNom}</div>
+                        <div className="text-[11px] text-[var(--ink-4)] font-mono">{tr.etuCode}</div>
                       </td>
                       <td className="px-3 py-2.5">
                         <div className="flex items-center gap-1.5">
                           <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: src?.couleur ?? "#ccc" }} />
-                          <span className="text-[var(--ink-3)]">{src?.lib ?? t.campusSourceId}</span>
+                          <span className="text-[var(--ink-3)]">{src?.lib ?? tr.campusSourceId}</span>
                         </div>
                       </td>
                       <td className="px-3 py-2.5">
                         <div className="flex items-center gap-1.5">
                           <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: dst?.couleur ?? "#ccc" }} />
-                          <span className="text-[var(--ink-3)]">{dst?.lib ?? t.campusDestId}</span>
+                          <span className="text-[var(--ink-3)]">{dst?.lib ?? tr.campusDestId}</span>
                         </div>
                       </td>
-                      <td className="px-3 py-2.5 text-[var(--ink-3)]">{new Date(t.date).toLocaleDateString("fr-FR")}</td>
-                      <td className="px-3 py-2.5 max-w-[160px] truncate text-[var(--ink-3)] text-[11.5px]">{t.motif}</td>
+                      <td className="px-3 py-2.5 text-[var(--ink-3)]">{new Date(tr.date).toLocaleDateString("fr-FR")}</td>
+                      <td className="px-3 py-2.5 max-w-[160px] truncate text-[var(--ink-3)] text-[11.5px]">{tr.motif}</td>
                       <td className="px-3 py-2.5 text-center">
-                        <EduBadge variant={badgeMap[t.statut]}>{t.statut}</EduBadge>
+                        <EduBadge variant={badgeMap[tr.statut]}>{tr.statut}</EduBadge>
                       </td>
                       <td className="px-3 py-2.5">
-                        {t.statut === "En attente" && (
+                        {tr.statut === "En attente" && (
                           <div className="flex gap-1 justify-center">
-                            <button onClick={() => approveTransfert(t.id)} className="p-1.5 rounded-[6px] text-[var(--success)] hover:bg-[var(--success-light)] transition-colors" title="Approuver">
+                            <button onClick={() => approveTransfert(tr.id)} className="p-1.5 rounded-[6px] text-[var(--success)] hover:bg-[var(--success-light)] transition-colors" title="Approuver">
                               <CheckCircle2 className="w-3.5 h-3.5" />
                             </button>
-                            <button onClick={() => rejectTransfert(t.id)} className="p-1.5 rounded-[6px] text-[var(--danger)] hover:bg-[var(--danger-light)] transition-colors" title="Rejeter">
+                            <button onClick={() => rejectTransfert(tr.id)} className="p-1.5 rounded-[6px] text-[var(--danger)] hover:bg-[var(--danger-light)] transition-colors" title="Rejeter">
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
@@ -485,22 +495,22 @@ export default function CampusPage() {
       {/* Delete confirm */}
       <Dialog open={!!deleteDlg} onOpenChange={() => setDeleteDlg(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Supprimer l'établissement</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t("campus.deleteDlg.title")}</DialogTitle></DialogHeader>
           <DialogBody>
             <div className="flex items-start gap-3 p-4 bg-[var(--danger-light)] border border-[rgba(192,57,43,0.2)] rounded-[10px]">
               <AlertTriangle className="w-5 h-5 text-[var(--danger)] shrink-0 mt-0.5" />
               <div>
-                <div className="font-semibold text-[13px] text-[var(--danger)] mb-1">Confirmation requise</div>
+                <div className="font-semibold text-[13px] text-[var(--danger)] mb-1">{t("campus.deleteDlg.warning")}</div>
                 <p className="text-[12.5px] text-[var(--ink-2)]">
-                  Supprimer <strong>{deleteDlg?.lib}</strong> retirera définitivement cet établissement du réseau. Les historiques de transfert associés seront également supprimés.
+                  {t("campus.deleteDlg.message", { name: deleteDlg?.lib })}
                 </p>
               </div>
             </div>
           </DialogBody>
           <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setDeleteDlg(null)}>Annuler</Button>
+            <Button variant="outline" size="sm" onClick={() => setDeleteDlg(null)}>{t("actions.cancel", { ns: "common" })}</Button>
             <Button variant="danger" size="sm" onClick={() => deleteDlg && deleteCampus(deleteDlg.id)}>
-              <Trash2 className="w-3.5 h-3.5" /> Supprimer
+              <Trash2 className="w-3.5 h-3.5" /> {t("actions.delete", { ns: "common" })}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -509,9 +519,9 @@ export default function CampusPage() {
       {/* Switch context */}
       <Dialog open={!!switchDlg} onOpenChange={() => setSwitchDlg(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Changer de contexte</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t("campus.switchDlg.title")}</DialogTitle></DialogHeader>
           <DialogBody>
-            <p className="text-[12.5px] text-[var(--ink-3)] mb-4">Sélectionnez l'établissement sur lequel vous souhaitez travailler :</p>
+            <p className="text-[12.5px] text-[var(--ink-3)] mb-4">{t("campus.switchDlg.subtitle")}</p>
             <div className="space-y-2">
               {campus.filter(c => c.id !== activeId && c.statut === "Actif").map(c => (
                 <button
@@ -522,7 +532,7 @@ export default function CampusPage() {
                   <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: c.couleur }} />
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-[13px] text-[var(--ink)]">{c.lib}</div>
-                    <div className="text-[11px] text-[var(--ink-4)]">{c.ville} · {c.effectif} élèves</div>
+                    <div className="text-[11px] text-[var(--ink-4)]">{c.ville} · {c.effectif} {t("campus.studentsUnit")}</div>
                   </div>
                   <EduBadge variant={typeBadge(c.type)}>{c.type}</EduBadge>
                 </button>
@@ -530,7 +540,7 @@ export default function CampusPage() {
             </div>
           </DialogBody>
           <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setSwitchDlg(null)}>Annuler</Button>
+            <Button variant="outline" size="sm" onClick={() => setSwitchDlg(null)}>{t("actions.cancel", { ns: "common" })}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -544,7 +554,7 @@ export default function CampusPage() {
         onSave={(data) => {
           setTransferts(p => [...p, { ...data, id: uid(), statut: "En attente" }]);
           setTransferDlg(false);
-          toast("Demande de transfert enregistrée. En attente de validation.", "success");
+          toast(t("campus.toasts.transferPending"), "success");
         }}
         onClose={() => setTransferDlg(false)}
       />
@@ -576,6 +586,7 @@ function CampusDialog({ open, initial, onSave, onClose }: {
   open: boolean; initial: Campus | null;
   onSave: (d: Omit<Campus, "id">) => void; onClose: () => void;
 }) {
+  const { t } = useTranslation("administration");
   const blank: Omit<Campus, "id"> = { code: "", lib: "", type: "Annexe", adresse: "", ville: "", tel: "", email: "", directeur: "", statut: "Actif", effectif: 0, nbClasses: 0, nbEnseignants: 0, couleur: "#0099cc", sessionActive: "2025–2026" };
   const [form, setForm] = useState<Omit<Campus, "id">>(initial ? { ...initial } : blank);
   useEffect(() => { if (open) setForm(initial ? { ...initial } : blank); }, [open]);
@@ -583,46 +594,46 @@ function CampusDialog({ open, initial, onSave, onClose }: {
   return (
     <Dialog open={open} onOpenChange={v => !v && onClose()}>
       <DialogContent>
-        <DialogHeader><DialogTitle>{initial ? "Modifier l'établissement" : "Nouvel établissement"}</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{initial ? t("campus.dialog.editTitle") : t("campus.dialog.newTitle")}</DialogTitle></DialogHeader>
         <DialogBody>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Code *"><Input placeholder="ex : ANNEXE-EST" value={form.code} onChange={set("code")} /></Field>
-              <Field label="Type *">
+              <Field label={t("campus.dialog.fields.code")}><Input placeholder={t("campus.dialog.codePlaceholder")} value={form.code} onChange={set("code")} /></Field>
+              <Field label={t("campus.dialog.fields.type")}>
                 <Select value={form.type} onValueChange={v => setForm(p => ({ ...p, type: v as Campus["type"] }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Principal">Principal</SelectItem>
-                    <SelectItem value="Annexe">Annexe</SelectItem>
-                    <SelectItem value="Partenaire">Partenaire</SelectItem>
+                    <SelectItem value="Principal">{t("campus.types.Principal")}</SelectItem>
+                    <SelectItem value="Annexe">{t("campus.types.Annexe")}</SelectItem>
+                    <SelectItem value="Partenaire">{t("campus.types.Partenaire")}</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
             </div>
-            <Field label="Nom de l'établissement *"><Input placeholder="ex : Annexe Est" value={form.lib} onChange={set("lib")} /></Field>
+            <Field label={t("campus.dialog.fields.name")}><Input placeholder={t("campus.dialog.namePlaceholder")} value={form.lib} onChange={set("lib")} /></Field>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Ville"><Input placeholder="ex : Yaoundé" value={form.ville} onChange={set("ville")} /></Field>
-              <Field label="Adresse"><Input placeholder="ex : Rue de la Paix" value={form.adresse} onChange={set("adresse")} /></Field>
+              <Field label={t("campus.dialog.fields.city")}><Input placeholder={t("campus.dialog.cityPlaceholder")} value={form.ville} onChange={set("ville")} /></Field>
+              <Field label={t("campus.dialog.fields.address")}><Input placeholder={t("campus.dialog.addressPlaceholder")} value={form.adresse} onChange={set("adresse")} /></Field>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Téléphone"><Input placeholder="+237 6XX XXX XXX" value={form.tel} onChange={set("tel")} /></Field>
-              <Field label="Email"><Input type="email" placeholder="annexe@edustar.cm" value={form.email} onChange={set("email")} /></Field>
+              <Field label={t("campus.dialog.fields.phone")}><Input placeholder={t("campus.dialog.phonePlaceholder")} value={form.tel} onChange={set("tel")} /></Field>
+              <Field label={t("campus.dialog.fields.email")}><Input type="email" placeholder={t("campus.dialog.emailPlaceholder")} value={form.email} onChange={set("email")} /></Field>
             </div>
-            <Field label="Directeur / Responsable"><Input placeholder="ex : M. NDOUMBE Paul" value={form.directeur} onChange={set("directeur")} /></Field>
+            <Field label={t("campus.dialog.fields.director")}><Input placeholder={t("campus.dialog.directorPlaceholder")} value={form.directeur} onChange={set("directeur")} /></Field>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Statut">
+              <Field label={t("campus.dialog.fields.status")}>
                 <Select value={form.statut} onValueChange={v => setForm(p => ({ ...p, statut: v as Campus["statut"] }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Actif">Actif</SelectItem>
-                    <SelectItem value="Inactif">Inactif</SelectItem>
+                    <SelectItem value="Actif">{t("status.active", { ns: "common" })}</SelectItem>
+                    <SelectItem value="Inactif">{t("status.inactive", { ns: "common" })}</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
-              <Field label="Session active"><Input placeholder="ex : 2025–2026" value={form.sessionActive} onChange={set("sessionActive")} /></Field>
+              <Field label={t("campus.dialog.fields.session")}><Input placeholder={t("campus.dialog.sessionPlaceholder")} value={form.sessionActive} onChange={set("sessionActive")} /></Field>
             </div>
             <div>
-              <Label>Couleur d'identification</Label>
+              <Label>{t("campus.dialog.fields.color")}</Label>
               <div className="flex gap-2 mt-1.5 flex-wrap">
                 {COULEURS_PRESET.map(c => (
                   <button
@@ -638,8 +649,8 @@ function CampusDialog({ open, initial, onSave, onClose }: {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose}>Annuler</Button>
-          <Button size="sm" onClick={() => onSave(form)}>{initial ? "Enregistrer" : "Ajouter"}</Button>
+          <Button variant="outline" size="sm" onClick={onClose}>{t("actions.cancel", { ns: "common" })}</Button>
+          <Button size="sm" onClick={() => onSave(form)}>{initial ? t("actions.save", { ns: "common" }) : t("actions.add", { ns: "common" })}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -654,6 +665,7 @@ function TransfertDialog({ open, campus, students, onSave, onClose }: {
   onSave: (d: Omit<TransfertEleve, "id" | "statut">) => void;
   onClose: () => void;
 }) {
+  const { t } = useTranslation("administration");
   const [form, setForm] = useState({ etuCode: "", etuNom: "", campusSourceId: "", campusDestId: "", date: new Date().toISOString().slice(0, 10), motif: "" });
   useEffect(() => {
     if (open) setForm({ etuCode: "", etuNom: "", campusSourceId: campus[0]?.id ?? "", campusDestId: campus[1]?.id ?? "", date: new Date().toISOString().slice(0, 10), motif: "" });
@@ -666,47 +678,47 @@ function TransfertDialog({ open, campus, students, onSave, onClose }: {
   return (
     <Dialog open={open} onOpenChange={v => !v && onClose()}>
       <DialogContent>
-        <DialogHeader><DialogTitle>Demande de transfert</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{t("campus.transferDialog.title")}</DialogTitle></DialogHeader>
         <DialogBody>
           <div className="space-y-3">
-            <Field label="Élève *">
+            <Field label={t("campus.transferDialog.fields.student")}>
               <Select value={form.etuCode} onValueChange={handleStudentSelect}>
-                <SelectTrigger><SelectValue placeholder="Sélectionner un élève" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder={t("campus.transferDialog.studentPlaceholder")} /></SelectTrigger>
                 <SelectContent>
                   {students.map(s => <SelectItem key={s.code} value={s.code}>{s.nom} ({s.code})</SelectItem>)}
                 </SelectContent>
               </Select>
             </Field>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Établissement source *">
+              <Field label={t("campus.transferDialog.fields.source")}>
                 <Select value={form.campusSourceId} onValueChange={v => setForm(p => ({ ...p, campusSourceId: v }))}>
-                  <SelectTrigger><SelectValue placeholder="Source" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={t("campus.transferDialog.sourcePlaceholder")} /></SelectTrigger>
                   <SelectContent>{campus.map(c => <SelectItem key={c.id} value={c.id}>{c.lib}</SelectItem>)}</SelectContent>
                 </Select>
               </Field>
-              <Field label="Établissement destination *">
+              <Field label={t("campus.transferDialog.fields.dest")}>
                 <Select value={form.campusDestId} onValueChange={v => setForm(p => ({ ...p, campusDestId: v }))}>
-                  <SelectTrigger><SelectValue placeholder="Destination" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={t("campus.transferDialog.destPlaceholder")} /></SelectTrigger>
                   <SelectContent>{campus.filter(c => c.id !== form.campusSourceId).map(c => <SelectItem key={c.id} value={c.id}>{c.lib}</SelectItem>)}</SelectContent>
                 </Select>
               </Field>
             </div>
-            <Field label="Date effective"><Input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} /></Field>
-            <Field label="Motif du transfert *"><Input placeholder="ex : Rapprochement familial" value={form.motif} onChange={e => setForm(p => ({ ...p, motif: e.target.value }))} /></Field>
+            <Field label={t("campus.transferDialog.fields.date")}><Input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} /></Field>
+            <Field label={t("campus.transferDialog.fields.reason")}><Input placeholder={t("campus.transferDialog.reasonPlaceholder")} value={form.motif} onChange={e => setForm(p => ({ ...p, motif: e.target.value }))} /></Field>
             <div className="flex items-start gap-2 p-3 bg-[var(--blue-lighter)] border border-[var(--blue-light)] rounded-[8px] text-[11.5px] text-[var(--ink-2)]">
               <AlertTriangle className="w-3.5 h-3.5 text-[var(--blue)] shrink-0 mt-0.5" />
-              La demande sera soumise à validation. L'élève restera inscrit dans l'établissement source jusqu'à approbation.
+              {t("campus.transferDialog.notice")}
             </div>
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose}>Annuler</Button>
+          <Button variant="outline" size="sm" onClick={onClose}>{t("actions.cancel", { ns: "common" })}</Button>
           <Button size="sm" onClick={() => {
-            if (!form.etuCode || !form.campusSourceId || !form.campusDestId || !form.motif) { toast("Tous les champs obligatoires doivent être remplis.", "error"); return; }
-            if (form.campusSourceId === form.campusDestId) { toast("Source et destination doivent être différentes.", "error"); return; }
+            if (!form.etuCode || !form.campusSourceId || !form.campusDestId || !form.motif) { toast(t("campus.errors.requiredFields"), "error"); return; }
+            if (form.campusSourceId === form.campusDestId) { toast(t("campus.errors.sameLocation"), "error"); return; }
             onSave(form);
           }}>
-            <ArrowRightLeft className="w-3.5 h-3.5" /> Soumettre la demande
+            <ArrowRightLeft className="w-3.5 h-3.5" /> {t("campus.transferDialog.submitBtn")}
           </Button>
         </DialogFooter>
       </DialogContent>

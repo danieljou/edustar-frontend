@@ -1,0 +1,103 @@
+{
+  "attendance": {
+    "pageTitle": "Présences",
+    "pageSubtitle": "Suivi des présences et absences des étudiants",
+    "markAttendance": "Prendre les Présences",
+    "exportReport": "Exporter le rapport",
+    "selectClass": "Sélectionner une Classe",
+    "selectDate": "Sélectionner une Date",
+    "columns": {
+      "student": "Étudiant",
+      "date": "Date",
+      "class": "Classe",
+      "subject": "Matière",
+      "status": "Statut",
+      "comment": "Observation"
+    },
+    "status": {
+      "present": "Présent",
+      "absent": "Absent",
+      "late": "En Retard",
+      "excused": "Excusé",
+      "halfDay": "Demi-journée"
+    },
+    "stats": {
+      "attendanceRate": "Taux de Présence",
+      "absenceCount": "Total Absences",
+      "lateCount": "Total Retards",
+      "excusedCount": "Absences Justifiées"
+    }
+  },
+  "exams": {
+    "pageTitle": "Examens",
+    "pageSubtitle": "Planification et gestion des examens",
+    "scheduleExam": "Planifier un Examen",
+    "editExam": "Modifier l'examen",
+    "cancelExam": "Annuler l'examen",
+    "searchPlaceholder": "Rechercher un examen...",
+    "columns": {
+      "name": "Nom de l'Examen",
+      "subject": "Matière",
+      "class": "Classe",
+      "date": "Date",
+      "time": "Heure",
+      "duration": "Durée (min)",
+      "room": "Salle",
+      "supervisor": "Surveillant",
+      "type": "Type",
+      "status": "Statut"
+    },
+    "types": {
+      "midterm": "Examen Intermédiaire",
+      "final": "Examen Final",
+      "makeup": "Rattrapage",
+      "quiz": "Interrogation"
+    },
+    "status": {
+      "scheduled": "Planifié",
+      "ongoing": "En cours",
+      "completed": "Terminé",
+      "cancelled": "Annulé"
+    }
+  },
+  "timetable": {
+    "pageTitle": "Emplois du Temps",
+    "pageSubtitle": "Gestion et consultation des emplois du temps",
+    "subtitle": "{{count}} cours planifiés · Session 2025–2026",
+    "addSlot": "Ajouter créneau",
+    "editSlot": "Modifier le créneau",
+    "selectClass": "Sélectionner une Classe",
+    "allClasses": "Toutes les classes",
+    "reset": "Réinitialiser",
+    "selectTeacher": "Sélectionner un Enseignant",
+    "weekView": "Vue Semaine",
+    "dayView": "Vue Jour",
+    "legend": "Légende :",
+    "scheduledCourses": "Liste des cours planifiés",
+    "timeHeader": "Heure",
+    "days": {
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi"
+    },
+    "columns": {
+      "time": "Horaire",
+      "subject": "Matière",
+      "teacher": "Enseignant",
+      "room": "Salle",
+      "class": "Classe"
+    },
+    "slot": {
+      "startTime": "Heure de Début",
+      "endTime": "Heure de Fin",
+      "duration": "Durée"
+    },
+    "filterDay": "Jour",
+    "filterClass": "Classe",
+    "filterType": "Type",
+    "searchPlaceholder": "Rechercher par jour ou matière…"
+  }
+}

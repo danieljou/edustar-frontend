@@ -3,6 +3,7 @@
 import { notFound, useRouter } from "next/navigation";
 import Link from "next/link";
 import { use } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft, Edit, Download, Mail, Phone, MapPin, Calendar,
   GraduationCap, CreditCard, BookOpen, FileText, UserCheck,
@@ -54,6 +55,8 @@ function StatutBadge({ statut }: { statut: string }) {
 export default function StudentDossierPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = use(params);
   const router = useRouter();
+  const { t } = useTranslation("academique");
+  const { t: tc } = useTranslation("common");
 
   const student = STUDENTS.find(s => s.code === decodeURIComponent(code));
   if (!student) notFound();
@@ -73,7 +76,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
       {/* ── Breadcrumb ──────────────────────────────────────────────────── */}
       <div className="flex items-center gap-1.5 text-[11.5px] text-[var(--ink-4)]">
         <Link href="/dashboard/students" className="hover:text-[var(--blue)] transition-colors flex items-center gap-1">
-          <ArrowLeft className="w-3.5 h-3.5" /> Étudiants
+          <ArrowLeft className="w-3.5 h-3.5" /> {t("students.pageTitle")}
         </Link>
         <ChevronRight className="w-3 h-3" />
         <span className="text-[var(--ink)] font-medium">{student.prenom} {student.nom}</span>
@@ -160,10 +163,10 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
             {/* Actions */}
             <div className="flex items-center gap-2 sm:mb-2 flex-wrap">
               <Button variant="outline" size="sm" className="text-[11.5px]">
-                <Download className="w-3.5 h-3.5" /> Exporter PDF
+                <Download className="w-3.5 h-3.5" /> {tc("actions.download")} PDF
               </Button>
               <Button size="sm" className="text-[11.5px]">
-                <Edit className="w-3.5 h-3.5" /> Modifier
+                <Edit className="w-3.5 h-3.5" /> {tc("actions.edit")}
               </Button>
             </div>
           </div>
@@ -172,7 +175,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-[var(--line)]">
             {[
               {
-                label: "Moyenne générale",
+                label: t("students.columns.average"),
                 value: `${student.moy}/20`,
                 sub: student.moy >= 14 ? "Excellent" : student.moy >= 10 ? "Passable" : "Insuffisant",
                 icon: Star,
@@ -180,7 +183,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                 bg: student.moy >= 14 ? "bg-[var(--success-light)]" : student.moy >= 10 ? "bg-[var(--warning-light)]" : "bg-[var(--danger-light)]",
               },
               {
-                label: "Absences",
+                label: t("students.columns.absences"),
                 value: `${student.absences}`,
                 sub: student.absences >= 10 ? "Critique" : student.absences >= 5 ? "À surveiller" : "Normal",
                 icon: UserCheck,
@@ -188,7 +191,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                 bg: student.absences >= 10 ? "bg-[var(--danger-light)]" : student.absences >= 5 ? "bg-[var(--warning-light)]" : "bg-[var(--success-light)]",
               },
               {
-                label: "Solde restant",
+                label: t("students.columns.balance"),
                 value: student.solde > 0 ? formatCurrency(student.solde) : "Soldé",
                 sub: student.solde > 0 ? "Dû" : "À jour",
                 icon: CreditCard,
@@ -196,7 +199,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                 bg: student.solde > 0 ? "bg-[var(--danger-light)]" : "bg-[var(--success-light)]",
               },
               {
-                label: "Inscrit depuis",
+                label: t("students.columns.enrollmentDate"),
                 value: new Date(student.created).getFullYear().toString(),
                 sub: formatDate(student.created),
                 icon: Calendar,
@@ -238,13 +241,13 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
               <CardHeader><CardTitle>Identité</CardTitle></CardHeader>
               <CardContent className="space-y-3.5">
                 {[
-                  { icon: User,      label: "Nom complet",        value: `${student.prenom} ${student.nom}` },
-                  { icon: Hash,      label: "Code étudiant",      value: student.code },
-                  { icon: Calendar,  label: "Date de naissance",  value: `${formatDate(student.dob)} (${age(student.dob)} ans)` },
-                  { icon: User,      label: "Sexe",               value: student.sexe === "F" ? "Féminin" : "Masculin" },
-                  { icon: MapPin,    label: "Adresse",             value: student.adresse || "—" },
-                  { icon: Phone,     label: "Téléphone",          value: student.tel },
-                  { icon: Mail,      label: "Email",              value: student.email || "—" },
+                  { icon: User,      label: t("students.columns.fullName"),      value: `${student.prenom} ${student.nom}` },
+                  { icon: Hash,      label: t("students.columns.code"),           value: student.code },
+                  { icon: Calendar,  label: t("students.columns.birthDate"),      value: `${formatDate(student.dob)} (${age(student.dob)} ans)` },
+                  { icon: User,      label: t("students.columns.gender"),         value: student.sexe === "F" ? tc("fields.female") : tc("fields.male") },
+                  { icon: MapPin,    label: t("students.columns.address"),        value: student.adresse || "—" },
+                  { icon: Phone,     label: t("students.columns.phone"),          value: student.tel },
+                  { icon: Mail,      label: t("students.columns.email"),          value: student.email || "—" },
                 ].map(({ icon: Icon, label, value }) => (
                   <div key={label} className="flex items-start gap-3">
                     <div className="w-7 h-7 rounded-[7px] bg-[var(--ivory)] flex items-center justify-center shrink-0 mt-0.5">
@@ -265,10 +268,10 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                 <CardHeader><CardTitle>Scolarité</CardTitle></CardHeader>
                 <CardContent className="space-y-3.5">
                   {[
-                    { icon: GraduationCap, label: "Classe",          value: student.classe },
-                    { icon: Building2,     label: "Filière",         value: student.filiere },
-                    { icon: Clock,         label: "Session",         value: student.session },
-                    { icon: Calendar,      label: "Date d'inscription", value: formatDate(student.created) },
+                    { icon: GraduationCap, label: t("students.columns.class"),          value: student.classe },
+                    { icon: Building2,     label: t("students.columns.filiere"),        value: student.filiere },
+                    { icon: Clock,         label: t("students.columns.session"),        value: student.session },
+                    { icon: Calendar,      label: t("students.columns.enrollmentDate"), value: formatDate(student.created) },
                   ].map(({ icon: Icon, label, value }) => (
                     <div key={label} className="flex items-start gap-3">
                       <div className="w-7 h-7 rounded-[7px] bg-[var(--blue-light)] flex items-center justify-center shrink-0 mt-0.5">
@@ -285,7 +288,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
 
               {/* Tuteur */}
               <Card>
-                <CardHeader><CardTitle>Tuteur / Contact urgence</CardTitle></CardHeader>
+                <CardHeader><CardTitle>{t("students.columns.guardian")} / Contact urgence</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
                   {student.tuteurNom ? (
                     <>
@@ -333,7 +336,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                   {/* Résumé */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
                     {[
-                      { label: "Moy. générale", value: `${bul.moyGeneral}/20`, color: bul.moyGeneral >= 14 ? "text-[var(--success)]" : bul.moyGeneral >= 10 ? "text-[var(--warning)]" : "text-[var(--danger)]" },
+                      { label: t("students.columns.average"), value: `${bul.moyGeneral}/20`, color: bul.moyGeneral >= 14 ? "text-[var(--success)]" : bul.moyGeneral >= 10 ? "text-[var(--warning)]" : "text-[var(--danger)]" },
                       { label: "Crédits validés", value: `${bul.creditsValides}/${bul.totalCredits}`, color: "text-[var(--ink)]" },
                       { label: "Rang", value: `${bul.rang}e/${bul.effectifClasse}`, color: "text-[var(--blue)]" },
                       { label: "Appréciation", value: bul.appreciation.split(".")[0], color: "text-[var(--ink-3)]" },
@@ -350,7 +353,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                     <table className="w-full text-[12px]">
                       <thead>
                         <tr className="bg-[var(--ivory)]">
-                          {["Matière", "DS", "TP", "Examen", "Moy.", "Crédits", "Statut"].map(h => (
+                          {["Matière", "DS", "TP", "Examen", "Moy.", "Crédits", tc("fields.status")].map(h => (
                             <th key={h} className="px-3 py-2 text-left text-[9.5px] font-bold uppercase tracking-wider text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
                               {h}
                             </th>
@@ -387,7 +390,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                       <table className="w-full text-[12px]">
                         <thead>
                           <tr className="bg-[var(--ivory)]">
-                            {["Matière", "DS", "TP", "Examen", "Moy.", "Statut"].map(h => (
+                            {["Matière", "DS", "TP", "Examen", "Moy.", tc("fields.status")].map(h => (
                               <th key={h} className="px-3 py-2 text-left text-[9.5px] font-bold uppercase tracking-wider text-[var(--ink-4)] border-b border-[var(--line)]">
                                 {h}
                               </th>
@@ -413,7 +416,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
               ) : (
                 <Card>
                   <CardContent className="flex items-center justify-center py-10 text-[12px] text-[var(--ink-4)]">
-                    Aucune note disponible pour cet étudiant.
+                    {tc("misc.noData")}
                   </CardContent>
                 </Card>
               )
@@ -429,7 +432,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { label: "Total payé", value: formatCurrency(totalPaye), icon: CheckCircle2, color: "text-[var(--success)]", bg: "bg-[var(--success-light)]" },
-                { label: "Solde restant", value: student.solde > 0 ? formatCurrency(student.solde) : "Soldé", icon: student.solde > 0 ? AlertTriangle : CheckCircle2, color: student.solde > 0 ? "text-[var(--danger)]" : "text-[var(--success)]", bg: student.solde > 0 ? "bg-[var(--danger-light)]" : "bg-[var(--success-light)]" },
+                { label: t("students.columns.balance"), value: student.solde > 0 ? formatCurrency(student.solde) : "Soldé", icon: student.solde > 0 ? AlertTriangle : CheckCircle2, color: student.solde > 0 ? "text-[var(--danger)]" : "text-[var(--success)]", bg: student.solde > 0 ? "bg-[var(--danger-light)]" : "bg-[var(--success-light)]" },
                 { label: "Frais totaux", value: formatCurrency(fraisTotal), icon: CreditCard, color: "text-[var(--blue)]", bg: "bg-[var(--blue-light)]" },
               ].map(({ label, value, icon: Icon, color, bg }) => (
                 <Card key={label}>
@@ -454,7 +457,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                   <table className="w-full text-[12px]">
                     <thead>
                       <tr className="bg-[var(--ivory)]">
-                        {["Réf.", "Type", "Montant", "Mode", "Date", "Statut"].map(h => (
+                        {["Réf.", tc("fields.type"), "Montant", "Mode", tc("fields.date"), tc("fields.status")].map(h => (
                           <th key={h} className="px-3 py-2 text-left text-[9.5px] font-bold uppercase tracking-wider text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
                             {h}
                           </th>
@@ -477,7 +480,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                 </div>
               ) : (
                 <CardContent className="py-8 text-center text-[12px] text-[var(--ink-4)]">
-                  Aucun paiement enregistré.
+                  {tc("misc.noData")}
                 </CardContent>
               )}
             </Card>
@@ -550,7 +553,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
                 <table className="w-full text-[12px]">
                   <thead>
                     <tr className="bg-[var(--ivory)]">
-                      {["Ouvrage", "Emprunté le", "Retour prévu", "Retour réel", "Statut"].map(h => (
+                      {["Ouvrage", "Emprunté le", "Retour prévu", "Retour réel", tc("fields.status")].map(h => (
                         <th key={h} className="px-3 py-2 text-left text-[9.5px] font-bold uppercase tracking-wider text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">
                           {h}
                         </th>
@@ -578,7 +581,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
               </div>
             ) : (
               <CardContent className="py-8 text-center text-[12px] text-[var(--ink-4)]">
-                Aucun emprunt pour cet étudiant.
+                {tc("misc.noData")}
               </CardContent>
             )}
           </Card>
@@ -590,7 +593,7 @@ export default function StudentDossierPage({ params }: { params: Promise<{ code:
             <CardHeader>
               <CardTitle>Documents du dossier</CardTitle>
               <Button variant="outline" size="sm">
-                <FileText className="w-3.5 h-3.5" /> Ajouter un document
+                <FileText className="w-3.5 h-3.5" /> {tc("actions.add")}
               </Button>
             </CardHeader>
             <CardContent>

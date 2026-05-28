@@ -3,12 +3,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard, Bell, GraduationCap, ClipboardList, CalendarRange, School, BookOpen,
   UserCheck, FileText, Award, Clock, CreditCard, Users, Library, Bus,
   MessageSquare, Megaphone, BarChart3, Settings, DoorOpen, UserCog,
   Building2, Settings2, Layers, PenLine,
-  ChevronRight, X, Menu, LogOut, User, HelpCircle,
+  ChevronRight, X, LogOut,
 } from "lucide-react";
 import { NAV_SECTIONS } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const { t } = useTranslation("common");
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -86,7 +88,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             {NAV_SECTIONS.map((section) => (
               <div key={section.title}>
                 <div className="px-3.5 pt-3.5 pb-1 text-[9px] font-bold text-white/25 uppercase tracking-[0.1em]">
-                  {section.title}
+                  {t(section.titleKey ?? section.title, { defaultValue: section.title })}
                 </div>
                 {section.items.map((item) => {
                   const Icon = ICON_MAP[item.icon];
@@ -111,7 +113,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                           )}
                         />
                       )}
-                      <span className="truncate flex-1">{item.label}</span>
+                      <span className="truncate flex-1">{t(item.labelKey ?? item.label, { defaultValue: item.label })}</span>
                       {item.badge !== undefined && (
                         <span className={cn(
                           "text-[9.5px] font-bold font-mono px-[5px] py-[1px] rounded-[3px]",
@@ -135,7 +137,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               </div>
               <div className="flex-1 overflow-hidden">
                 <div className="text-[11.5px] font-semibold text-white/80 truncate">Admin Principal</div>
-                <div className="text-[10px] text-white/30">Administrateur</div>
+                <div className="text-[10px] text-white/30">{t("sidebar.role")}</div>
               </div>
               <LogOut className="w-3.5 h-3.5 text-white/25 group-hover:text-white/50 transition-colors shrink-0" />
             </div>
@@ -153,6 +155,7 @@ interface SidebarDesktopProps {
 
 export function SidebarDesktop({ collapsed, onToggleCollapse }: SidebarDesktopProps) {
   const pathname = usePathname();
+  const { t } = useTranslation("common");
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -188,18 +191,19 @@ export function SidebarDesktop({ collapsed, onToggleCollapse }: SidebarDesktopPr
           <div key={section.title}>
             {!collapsed && (
               <div className="px-3.5 pt-3.5 pb-1 text-[9px] font-bold text-white/25 uppercase tracking-[0.1em]">
-                {section.title}
+                {t(section.titleKey ?? section.title, { defaultValue: section.title })}
               </div>
             )}
             {collapsed && <div className="pt-3" />}
             {section.items.map((item) => {
               const Icon = ICON_MAP[item.icon];
               const active = isActive(item.href);
+              const label = t(item.labelKey ?? item.label, { defaultValue: item.label });
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  title={collapsed ? item.label : undefined}
+                  title={collapsed ? label : undefined}
                   className={cn(
                     "flex items-center border transition-all duration-150 mb-[1px]",
                     collapsed
@@ -212,7 +216,7 @@ export function SidebarDesktop({ collapsed, onToggleCollapse }: SidebarDesktopPr
                   )}
                 >
                   {Icon && <Icon className={cn("w-[14px] h-[14px] shrink-0", active ? "opacity-100" : "opacity-75")} />}
-                  {!collapsed && <span className="truncate flex-1">{item.label}</span>}
+                  {!collapsed && <span className="truncate flex-1">{label}</span>}
                   {!collapsed && item.badge !== undefined && (
                     <span className={cn("text-[9.5px] font-bold font-mono px-[5px] py-[1px] rounded-[3px]", active ? "bg-white/25 text-white" : "bg-white/12 text-white")}>
                       {item.badge}
@@ -234,10 +238,10 @@ export function SidebarDesktop({ collapsed, onToggleCollapse }: SidebarDesktopPr
             "w-full flex items-center rounded-[6px] text-white/30 hover:text-white/70 hover:bg-white/[0.06] transition-colors py-[7px]",
             collapsed ? "justify-center px-0" : "gap-2 px-2"
           )}
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? t("sidebar.expand") : t("sidebar.collapse")}
         >
           <ChevronRight className={cn("w-3.5 h-3.5 shrink-0 transition-transform duration-200", collapsed ? "rotate-0" : "rotate-180")} />
-          {!collapsed && <span className="text-[11px] font-medium">Réduire</span>}
+          {!collapsed && <span className="text-[11px] font-medium">{t("sidebar.collapse")}</span>}
         </button>
 
         {/* User */}
@@ -255,7 +259,7 @@ export function SidebarDesktop({ collapsed, onToggleCollapse }: SidebarDesktopPr
             <>
               <div className="flex-1 overflow-hidden">
                 <div className="text-[11.5px] font-semibold text-white/80 truncate">Admin Principal</div>
-                <div className="text-[10px] text-white/30">Administrateur</div>
+                <div className="text-[10px] text-white/30">{t("sidebar.role")}</div>
               </div>
               <LogOut className="w-3.5 h-3.5 text-white/25 group-hover:text-white/50 transition-colors shrink-0" />
             </>

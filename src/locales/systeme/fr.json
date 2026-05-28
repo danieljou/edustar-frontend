@@ -1,0 +1,310 @@
+{
+  "reports": {
+    "pageTitle": "Rapports",
+    "pageSubtitle": "Génération et consultation des rapports statistiques",
+    "generateReport": "Générer un Rapport",
+    "exportPdf": "Exporter en PDF",
+    "exportExcel": "Exporter en Excel",
+    "pageTitle2": "Rapports & Statistiques",
+    "pageSubtitle2": "Analyse de la session 2025–2026",
+    "totalEnrolled": "Total inscrits",
+    "successRate": "Taux réussite",
+    "totalRevenue": "Revenus totaux",
+    "attendanceRate": "Taux présence",
+    "vsLastYear": "vs an dernier",
+    "effectifsTitle": "Évolution des effectifs",
+    "filiereTitle": "Répartition par filière",
+    "revenueTitle": "Revenus mensuels (FCFA)",
+    "performanceTitle": "Performance par classe",
+    "types": {
+      "academic": "Rapport Académique",
+      "financial": "Rapport Financier",
+      "attendance": "Rapport de Présences",
+      "students": "Rapport Étudiants",
+      "hr": "Rapport RH",
+      "global": "Rapport Global"
+    },
+    "filters": {
+      "period": "Période",
+      "class": "Classe",
+      "session": "Session",
+      "campus": "Établissement"
+    },
+    "periods": {
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel",
+      "trimester": "Trimestriel",
+      "semester": "Semestriel",
+      "annual": "Annuel",
+      "custom": "Personnalisé"
+    }
+  },
+  "users": {
+    "pageTitle": "Utilisateurs",
+    "pageSubtitle": "Gestion des comptes et accès utilisateurs",
+    "pageTitle2": "Gestion des utilisateurs",
+    "addUser": "Ajouter un Utilisateur",
+    "createAccount": "Créer un compte",
+    "editUser": "Modifier l'utilisateur",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "deactivate": "Désactiver le compte",
+    "activate": "Activer le compte",
+    "searchPlaceholder": "Rechercher un utilisateur...",
+    "searchNameEmail": "Nom, email…",
+    "allProfiles": "Tous les profils",
+    "allStatuses": "Tous statuts",
+    "accountsCount": "{{count}} comptes · {{active}} actifs",
+    "columns": {
+      "username": "Nom d'Utilisateur",
+      "fullName": "Nom Complet",
+      "email": "Email",
+      "role": "Rôle",
+      "profile": "Profil",
+      "phone": "Téléphone",
+      "campus": "Établissement",
+      "lastLogin": "Dernière Connexion",
+      "lastLoginShort": "Dernière connexion",
+      "createdAt": "Date de Création",
+      "status": "Statut",
+      "user": "Utilisateur"
+    },
+    "roles": {
+      "superAdmin": "Super Administrateur",
+      "admin": "Administrateur",
+      "teacher": "Enseignant",
+      "secretary": "Secrétaire",
+      "accountant": "Comptable",
+      "librarian": "Bibliothécaire",
+      "parent": "Parent",
+      "direction": "Direction",
+      "scolarite": "Scolarité",
+      "comptabilite": "Comptabilité"
+    },
+    "statuses": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "suspended": "Suspendu"
+    },
+    "tooltips": {
+      "edit": "Modifier",
+      "permissions": "Permissions",
+      "resetPassword": "Réinitialiser mot de passe"
+    },
+    "permissions": {
+      "title": "Permissions",
+      "read": "Lecture",
+      "write": "Écriture",
+      "delete": "Suppression",
+      "admin": "Administration"
+    }
+  },
+  "settings": {
+    "pageTitle": "Paramètres",
+    "pageSubtitle": "Configuration générale du système",
+    "pageTitle2": "Paramètres système",
+    "pageSubtitle2": "Configuration globale de la plateforme EduStar",
+    "tabs": {
+      "general": "Général",
+      "school": "Établissement",
+      "security": "Sécurité",
+      "notifications": "Notifications",
+      "appearance": "Apparence",
+      "backup": "Sauvegarde",
+      "data": "Données"
+    },
+    "general": {
+      "language": "Langue",
+      "french": "Français",
+      "english": "Anglais",
+      "timezone": "Fuseau Horaire",
+      "dateFormat": "Format de Date",
+      "currency": "Devise",
+      "currencySymbol": "Symbole Monétaire",
+      "primaryLanguage": "Langue principale",
+      "currentSession": "Session en cours"
+    },
+    "school": {
+      "schoolName": "Nom de l'École",
+      "schoolNameLabel": "Nom de l'établissement *",
+      "logo": "Logo",
+      "address": "Adresse",
+      "addressFull": "Adresse complète",
+      "phone": "Téléphone",
+      "mainPhone": "Téléphone principal",
+      "email": "Email",
+      "officialEmail": "Email officiel",
+      "website": "Site Web",
+      "motto": "Devise de l'École",
+      "foundingYear": "Année de Fondation",
+      "infoTitle": "Informations de l'établissement"
+    },
+    "security": {
+      "passwordPolicy": "Politique de Mot de Passe",
+      "minLength": "Longueur Minimale",
+      "requireUppercase": "Majuscule Obligatoire",
+      "requireNumbers": "Chiffres Obligatoires",
+      "sessionTimeout": "Expiration de Session",
+      "twoFactor": "Authentification à Deux Facteurs",
+      "changePassword": "Changer le mot de passe",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le nouveau mot de passe",
+      "changeBtn": "Modifier"
+    },
+    "appearance": {
+      "theme": "Thème",
+      "dark": "Sombre",
+      "light": "Clair",
+      "auto": "Auto",
+      "primaryColor": "Couleur Principale",
+      "colorLabel": "Couleur principale",
+      "displayMode": "Mode d'affichage",
+      "fontSize": "Taille de Police",
+      "themeTitle": "Thème et apparence",
+      "colorBlue": "Bleu (défaut)",
+      "colorPurple": "Violet",
+      "colorGreen": "Vert"
+    },
+    "notifItems": {
+      "payments": {
+        "label": "Paiements en retard",
+        "desc": "Recevoir une alerte lorsqu'un paiement dépasse la date d'échéance"
+      },
+      "admissions": {
+        "label": "Nouvelles admissions",
+        "desc": "Notification à chaque nouveau dossier de candidature reçu"
+      },
+      "absences": {
+        "label": "Absences répétées",
+        "desc": "Alerte lorsqu'un étudiant dépasse 10 absences"
+      },
+      "resultats": {
+        "label": "Résultats publiés",
+        "desc": "Notification lors de la publication des notes d'examen"
+      },
+      "rapports": {
+        "label": "Rapports hebdomadaires",
+        "desc": "Résumé automatique chaque lundi matin"
+      }
+    },
+    "data": {
+      "exportTitle": "Exporter les données",
+      "exportDesc": "Télécharger toutes les données au format CSV ou JSON",
+      "exportAction": "Exporter",
+      "backupTitle": "Sauvegarder la base",
+      "backupDesc": "Créer une sauvegarde complète de la base de données",
+      "backupAction": "Sauvegarder",
+      "importTitle": "Importer des données",
+      "importDesc": "Importer des étudiants, notes ou paiements depuis un fichier CSV",
+      "importAction": "Importer",
+      "actionInProgress": "{{action}} en cours…"
+    },
+    "saveChanges": "Enregistrer les Modifications",
+    "resetDefaults": "Restaurer les Valeurs par Défaut",
+    "save": "Sauvegarder",
+    "settingsSaved": "Paramètres sauvegardés !",
+    "notifSaved": "Préférences de notification sauvegardées !",
+    "passwordChanged": "Mot de passe modifié !"
+  },
+  "notifications": {
+    "pageTitle": "Notifications",
+    "pageSubtitle": "Centre de notifications et alertes système",
+    "markAllRead": "Tout Marquer comme Lu",
+    "markAllReadBtn": "Tout marquer comme lu",
+    "clearAll": "Tout Effacer",
+    "noNotifications": "Aucune notification",
+    "viewAll": "Voir toutes les notifications",
+    "notifCount": "{{count}} notifications · {{unread}} non lues",
+    "newBadge": "Nouveau",
+    "types": {
+      "newStudent": "Nouvel Étudiant",
+      "paymentReceived": "Paiement Reçu",
+      "attendanceAlert": "Alerte d'Absence",
+      "examScheduled": "Examen Planifié",
+      "gradePublished": "Notes Publiées",
+      "announcement": "Nouvelle Annonce",
+      "systemAlert": "Alerte Système"
+    },
+    "status": {
+      "unread": "Non lu",
+      "read": "Lu"
+    }
+  },
+  "profile": {
+    "editProfile": "Modifier le profil",
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "online": "En ligne",
+    "stats": {
+      "connections": "Connexions",
+      "actions": "Actions",
+      "sessions": "Sessions",
+      "since": "Depuis"
+    },
+    "personalInfo": "Informations personnelles",
+    "edit": "Modifier",
+    "fields": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "position": "Poste",
+      "department": "Département",
+      "location": "Localisation",
+      "bio": "Biographie"
+    },
+    "infoLabels": {
+      "email": "Email",
+      "phone": "Téléphone",
+      "position": "Poste",
+      "department": "Département",
+      "location": "Localisation"
+    },
+    "security": {
+      "title": "Sécurité du compte",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "confirm": "Confirmer",
+      "strength": "Force",
+      "changeBtn": "Modifier le mot de passe",
+      "strengthLabels": {
+        "weak": "Faible",
+        "fair": "Passable",
+        "good": "Bon",
+        "strong": "Fort"
+      },
+      "requirements": {
+        "minChars": "8 caractères minimum",
+        "uppercase": "Une majuscule",
+        "number": "Un chiffre",
+        "special": "Un caractère spécial"
+      },
+      "errors": {
+        "fillAll": "Veuillez remplir tous les champs.",
+        "noMatch": "Les mots de passe ne correspondent pas.",
+        "tooShort": "Le mot de passe doit contenir au moins 8 caractères."
+      }
+    },
+    "recentActivity": {
+      "title": "Activité récente",
+      "today": "Aujourd'hui",
+      "viewAll": "Voir tout l'historique"
+    },
+    "accountStatus": {
+      "title": "Statut du compte",
+      "verified": "Compte vérifié",
+      "verifiedDesc": "Email confirmé",
+      "adminAccess": "Accès administrateur",
+      "adminDesc": "Toutes permissions",
+      "memberSince": "Membre depuis 2022",
+      "memberDesc": "3 ans d'ancienneté",
+      "disconnect": "Déconnecter tous les appareils"
+    },
+    "toasts": {
+      "profileUpdated": "Profil mis à jour avec succès !",
+      "passwordChanged": "Mot de passe modifié !"
+    },
+    "changePhoto": "Changer la photo",
+    "adminBadge": "Admin"
+  }
+}

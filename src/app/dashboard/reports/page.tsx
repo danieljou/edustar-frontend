@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "react-i18next";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -15,26 +16,28 @@ const FILIERE_DATA = [
 ];
 
 export default function ReportsPage() {
+  const { t } = useTranslation("systeme");
+
   return (
     <div>
       <PageHeader
-        title="Rapports & Statistiques"
-        subtitle="Analyse de la session 2025–2026"
-        actions={<Button variant="outline" size="sm"><Download className="w-3.5 h-3.5" /> Exporter PDF</Button>}
+        title={t("reports.pageTitle2")}
+        subtitle={t("reports.pageSubtitle2")}
+        actions={<Button variant="outline" size="sm"><Download className="w-3.5 h-3.5" /> {t("reports.exportPdf")}</Button>}
       />
 
       {/* Summary row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-5">
         {[
-          { label: "Total inscrits", value: "391", trend: "+12%", color: "var(--blue)" },
-          { label: "Taux réussite", value: "78%", trend: "+3%", color: "var(--success)" },
-          { label: "Revenus totaux", value: "61.7M", trend: "+8%", color: "var(--cyan)" },
-          { label: "Taux présence", value: "84%", trend: "-2%", color: "var(--warning)" },
+          { label: t("reports.totalEnrolled"), value: "391", trend: "+12%", color: "var(--blue)" },
+          { label: t("reports.successRate"), value: "78%", trend: "+3%", color: "var(--success)" },
+          { label: t("reports.totalRevenue"), value: "61.7M", trend: "+8%", color: "var(--cyan)" },
+          { label: t("reports.attendanceRate"), value: "84%", trend: "-2%", color: "var(--warning)" },
         ].map(c => (
           <div key={c.label} className="bg-white border border-[var(--line)] rounded-[14px] p-4 text-center">
             <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-4)] mb-1">{c.label}</div>
             <div className="font-serif text-[26px]" style={{ color: c.color }}>{c.value}</div>
-            <div className={`text-[11px] font-semibold mt-1 ${c.trend.startsWith("+") ? "text-[var(--success)]" : "text-[var(--danger)]"}`}>{c.trend} vs an dernier</div>
+            <div className={`text-[11px] font-semibold mt-1 ${c.trend.startsWith("+") ? "text-[var(--success)]" : "text-[var(--danger)]"}`}>{c.trend} {t("reports.vsLastYear")}</div>
           </div>
         ))}
       </div>
@@ -42,7 +45,7 @@ export default function ReportsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Effectifs */}
         <Card>
-          <CardHeader><CardTitle>Évolution des effectifs</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("reports.effectifsTitle")}</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={CHART_DATA} barSize={20}>
@@ -50,7 +53,7 @@ export default function ReportsPage() {
                 <XAxis dataKey="mois" tick={{ fontSize: 11, fill: "var(--ink-4)" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "var(--ink-4)" }} axisLine={false} tickLine={false} domain={[350, 410]} />
                 <Tooltip />
-                <Bar dataKey="inscrits" name="Étudiants" fill="#1a3c8f" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="inscrits" name={t("reports.types.students")} fill="#1a3c8f" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -58,7 +61,7 @@ export default function ReportsPage() {
 
         {/* Répartition filieres */}
         <Card>
-          <CardHeader><CardTitle>Répartition par filière</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("reports.filiereTitle")}</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
@@ -67,7 +70,7 @@ export default function ReportsPage() {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value) => [value, "Étudiants"]} />
+                <Tooltip formatter={(value) => [value, t("reports.types.students")]} />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -75,15 +78,15 @@ export default function ReportsPage() {
 
         {/* Paiements */}
         <Card>
-          <CardHeader><CardTitle>Revenus mensuels (FCFA)</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("reports.revenueTitle")}</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={CHART_DATA} barSize={20}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" vertical={false} />
                 <XAxis dataKey="mois" tick={{ fontSize: 11, fill: "var(--ink-4)" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "var(--ink-4)" }} axisLine={false} tickLine={false} tickFormatter={v => `${(v / 1e6).toFixed(0)}M`} />
-                <Tooltip formatter={(v: number) => [formatCurrency(v), "Revenus"]} />
-                <Bar dataKey="paiements" name="Paiements" fill="#0099cc" radius={[4, 4, 0, 0]} />
+                <Tooltip formatter={(v: number) => [formatCurrency(v), t("reports.totalRevenue")]} />
+                <Bar dataKey="paiements" name={t("reports.types.financial")} fill="#0099cc" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -91,7 +94,7 @@ export default function ReportsPage() {
 
         {/* Top classes */}
         <Card>
-          <CardHeader><CardTitle>Performance par classe</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t("reports.performanceTitle")}</CardTitle></CardHeader>
           <CardContent className="p-0">
             {CLASSES.map(c => {
               const classStudents = STUDENTS.filter(s => s.classe === c.code);

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Layers, Calendar, Settings2, Check, ChevronRight,
   Plus, AlertCircle, BookOpen, ArrowRight,
@@ -9,14 +10,12 @@ import { EduBadge } from "@/components/shared/EduBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { EvalSystemBuilder } from "@/components/evaluation/EvalSystemBuilder";
-import { useEvaluationStore, selectPeriodesActives } from "@/stores/useEvaluationStore";
-import { validateTypesEvaluation, pourcentageColor } from "@/lib/calcul-engine";
+import { useEvaluationStore } from "@/stores/useEvaluationStore";
+import { validateTypesEvaluation } from "@/lib/calcul-engine";
 import { SYSTEM_TEMPLATES } from "@/constants/evaluation-mock";
 import type { SystemeEvaluation, Periode, TypeEvaluation, EvalSystemType } from "@/types/evaluation";
 
@@ -31,11 +30,11 @@ function StepChoisirModele({
   current: EvalSystemType;
   onChoose: (t: EvalSystemType) => void;
 }) {
+  const { t } = useTranslation("evaluations");
   return (
     <div className="space-y-3">
       <p className="text-[12px] text-[var(--ink-4)] mb-4">
-        Choisissez le modèle qui correspond à votre établissement.
-        Vous pourrez ensuite personnaliser entièrement les périodes et les évaluations.
+        {t("evalSystem.chooseModelHint")}
       </p>
       {SYSTEM_TEMPLATES.map(tpl => {
         const Icon = ICON_MAP[tpl.icon];
@@ -71,7 +70,6 @@ function StepChoisirModele({
                 </div>
                 <p className="text-[12px] text-[var(--ink-4)] mb-2">{tpl.description}</p>
 
-                {/* Exemple */}
                 <div className="flex items-center gap-1 flex-wrap">
                   {tpl.exemple.map((ex, i) => (
                     <span key={i} className="flex items-center gap-1">
@@ -108,13 +106,13 @@ function StepConfigurerPeriodes({
   onUpdate: (id: string, patch: Partial<Periode>) => void;
   onRemove: (id: string) => void;
 }) {
+  const { t } = useTranslation("evaluations");
   const sorted = [...periodes].sort((a, b) => a.ordre - b.ordre);
 
   return (
     <div className="space-y-3">
       <p className="text-[12px] text-[var(--ink-4)] mb-4">
-        Définissez les périodes du système. Cochez <strong>Agrégat</strong> pour les
-        périodes calculées (ex. Trimestre = Séq1 + Séq2).
+        {t("evalSystem.periodsHint")}
       </p>
 
       {sorted.map(p => (
@@ -130,7 +128,7 @@ function StepConfigurerPeriodes({
             value={p.nom}
             onChange={e => onUpdate(p.id, { nom: e.target.value })}
             className="h-8 text-[12px] flex-1"
-            placeholder="Nom de la période"
+            placeholder={t("evalSystem.periodNamePlaceholder")}
           />
 
           <Select
@@ -141,10 +139,10 @@ function StepConfigurerPeriodes({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="SEQUENCE">Séquence</SelectItem>
-              <SelectItem value="TRIMESTRE">Trimestre</SelectItem>
-              <SelectItem value="SEMESTRE">Semestre</SelectItem>
-              <SelectItem value="CUSTOM">Personnalisé</SelectItem>
+              <SelectItem value="SEQUENCE">{t("evalSystem.periodTypes.sequence")}</SelectItem>
+              <SelectItem value="TRIMESTRE">{t("evalSystem.periodTypes.trimestre")}</SelectItem>
+              <SelectItem value="SEMESTRE">{t("evalSystem.periodTypes.semestre")}</SelectItem>
+              <SelectItem value="CUSTOM">{t("evalSystem.periodTypes.custom")}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -162,13 +160,12 @@ function StepConfigurerPeriodes({
             className="h-8 text-[11px] w-36"
           />
 
-          {/* Agrégat toggle */}
           <button
             onClick={() => onUpdate(p.id, { estAgregat: !p.estAgregat })}
             className="shrink-0"
           >
             <EduBadge variant={p.estAgregat ? "cyan" : "neutral"}>
-              {p.estAgregat ? "Agrégat" : "Simple"}
+              {p.estAgregat ? t("evalSystem.aggregate") : t("evalSystem.simple")}
             </EduBadge>
           </button>
 
@@ -189,18 +186,15 @@ function StepConfigurerPeriodes({
         onClick={onAdd}
         className="w-full border-dashed h-9 text-[12px]"
       >
-        <Plus className="w-3.5 h-3.5 mr-1.5" /> Ajouter une période
+        <Plus className="w-3.5 h-3.5 mr-1.5" /> {t("evalSystem.addPeriod")}
       </Button>
 
-      {/* Info agrégat */}
       <div className="flex items-start gap-2 p-3 rounded-[8px] bg-[var(--cyan-light)] border border-[rgba(0,153,204,0.2)]">
         <AlertCircle className="w-3.5 h-3.5 text-[var(--cyan)] shrink-0 mt-[1px]" />
         <p className="text-[11px] text-[var(--cyan)]">
-          <strong>Agrégat</strong> = période calculée automatiquement (moyenne des sous-périodes).
-          Exemple : Trimestre 1 = (Séquence 1 + Séquence 2) / 2.
+          {t("evalSystem.aggregateHint")}
         </p>
       </div>
-      {/* Suppress unused */}
       <span className="hidden">{systemeId}</span>
     </div>
   );
@@ -246,11 +240,11 @@ function StepPreview({
   periodes: Periode[];
   typesEval: TypeEvaluation[];
 }) {
+  const { t } = useTranslation("evaluations");
   const sorted = [...periodes].sort((a, b) => a.ordre - b.ordre);
 
   return (
     <div className="space-y-4">
-      {/* Header info */}
       <div className="p-4 rounded-[12px] border border-[var(--line)] bg-[var(--ivory)]">
         <div className="flex items-center gap-3 mb-3">
           <BookOpen className="w-5 h-5 text-[var(--blue)]" />
@@ -259,12 +253,11 @@ function StepPreview({
             <p className="text-[11px] text-[var(--ink-4)]">{systeme.description}</p>
           </div>
           <EduBadge variant={systeme.actif ? "green" : "neutral"} className="ml-auto">
-            {systeme.actif ? "Actif" : "Inactif"}
+            {systeme.actif ? t("evalSystem.active") : t("evalSystem.inactive")}
           </EduBadge>
         </div>
       </div>
 
-      {/* Timeline des périodes */}
       <div className="space-y-2">
         {sorted.map(p => {
           const types = typesEval
@@ -287,7 +280,7 @@ function StepPreview({
                   p.statut === "CLOTUREE" ? "bg-[var(--ink-4)]" : "bg-[var(--warning)]"
                 }`} />
                 <p className="text-[12.5px] font-semibold text-[var(--ink)]">{p.nom}</p>
-                {p.estAgregat && <EduBadge variant="cyan">Agrégat</EduBadge>}
+                {p.estAgregat && <EduBadge variant="cyan">{t("evalSystem.aggregate")}</EduBadge>}
                 <span className="ml-auto text-[10px] text-[var(--ink-4)]">
                   {p.dateDebut} → {p.dateFin}
                 </span>
@@ -295,7 +288,6 @@ function StepPreview({
 
               {types.length > 0 && !p.estAgregat && (
                 <div className="ml-5 space-y-1.5">
-                  {/* Bar */}
                   <div className="h-3 rounded-full overflow-hidden flex bg-[var(--line)]">
                     {types.map((t, i) => {
                       const COLORS = ["var(--blue)","var(--cyan)","var(--purple)","var(--success)","var(--warning)"];
@@ -310,7 +302,6 @@ function StepPreview({
                     })}
                   </div>
 
-                  {/* List */}
                   <div className="flex flex-wrap gap-2">
                     {types.map(t => (
                       <div key={t.id} className="flex items-center gap-1.5">
@@ -340,7 +331,7 @@ function StepPreview({
 
               {p.estAgregat && (
                 <p className="ml-5 text-[11px] text-[var(--cyan)]">
-                  Calculé automatiquement depuis : {p.periodesFilles.join(", ")}
+                  {t("evalSystem.calculatedFrom")} : {p.periodesFilles.join(", ")}
                 </p>
               )}
             </div>
@@ -353,14 +344,8 @@ function StepPreview({
 
 // ─── Page principale ───────────────────────────────────────────────────────────
 
-const STEPS = [
-  { id: "modele", label: "Modèle" },
-  { id: "periodes", label: "Périodes" },
-  { id: "evaluations", label: "Évaluations" },
-  { id: "apercu", label: "Aperçu" },
-];
-
 export default function EvaluationSystemPage() {
+  const { t } = useTranslation("evaluations");
   const {
     systemes, periodes, typesEval,
     activeSystemeId,
@@ -368,6 +353,13 @@ export default function EvaluationSystemPage() {
     addPeriode, updatePeriode, removePeriode,
     addTypeEval, updateTypeEval, removeTypeEval,
   } = useEvaluationStore();
+
+  const STEPS = [
+    { id: "modele", label: t("evalSystem.steps.model") },
+    { id: "periodes", label: t("evalSystem.steps.periods") },
+    { id: "evaluations", label: t("evalSystem.steps.evaluations") },
+    { id: "apercu", label: t("evalSystem.steps.preview") },
+  ];
 
   const [step, setStep] = useState("modele");
   const [draftType, setDraftType] = useState<EvalSystemType>("SEQUENCES_TRIMESTRES");
@@ -387,7 +379,7 @@ export default function EvaluationSystemPage() {
     addPeriode({
       id: uid(),
       systemeId: activeSystemeId,
-      nom: `Période ${ordre}`,
+      nom: `${t("evalSystem.periodDefaultName")} ${ordre}`,
       type: "CUSTOM",
       ordre,
       dateDebut: "2025-09-01",
@@ -406,7 +398,7 @@ export default function EvaluationSystemPage() {
       id: uid(),
       systemeId: activeSystemeId,
       periodeId,
-      nom: `Évaluation ${ordre}`,
+      nom: `${t("evalSystem.evalDefaultName")} ${ordre}`,
       abrev: `EV${ordre}`,
       pourcentage: 0,
       coefficient: 1,
@@ -422,18 +414,18 @@ export default function EvaluationSystemPage() {
   return (
     <div>
       <PageHeader
-        title="Système d'évaluation"
-        subtitle="Configurez la structure pédagogique de votre établissement"
+        title={t("evalSystem.pageTitle")}
+        subtitle={t("evalSystem.pageSubtitle")}
         actions={
           <div className="flex items-center gap-2">
             {stepIndex < STEPS.length - 1 && (
               <Button size="sm" onClick={() => setStep(STEPS[stepIndex + 1].id)}>
-                Suivant <ChevronRight className="w-3.5 h-3.5 ml-1" />
+                {t("actions.next", { ns: "common" })} <ChevronRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             )}
             {stepIndex === STEPS.length - 1 && (
               <Button size="sm" variant="primary">
-                <Check className="w-3.5 h-3.5 mr-1.5" /> Enregistrer la configuration
+                <Check className="w-3.5 h-3.5 mr-1.5" /> {t("evalSystem.saveConfig")}
               </Button>
             )}
           </div>
@@ -513,7 +505,7 @@ export default function EvaluationSystemPage() {
           <Card className="border-[var(--line)] shadow-none">
             <CardContent className="p-4">
               <p className="text-[10px] font-semibold text-[var(--ink-4)] uppercase tracking-[0.06em] mb-3">
-                Systèmes configurés
+                {t("evalSystem.configuredSystems")}
               </p>
               <div className="space-y-2">
                 {systemes.map(s => (
@@ -538,10 +530,10 @@ export default function EvaluationSystemPage() {
               </div>
 
               <div className="mt-3 pt-3 border-t border-[var(--line)]">
-                <p className="text-[10px] text-[var(--ink-4)] mb-2">Nouveau système</p>
+                <p className="text-[10px] text-[var(--ink-4)] mb-2">{t("evalSystem.newSystem")}</p>
                 <div className="space-y-2">
                   <Input
-                    placeholder="Nom du système"
+                    placeholder={t("evalSystem.systemNamePlaceholder")}
                     value={newNom}
                     onChange={e => setNewNom(e.target.value)}
                     className="h-8 text-[12px]"
@@ -552,11 +544,10 @@ export default function EvaluationSystemPage() {
                     className="w-full text-[11px] h-8"
                     disabled={!newNom.trim()}
                     onClick={() => {
-                      // addSysteme(...)
                       setNewNom("");
                     }}
                   >
-                    <Plus className="w-3 h-3 mr-1" /> Créer
+                    <Plus className="w-3 h-3 mr-1" /> {t("actions.create", { ns: "common" })}
                   </Button>
                 </div>
               </div>
@@ -567,13 +558,13 @@ export default function EvaluationSystemPage() {
           <Card className="border-[var(--line)] shadow-none">
             <CardContent className="p-4">
               <p className="text-[10px] font-semibold text-[var(--ink-4)] uppercase tracking-[0.06em] mb-3">
-                Raccourcis
+                {t("evalSystem.shortcuts")}
               </p>
               <div className="space-y-1">
                 {[
-                  { label: "Saisie des notes", href: "/dashboard/notes/saisie" },
-                  { label: "Programmation examens", href: "/dashboard/academique/examens" },
-                  { label: "Bulletins", href: "/dashboard/bulletins" },
+                  { label: t("gradeEntry.pageTitle"), href: "/dashboard/notes/saisie" },
+                  { label: t("evalSystem.examScheduling"), href: "/dashboard/academique/examens" },
+                  { label: t("bulletins.pageTitle"), href: "/dashboard/bulletins" },
                 ].map(l => (
                   <a
                     key={l.href}

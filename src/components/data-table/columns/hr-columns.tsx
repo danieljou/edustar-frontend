@@ -1,5 +1,6 @@
 "use client";
 
+import { TFunction } from "i18next";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreVertical, Eye, Edit } from "lucide-react";
 import { Personnel } from "@/types";
@@ -9,16 +10,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { formatDate, formatCurrency } from "@/lib/utils";
 
-export const hrColumns: ColumnDef<Personnel>[] = [
+export const getHrColumns = (t: TFunction): ColumnDef<Personnel>[] => [
   {
     accessorKey: "id",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("hr.columns.matricule")} />,
     cell: ({ row }) => <span className="font-mono text-[11px] text-[var(--blue)] font-semibold">{row.getValue("id")}</span>,
     size: 70,
   },
   {
     id: "member",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Membre" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("hr.columns.firstName") + " / " + t("hr.columns.lastName")} />,
     cell: ({ row }) => {
       const personnel = row.original;
       return (
@@ -36,7 +37,7 @@ export const hrColumns: ColumnDef<Personnel>[] = [
     id: "role",
     accessorFn: (row) => row.role,
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Rôle / Dept." />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("hr.columns.role") + " / " + t("hr.columns.department")} />,
     cell: ({ row }) => {
       const personnel = row.original;
       return (
@@ -49,7 +50,7 @@ export const hrColumns: ColumnDef<Personnel>[] = [
   },
   {
     id: "contact",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Contact" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("hr.columns.phone")} />,
     cell: ({ row }) => {
       const personnel = row.original;
       return (
@@ -62,13 +63,13 @@ export const hrColumns: ColumnDef<Personnel>[] = [
   },
   {
     accessorKey: "salaire",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Salaire" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("hr.columns.salary")} />,
     cell: ({ row }) => <span className="font-bold text-[var(--ink)]">{formatCurrency(row.getValue("salaire") as number)}</span>,
   },
   {
     accessorKey: "contrat",
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Contrat" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("hr.columns.contract")} />,
     cell: ({ row }) => {
       const contrat = row.getValue("contrat") as string;
       return <EduBadge variant={contrat === "CDI" ? "green" : contrat === "CDD" ? "amber" : "neutral"}>{contrat}</EduBadge>;
@@ -78,7 +79,7 @@ export const hrColumns: ColumnDef<Personnel>[] = [
   {
     accessorKey: "statut",
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("hr.columns.status")} />,
     cell: ({ row }) => {
       const statut = row.getValue("statut") as string;
       return <EduBadge variant={statusBadge(statut)}>{statut}</EduBadge>;

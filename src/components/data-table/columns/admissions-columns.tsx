@@ -1,6 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { TFunction } from "i18next";
 import { MoreVertical, Eye, X, Check } from "lucide-react";
 import { Admission } from "@/types";
 import { EduAvatar, EduBadge, statusBadge } from "@/components/shared";
@@ -9,7 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { age, formatDate } from "@/lib/utils";
 
-export const admissionsColumns: ColumnDef<Admission>[] = [
+export const getAdmissionsColumns = (t: TFunction): ColumnDef<Admission>[] => [
   {
     accessorKey: "id",
     header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
@@ -18,7 +19,7 @@ export const admissionsColumns: ColumnDef<Admission>[] = [
   },
   {
     id: "candidat",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Candidat" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("admissions.columns.candidate")} />,
     cell: ({ row }) => {
       const admission = row.original;
       return (
@@ -26,7 +27,7 @@ export const admissionsColumns: ColumnDef<Admission>[] = [
           <EduAvatar name={`${admission.prenom} ${admission.nom}`} size={28} />
           <div>
             <div className="font-semibold text-[var(--ink)]">{admission.prenom} {admission.nom}</div>
-            <div className="text-[10.5px] text-[var(--ink-4)]">{admission.sexe === "F" ? "Féminin" : "Masculin"} · {age(admission.dob)} ans</div>
+            <div className="text-[10.5px] text-[var(--ink-4)]">{admission.sexe === "F" ? t("fields.female", { ns: "common" }) : t("fields.male", { ns: "common" })} · {age(admission.dob)} ans</div>
           </div>
         </div>
       );
@@ -34,7 +35,7 @@ export const admissionsColumns: ColumnDef<Admission>[] = [
   },
   {
     id: "formation",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Filière / Niveau" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("admissions.columns.desiredClass")} />,
     cell: ({ row }) => {
       const admission = row.original;
       return (
@@ -67,12 +68,12 @@ export const admissionsColumns: ColumnDef<Admission>[] = [
   },
   {
     accessorKey: "date",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("admissions.columns.applicationDate")} />,
     cell: ({ row }) => <span className="text-[var(--ink-4)] whitespace-nowrap">{formatDate(row.getValue("date") as string)}</span>,
   },
   {
     accessorKey: "statut",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("admissions.columns.status")} />,
     cell: ({ row }) => {
       const statut = row.getValue("statut") as string;
       return <EduBadge variant={statusBadge(statut)}>{statut}</EduBadge>;
@@ -90,11 +91,11 @@ export const admissionsColumns: ColumnDef<Admission>[] = [
             <Button variant="ghost" size="icon"><MoreVertical className="w-3.5 h-3.5" /></Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem><Eye className="w-3.5 h-3.5" /> Voir dossier</DropdownMenuItem>
+            <DropdownMenuItem><Eye className="w-3.5 h-3.5" /> {t("actions.view", { ns: "common" })}</DropdownMenuItem>
             {admission.statut === "En attente" && (
               <>
-                <DropdownMenuItem><Check className="w-3.5 h-3.5" /> Valider</DropdownMenuItem>
-                <DropdownMenuItem destructive><X className="w-3.5 h-3.5" /> Rejeter</DropdownMenuItem>
+                <DropdownMenuItem><Check className="w-3.5 h-3.5" /> {t("actions.confirm", { ns: "common" })}</DropdownMenuItem>
+                <DropdownMenuItem destructive><X className="w-3.5 h-3.5" /> {t("actions.delete", { ns: "common" })}</DropdownMenuItem>
               </>
             )}
           </DropdownMenuContent>

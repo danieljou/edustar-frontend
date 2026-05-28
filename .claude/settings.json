@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(PowerShell -Command 'Select-String -Path '\\\\''C:\\\\Users\\\\DELL\\\\.vscode\\\\extensions\\\\lokalise.i18n-ally-2.13.1\\\\dist\\\\extension.js'\\\\'' -Pattern '\\\\''useTranslation'\\\\'' | Select-Object -First 5 | ForEach-Object { $_.Line.Substring\\([Math]::Max\\(0, $_.Line.IndexOf\\('\\\\''useTranslation'\\\\''\\) - 100\\), [Math]::Min\\(300, $_.Line.Length - [Math]::Max\\(0, $_.Line.IndexOf\\('\\\\''useTranslation'\\\\''\\) - 100\\)\\)\\) }')",
+      "Bash(PowerShell -Command ' *)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

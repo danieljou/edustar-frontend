@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { StatCard } from "@/components/shared/StatCard";
 import {
   GraduationCap,
@@ -16,13 +17,9 @@ import {
 import { STUDENTS, PAYMENTS, PERSONNEL, ADMISSIONS, MORATORIUMS } from "@/constants/mock-data";
 import { formatCurrency, cn } from "@/lib/utils";
 
-const FILIERES = ["Toutes", "Informatique", "Gestion", "Droit"] as const;
-const PERIODES = ["Mois", "Trimestre", "Semestre", "Année"] as const;
-const STATUTS = ["Tous", "Actif", "Suspendu"] as const;
-
-type Filiere = (typeof FILIERES)[number];
-type Periode = (typeof PERIODES)[number];
-type StatutFilter = (typeof STATUTS)[number];
+type Filiere = "Toutes" | "Informatique" | "Gestion" | "Droit";
+type Periode = "Mois" | "Trimestre" | "Semestre" | "Année";
+type StatutFilter = "Tous" | "Actif" | "Suspendu";
 
 const PERIODE_BADGE: Record<string, string> = {
   Mois: "Janv. – Fév. 2026",
@@ -32,6 +29,12 @@ const PERIODE_BADGE: Record<string, string> = {
 };
 
 export function DashboardStats() {
+  const { t } = useTranslation("dashboard");
+
+  const FILIERES: Filiere[] = ["Toutes", "Informatique", "Gestion", "Droit"];
+  const PERIODES: Periode[] = ["Mois", "Trimestre", "Semestre", "Année"];
+  const STATUTS: StatutFilter[] = ["Tous", "Actif", "Suspendu"];
+
   const [filiere, setFiliere] = useState<Filiere>("Toutes");
   const [periode, setPeriode] = useState<Periode>("Semestre");
   const [statut, setStatut] = useState<StatutFilter>("Tous");
@@ -92,68 +95,68 @@ export function DashboardStats() {
 
   const kpis = [
     {
-      label: "Étudiants inscrits",
+      label: t("stats.enrolledStudents"),
       value: students.length,
-      trend: { value: `${students.filter((s) => s.statut === "Actif").length} actifs`, up: true },
+      trend: { value: t("kpi.activeStudents", { count: students.filter((s) => s.statut === "Actif").length }), up: true },
       accent: "blue" as const,
       icon: <GraduationCap className="w-4 h-4" />,
     },
     {
-      label: "Taux de recouvrement",
+      label: t("stats.recoveryRate"),
       value: `${tauxRecouvrement}%`,
       trend: {
-        value: tauxRecouvrement >= 80 ? "Objectif atteint" : "Seuil alerte < 80%",
+        value: tauxRecouvrement >= 80 ? t("kpi.goalReached") : t("kpi.alertThreshold", { pct: 80 }),
         up: tauxRecouvrement >= 80,
       },
       accent: (tauxRecouvrement >= 80 ? "green" : "red") as "green" | "red",
       icon: <CreditCard className="w-4 h-4" />,
     },
     {
-      label: "Taux de réussite",
+      label: t("stats.passRateLabel"),
       value: `${tauxReussite}%`,
       trend: {
-        value: tauxReussite >= 70 ? "Session correcte" : "Seuil alerte < 70%",
+        value: tauxReussite >= 70 ? t("kpi.sessionOk") : t("kpi.alertThreshold", { pct: 70 }),
         up: tauxReussite >= 70,
       },
       accent: (tauxReussite >= 70 ? "green" : "amber") as "green" | "amber",
       icon: <Award className="w-4 h-4" />,
     },
     {
-      label: "Taux de présence",
+      label: t("stats.attendanceRateLabel"),
       value: `${tauxPresence}%`,
       trend: {
-        value: tauxPresence >= 85 ? "Satisfaisant" : "Seuil alerte < 85%",
+        value: tauxPresence >= 85 ? t("kpi.satisfactory") : t("kpi.alertThreshold", { pct: 85 }),
         up: tauxPresence >= 85,
       },
       accent: (tauxPresence >= 85 ? "cyan" : "amber") as "cyan" | "amber",
       icon: <UserCheck className="w-4 h-4" />,
     },
     {
-      label: "Soldes impayés",
+      label: t("stats.unpaidBalances"),
       value: debtStudents,
-      trend: { value: `${formatCurrency(totalDebt)} total`, neutral: true },
+      trend: { value: t("kpi.total", { amount: formatCurrency(totalDebt) }), neutral: true },
       accent: "red" as const,
       icon: <TrendingUp className="w-4 h-4" />,
     },
     {
-      label: "Absentéisme staff",
+      label: t("stats.staffAbsenteeism"),
       value: `${tauxAbsStaff}%`,
-      trend: { value: `${totalStaff} actifs / ${PERSONNEL.length}`, neutral: true },
+      trend: { value: t("kpi.activeStaff", { active: totalStaff, total: PERSONNEL.length }), neutral: true },
       accent: (tauxAbsStaff > 5 ? "amber" : "purple") as "amber" | "purple",
       icon: <Users className="w-4 h-4" />,
     },
     {
-      label: "Admissions en attente",
+      label: t("stats.pendingAdmissions"),
       value: admissionsEnAttente,
-      trend: { value: `${admissionsValidees} validées cette session`, up: true },
+      trend: { value: t("kpi.validatedThisSession", { count: admissionsValidees }), up: true },
       accent: "cyan" as const,
       icon: <FileText className="w-4 h-4" />,
     },
     {
-      label: "Moratoriums à risque",
+      label: t("stats.atRiskMoratoriums"),
       value: moratoriumsCritiques,
       trend: {
-        value: `${MORATORIUMS.length} morat. actifs`,
+        value: t("kpi.activeMoratoriums", { count: MORATORIUMS.length }),
         up: moratoriumsCritiques === 0,
       },
       accent: (moratoriumsCritiques > 0 ? "amber" : "green") as "amber" | "green",
@@ -167,10 +170,10 @@ export function DashboardStats() {
       <div className="bg-white border border-[var(--line)] rounded-[14px] px-4 py-3 flex flex-wrap items-center gap-x-4 gap-y-2.5">
         <div className="flex items-center gap-1.5 shrink-0">
           <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--blue)]" />
-          <span className="text-[11px] font-bold text-[var(--ink)]">Filtres</span>
+          <span className="text-[11px] font-bold text-[var(--ink)]">{t("filters.label")}</span>
           {isFiltered && (
             <span className="text-[9.5px] font-bold bg-[var(--blue)] text-white rounded-full px-1.5 py-0.5 leading-none">
-              actifs
+              {t("filters.active")}
             </span>
           )}
         </div>
@@ -180,7 +183,7 @@ export function DashboardStats() {
         {/* Filière */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[9.5px] font-bold text-[var(--ink-4)] uppercase tracking-[0.08em]">
-            Filière
+            {t("filters.filiere")}
           </span>
           <div className="flex items-center gap-0.5">
             {FILIERES.map((f) => (
@@ -205,7 +208,7 @@ export function DashboardStats() {
         {/* Période */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[9.5px] font-bold text-[var(--ink-4)] uppercase tracking-[0.08em]">
-            Période
+            {t("filters.periode")}
           </span>
           <div className="flex items-center gap-0.5">
             {PERIODES.map((p) => (
@@ -230,7 +233,7 @@ export function DashboardStats() {
         {/* Statut */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[9.5px] font-bold text-[var(--ink-4)] uppercase tracking-[0.08em]">
-            Statut
+            {t("filters.statut")}
           </span>
           <div className="flex items-center gap-0.5">
             {STATUTS.map((s) => (
@@ -265,7 +268,7 @@ export function DashboardStats() {
               className="flex items-center gap-1 text-[10.5px] font-semibold text-[var(--danger)] hover:opacity-70 transition-opacity"
             >
               <RotateCcw className="w-3 h-3" />
-              Réinitialiser
+              {t("filters.reset")}
             </button>
           )}
         </div>

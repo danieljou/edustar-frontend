@@ -1,3 +1,5 @@
+"use client";
+import { useTranslation } from "react-i18next";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,13 +27,14 @@ const FILIERE_BADGE: Record<string, string> = {
 };
 
 export function ClassPerformance() {
+  const { t } = useTranslation("dashboard");
   const maxAvg = 20;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Performance par classe</CardTitle>
-        <span className="text-[10.5px] text-[var(--ink-4)]">Moy. générale / 20 — S1 2025–2026</span>
+        <CardTitle>{t("classPerformance.title")}</CardTitle>
+        <span className="text-[10.5px] text-[var(--ink-4)]">{t("classPerformance.subtitle")}</span>
       </CardHeader>
 
       <CardContent className="space-y-2.5 pt-1">
@@ -63,7 +66,7 @@ export function ClassPerformance() {
                     {cls.filiere}
                   </span>
                   <span className="text-[10px] text-[var(--ink-4)] shrink-0 ml-auto sm:ml-0">
-                    {cls.students} étu.
+                    {t("classPerformance.students", { count: cls.students })}
                   </span>
                 </div>
 
@@ -122,7 +125,7 @@ export function ClassPerformance() {
             </div>
           ))}
           <span className="text-[9.5px] text-[var(--ink-4)] ml-auto hidden sm:block">
-            ↑↓ vs semestre précédent
+            {t("chart.vsLastSemester")}
           </span>
         </div>
       </CardContent>

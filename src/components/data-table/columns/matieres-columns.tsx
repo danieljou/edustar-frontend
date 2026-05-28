@@ -1,6 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { TFunction } from "i18next";
 import { BookOpen } from "lucide-react";
 import { Matiere } from "@/types";
 import { EduBadge } from "@/components/shared";
@@ -19,16 +20,16 @@ const TYPE_BADGE: Record<string, "blue" | "green" | "amber" | "neutral"> = {
   "TP": "amber",
 };
 
-export const matieresColumns: ColumnDef<Matiere>[] = [
+export const getMatieresColumns = (t: TFunction): ColumnDef<Matiere>[] => [
   {
     accessorKey: "code",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("subjects.columns.code")} />,
     cell: ({ row }) => <span className="font-mono font-bold text-[11px] text-[var(--blue)]">{row.getValue("code")}</span>,
     size: 80,
   },
   {
     id: "matiere",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Intitulé de la matière" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("subjects.columns.name")} />,
     cell: ({ row }) => {
       const matiere = row.original;
       return (
@@ -44,13 +45,13 @@ export const matieresColumns: ColumnDef<Matiere>[] = [
   {
     accessorKey: "filiere",
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Filière" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("students.columns.filiere")} />,
     cell: ({ row }) => <span className="text-[var(--ink-3)]">{row.getValue("filiere")}</span>,
   },
   {
     accessorKey: "niveau",
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Niveau" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("classes.columns.level")} />,
     cell: ({ row }) => <EduBadge variant="neutral">{row.getValue("niveau")}</EduBadge>,
     size: 90,
   },
@@ -62,14 +63,14 @@ export const matieresColumns: ColumnDef<Matiere>[] = [
   },
   {
     accessorKey: "coeff",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Coeff." />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("subjects.columns.coefficient")} />,
     cell: ({ row }) => <div className="flex items-center justify-center w-8 h-6 rounded-[5px] bg-[var(--line)] text-[var(--ink-3)] font-bold text-[11px]">{row.getValue("coeff")}</div>,
     size: 70,
   },
   {
     accessorKey: "type",
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("fields.type", { ns: "common" })} />,
     cell: ({ row }) => {
       const type = row.getValue("type") as string;
       return <EduBadge variant={TYPE_BADGE[type] ?? "blue"}>{type}</EduBadge>;
@@ -78,13 +79,13 @@ export const matieresColumns: ColumnDef<Matiere>[] = [
   },
   {
     accessorKey: "ens",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Enseignant" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("subjects.columns.teacher")} />,
     cell: ({ row }) => <span className="text-[var(--ink-3)]">{row.getValue("ens")}</span>,
   },
   {
     id: "actions",
     header: () => null,
-    cell: () => <Button variant="ghost" size="xs">Modifier</Button>,
+    cell: () => <Button variant="ghost" size="xs">{t("actions.edit", { ns: "common" })}</Button>,
     size: 70,
   },
 ];

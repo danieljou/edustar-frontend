@@ -4,7 +4,11 @@
       "Bash(npx tsc *)",
       "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\(Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\('edit'\\) || k.toLowerCase\\(\\).includes\\('pencil'\\)\\).join\\(', '\\)\\)\")",
       "Bash(del \"c:\\\\Users\\\\DELL\\\\Documents\\\\PROJECT\\\\sms\\\\edustar-frontend\\\\specs_text.txt\")",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(PowerShell -Command \"Select-String -Path 'C:\\\\Users\\\\DELL\\\\.vscode\\\\extensions\\\\lokalise.i18n-ally-2.13.1\\\\dist\\\\*.js' -Pattern '@i18n' -SimpleMatch | Select-Object -First 5\")",
+      "Bash(PowerShell -Command \"Select-String -Path 'C:\\\\Users\\\\DELL\\\\.vscode\\\\extensions\\\\lokalise.i18n-ally-2.13.1\\\\dist\\\\*.js' -Pattern 'namespace.*annotation|file.*namespace|annotation.*namespace' | Select-Object -First 10\")",
+      "Bash(PowerShell -Command 'Select-String -Path '\\\\''C:\\\\Users\\\\DELL\\\\.vscode\\\\extensions\\\\lokalise.i18n-ally-2.13.1\\\\package.json'\\\\'' -Pattern '\\\\''frameworkOptions|usageMatch|react-i18next|namespaceArg'\\\\'' | Select-Object -First 20 | ForEach-Object { $_.Line }')",
+      "Bash(PowerShell -Command ' *)"
     ]
   }
 }

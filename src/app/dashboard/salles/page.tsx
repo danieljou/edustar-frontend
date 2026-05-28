@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Search, DoorOpen, Users, Wrench, CheckCircle2, Monitor } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduBadge } from "@/components/shared/EduBadge";
@@ -36,6 +37,7 @@ const TYPE_ICON: Record<string, React.ReactNode> = {
 };
 
 export default function SallesPage() {
+  const { t } = useTranslation("administration");
   const [query, setQuery] = useState("");
   const [type, setType] = useState("all");
   const [statut, setStatut] = useState("all");
@@ -56,18 +58,18 @@ export default function SallesPage() {
   return (
     <div>
       <PageHeader
-        title="Salles & Espaces"
-        subtitle={`${SALLES.length} espaces · ${disponibles} disponibles`}
-        actions={<Button size="sm"><DoorOpen className="w-3.5 h-3.5" /> Ajouter un espace</Button>}
+        title={t("salles.networkTitle")}
+        subtitle={t("salles.networkSubtitle", { count: SALLES.length, available: disponibles })}
+        actions={<Button size="sm"><DoorOpen className="w-3.5 h-3.5" /> {t("salles.addRoom")}</Button>}
       />
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-5">
         {[
-          { label: "Total espaces", value: SALLES.length, color: "var(--blue)", icon: <DoorOpen className="w-4 h-4" /> },
-          { label: "Disponibles", value: disponibles, color: "var(--success)", icon: <CheckCircle2 className="w-4 h-4" /> },
-          { label: "Occupées", value: occupees, color: "var(--cyan)", icon: <Users className="w-4 h-4" /> },
-          { label: "Capacité totale", value: totalCapacite, color: "var(--purple)", icon: <Users className="w-4 h-4" /> },
+          { label: t("salles.kpi.totalSpaces"), value: SALLES.length, color: "var(--blue)", icon: <DoorOpen className="w-4 h-4" /> },
+          { label: t("salles.kpi.available"), value: disponibles, color: "var(--success)", icon: <CheckCircle2 className="w-4 h-4" /> },
+          { label: t("salles.kpi.occupied"), value: occupees, color: "var(--cyan)", icon: <Users className="w-4 h-4" /> },
+          { label: t("salles.kpi.totalCapacity"), value: totalCapacite, color: "var(--purple)", icon: <Users className="w-4 h-4" /> },
         ].map(k => (
           <div key={k.label} className="bg-white border border-[var(--line)] rounded-[14px] p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: `${k.color}18`, color: k.color }}>
@@ -85,13 +87,13 @@ export default function SallesPage() {
       <div className="flex items-center gap-2.5 mb-4 flex-wrap">
         <div className="relative flex-1 max-w-xs">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--ink-4)] pointer-events-none" />
-          <Input placeholder="Rechercher une salle…" value={query} onChange={e => setQuery(e.target.value)} className="pl-8" />
+          <Input placeholder={t("salles.searchPlaceholder")} value={query} onChange={e => setQuery(e.target.value)} className="pl-8" />
         </div>
         <div className="w-36">
           <Select value={type} onValueChange={setType}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              {types.map(t => <SelectItem key={t} value={t}>{t === "all" ? "Tous types" : t}</SelectItem>)}
+              {types.map(tp => <SelectItem key={tp} value={tp}>{tp === "all" ? t("salles.allTypes") : tp}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
@@ -99,10 +101,10 @@ export default function SallesPage() {
           <Select value={statut} onValueChange={setStatut}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Tous statuts</SelectItem>
-              <SelectItem value="Disponible">Disponible</SelectItem>
-              <SelectItem value="Occupée">Occupée</SelectItem>
-              <SelectItem value="Maintenance">Maintenance</SelectItem>
+              <SelectItem value="all">{t("salles.allStatuses")}</SelectItem>
+              <SelectItem value="Disponible">{t("salles.status.available")}</SelectItem>
+              <SelectItem value="Occupée">{t("salles.status.occupied")}</SelectItem>
+              <SelectItem value="Maintenance">{t("salles.status.maintenance")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -134,20 +136,20 @@ export default function SallesPage() {
 
               <div className="grid grid-cols-2 gap-2 mb-3">
                 <div>
-                  <div className="text-[9.5px] text-[var(--ink-4)] uppercase font-bold tracking-wide">Bâtiment</div>
+                  <div className="text-[9.5px] text-[var(--ink-4)] uppercase font-bold tracking-wide">{t("salles.building")}</div>
                   <div className="text-[11.5px] text-[var(--ink-3)] mt-0.5">{salle.batiment}</div>
                 </div>
                 <div>
-                  <div className="text-[9.5px] text-[var(--ink-4)] uppercase font-bold tracking-wide">Capacité</div>
+                  <div className="text-[9.5px] text-[var(--ink-4)] uppercase font-bold tracking-wide">{t("salles.capacity")}</div>
                   <div className="flex items-center gap-1 mt-0.5">
                     <Users className="w-3 h-3 text-[var(--ink-4)]" />
-                    <span className="text-[12px] font-bold text-[var(--ink)]">{salle.capacite} places</span>
+                    <span className="text-[12px] font-bold text-[var(--ink)]">{salle.capacite} {t("salles.places")}</span>
                   </div>
                 </div>
               </div>
 
               <div className="pt-2 border-t border-[var(--line)]">
-                <div className="text-[9.5px] text-[var(--ink-4)] uppercase font-bold tracking-wide mb-1.5">Équipements</div>
+                <div className="text-[9.5px] text-[var(--ink-4)] uppercase font-bold tracking-wide mb-1.5">{t("salles.equipment")}</div>
                 <div className="flex flex-wrap gap-1">
                   {salle.equipements.map(eq => (
                     <span key={eq} className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--ivory)] border border-[var(--line)] text-[var(--ink-3)]">{eq}</span>
@@ -156,9 +158,9 @@ export default function SallesPage() {
               </div>
 
               <div className="flex gap-1.5 mt-3">
-                <Button variant="outline" size="xs" className="flex-1">Détails</Button>
+                <Button variant="outline" size="xs" className="flex-1">{t("salles.details")}</Button>
                 {salle.statut === "Disponible" && (
-                  <Button size="xs" className="flex-1">Réserver</Button>
+                  <Button size="xs" className="flex-1">{t("salles.reserve")}</Button>
                 )}
               </div>
             </CardContent>

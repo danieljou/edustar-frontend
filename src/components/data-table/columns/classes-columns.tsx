@@ -1,6 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { TFunction } from "i18next";
 import { Button } from "@/components/ui/button";
 import { EduBadge } from "@/components/shared";
 import { Classe } from "@/types";
@@ -14,17 +15,17 @@ const FILIERE_COLORS: Record<string, string> = {
   Lettres: "var(--success)",
 };
 
-export const classesColumns: ColumnDef<Classe>[] = [
+export const getClassesColumns = (t: TFunction): ColumnDef<Classe>[] => [
   {
     accessorKey: "code",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Code classe" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("classes.columns.name")} />,
     cell: ({ row }) => <span className="font-mono font-bold text-[var(--blue)]">{row.getValue("code")}</span>,
     size: 100,
   },
   {
     accessorKey: "filiere",
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Filière" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("classes.columns.filiere")} />,
     cell: ({ row }) => {
       const filiere = row.getValue("filiere") as string;
       return <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ background: `${FILIERE_COLORS[filiere]}18`, color: FILIERE_COLORS[filiere] }}>{filiere}</span>;
@@ -33,12 +34,12 @@ export const classesColumns: ColumnDef<Classe>[] = [
   {
     accessorKey: "niveau",
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Niveau" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("classes.columns.level")} />,
     cell: ({ row }) => <span className="text-[var(--ink-3)]">{row.getValue("niveau")}</span>,
   },
   {
     accessorKey: "effectif",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Effectif" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("classes.columns.studentsCount")} />,
     cell: ({ row }) => {
       const effectif = row.getValue("effectif") as number;
       const filiere = row.original.filiere;
@@ -54,7 +55,7 @@ export const classesColumns: ColumnDef<Classe>[] = [
   },
   {
     accessorKey: "delegue",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Délégué" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("classes.columns.headTeacher")} />,
     cell: ({ row }) => {
       const delegue = row.getValue("delegue") as string;
       return delegue !== "—" ? (
@@ -69,7 +70,7 @@ export const classesColumns: ColumnDef<Classe>[] = [
   },
   {
     accessorKey: "responsable",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Responsable" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("classes.columns.headTeacher")} />,
     cell: ({ row }) => <span className="text-[var(--ink-3)]">{row.getValue("responsable")}</span>,
   },
   {
@@ -80,7 +81,7 @@ export const classesColumns: ColumnDef<Classe>[] = [
   {
     id: "actions",
     header: () => null,
-    cell: () => <Button variant="ghost" size="xs">Détails</Button>,
+    cell: () => <Button variant="ghost" size="xs">{t("actions.view", { ns: "common" })}</Button>,
     size: 70,
   },
 ];

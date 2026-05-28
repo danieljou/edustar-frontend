@@ -1,0 +1,151 @@
+{
+  "title": "Tableau de bord",
+  "welcome": "Bienvenue",
+  "stats": {
+    "totalStudents": "Total Étudiants",
+    "totalTeachers": "Total Enseignants",
+    "totalClasses": "Total Classes",
+    "totalRevenue": "Revenu Total",
+    "attendanceRate": "Taux de Présence",
+    "passRate": "Taux de Réussite",
+    "newAdmissions": "Nouvelles Admissions",
+    "pendingPayments": "Paiements en Attente",
+    "enrolledStudents": "Étudiants inscrits",
+    "recoveryRate": "Taux de recouvrement",
+    "passRateLabel": "Taux de réussite",
+    "attendanceRateLabel": "Taux de présence",
+    "unpaidBalances": "Soldes impayés",
+    "staffAbsenteeism": "Absentéisme staff",
+    "pendingAdmissions": "Admissions en attente",
+    "atRiskMoratoriums": "Moratoriums à risque"
+  },
+  "sections": {
+    "recentStudents": "Étudiants Récents",
+    "quickActions": "Actions Rapides",
+    "activityFeed": "Activité Récente",
+    "classPerformance": "Performance des Classes",
+    "financialSummary": "Résumé Financier",
+    "upcomingExams": "Examens à Venir"
+  },
+  "quickActions": {
+    "addStudent": "Ajouter un étudiant",
+    "recordPayment": "Enregistrer un paiement",
+    "takeAttendance": "Prendre les présences",
+    "generateReport": "Générer un rapport",
+    "scheduleExam": "Planifier un examen",
+    "sendAnnouncement": "Envoyer une annonce",
+    "newStudent": "Nouvel étudiant",
+    "newAdmission": "Nouvelle admission",
+    "recordPaymentShort": "Enregistrer paiement",
+    "enterGrades": "Saisir notes",
+    "attendance": "Présences",
+    "newHR": "Nouveau RH"
+  },
+  "activityFeed": {
+    "newStudentEnrolled": "Nouvel étudiant inscrit",
+    "paymentReceived": "Paiement reçu",
+    "examScheduled": "Examen planifié",
+    "absenceRecorded": "Absence enregistrée",
+    "gradePublished": "Notes publiées",
+    "announcementSent": "Annonce envoyée",
+    "ago": "il y a",
+    "today": "Aujourd'hui"
+  },
+  "filters": {
+    "label": "Filtres",
+    "active": "actifs",
+    "filiere": "Filière",
+    "periode": "Période",
+    "statut": "Statut",
+    "reset": "Réinitialiser",
+    "all": "Toutes",
+    "allFilieres": "Toutes",
+    "allStatuts": "Tous"
+  },
+  "kpi": {
+    "activeStudents": "{{count}} actifs",
+    "goalReached": "Objectif atteint",
+    "alertThreshold": "Seuil alerte < {{pct}}%",
+    "sessionOk": "Session correcte",
+    "satisfactory": "Satisfaisant",
+    "total": "{{amount}} total",
+    "activeStaff": "{{active}} actifs / {{total}}",
+    "validatedThisSession": "{{count}} validées cette session",
+    "activeMoratoriums": "{{count}} morat. actifs"
+  },
+  "chart": {
+    "title": "Activité — Session 2025–2026",
+    "views": {
+      "inscrits": "Effectifs",
+      "paiements": "Paiements",
+      "reussite": "Réussite",
+      "presences": "Présences"
+    },
+    "desc": {
+      "inscrits": "Inscrits & admissions / mois",
+      "paiements": "Revenus mensuels en FCFA",
+      "reussite": "Répartition des mentions par classe",
+      "presences": "Taux de présence par classe"
+    },
+    "legend": {
+      "excellent": "Excellent ≥15",
+      "bien": "Bien 12–14",
+      "passable": "Passable 10–11",
+      "rattrapage": "Rattrapage <10"
+    },
+    "bars": {
+      "students": "Étudiants",
+      "admissions": "Admissions",
+      "presenceRate": "Taux présence"
+    },
+    "vsLastSemester": "↑↓ vs semestre précédent"
+  },
+  "classPerformance": {
+    "title": "Performance par classe",
+    "subtitle": "Moy. générale / 20 — S1 2025–2026",
+    "students": "{{count}} étu."
+  },
+  "financial": {
+    "title": "Synthèse financière",
+    "session": "Session 2025–2026",
+    "paymentModes": "Modes de paiement",
+    "pending": "+{{amount}} en attente",
+    "moratoriums": "Moratoriums de paiement",
+    "remainingToRecover": "Total restant à recouvrer",
+    "activeMoratoriums": "sur {{count}} moratoriums actifs",
+    "statuses": {
+      "enCours": "En cours",
+      "enRetard": "En retard",
+      "critique": "Critique"
+    }
+  },
+  "recentStudents": {
+    "title": "Étudiants récents",
+    "viewAll": "Voir tout",
+    "columns": {
+      "code": "Code",
+      "student": "Étudiant",
+      "class": "Classe",
+      "avg": "Moy.",
+      "balance": "Solde",
+      "status": "Statut"
+    },
+    "settled": "Soldé",
+    "feminine": "Féminin",
+    "masculine": "Masculin"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "newCount": "{{count}} nouvelles",
+    "viewAll": "Voir toutes les notifications",
+    "ago": "Il y a {{time}}"
+  },
+  "userMenu": {
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+  "search": {
+    "placeholder": "Rechercher… (⌘K)"
+  }
+}

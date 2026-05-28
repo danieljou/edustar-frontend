@@ -1,18 +1,21 @@
 "use client";
 import { useState, useMemo } from "react";
-import { UserPlus, Search } from "lucide-react";
+import { UserPlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DataTable } from "@/components/data-table";
-import { hrColumns } from "@/components/data-table/columns/hr-columns";
+import { getHrColumns } from "@/components/data-table/columns/hr-columns";
 import { PERSONNEL } from "@/constants/mock-data";
 import { formatCurrency } from "@/lib/utils";
 
 export default function HRPage() {
+  const { t } = useTranslation("administration");
   const [query, setQuery] = useState("");
+
+  const columns = useMemo(() => getHrColumns(t), [t]);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return PERSONNEL;
@@ -32,9 +35,9 @@ export default function HRPage() {
   return (
     <div>
       <PageHeader
-        title="Ressources Humaines"
+        title={t("hr.pageTitle")}
         subtitle={`${PERSONNEL.length} membres · ${PERSONNEL.filter(p => p.statut === "Actif").length} actifs`}
-        actions={<Button size="sm"><UserPlus className="w-3.5 h-3.5" /> Nouveau membre</Button>}
+        actions={<Button size="sm"><UserPlus className="w-3.5 h-3.5" /> {t("hr.addStaff")}</Button>}
       />
 
       {/* Summary */}
@@ -72,23 +75,23 @@ export default function HRPage() {
             <TabsContent key={tab} value={tab}>
               <Card>
                 <DataTable
-                  columns={hrColumns}
+                  columns={columns}
                   data={tabFiltered}
                   searchKey="nom"
-                  searchPlaceholder="Rechercher un membre…"
+                  searchPlaceholder={t("hr.searchPlaceholder")}
                   filterFields={[
-                    { columnId: "role", title: "Rôle", options: [
+                    { columnId: "role", title: t("hr.columns.role"), options: [
                       { label: "Enseignant", value: "Enseignant" },
                       { label: "Direction", value: "Direction" },
                       { label: "Administratif", value: "Administratif" },
                       { label: "Technicien", value: "Technicien" },
                     ]},
-                    { columnId: "contrat", title: "Contrat", options: [
+                    { columnId: "contrat", title: t("hr.columns.contract"), options: [
                       { label: "CDI", value: "CDI" },
                       { label: "CDD", value: "CDD" },
                       { label: "Vacataire", value: "Vacataire" },
                     ]},
-                    { columnId: "statut", title: "Statut", options: [
+                    { columnId: "statut", title: t("hr.columns.status"), options: [
                       { label: "Actif", value: "Actif" },
                       { label: "Congé", value: "Congé" },
                     ]},

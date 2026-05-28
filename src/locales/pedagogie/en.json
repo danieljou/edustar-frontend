@@ -1,0 +1,103 @@
+{
+  "attendance": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "markAttendance": "",
+    "exportReport": "",
+    "selectClass": "",
+    "selectDate": "",
+    "columns": {
+      "student": "",
+      "date": "",
+      "class": "",
+      "subject": "",
+      "status": "",
+      "comment": ""
+    },
+    "status": {
+      "present": "",
+      "absent": "",
+      "late": "",
+      "excused": "",
+      "halfDay": ""
+    },
+    "stats": {
+      "attendanceRate": "",
+      "absenceCount": "",
+      "lateCount": "",
+      "excusedCount": ""
+    }
+  },
+  "exams": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "scheduleExam": "",
+    "editExam": "",
+    "cancelExam": "",
+    "searchPlaceholder": "",
+    "columns": {
+      "name": "",
+      "subject": "",
+      "class": "",
+      "date": "",
+      "time": "",
+      "duration": "",
+      "room": "",
+      "supervisor": "",
+      "type": "",
+      "status": ""
+    },
+    "types": {
+      "midterm": "",
+      "final": "",
+      "makeup": "",
+      "quiz": ""
+    },
+    "status": {
+      "scheduled": "",
+      "ongoing": "",
+      "completed": "",
+      "cancelled": ""
+    }
+  },
+  "timetable": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "subtitle": "",
+    "addSlot": "",
+    "editSlot": "",
+    "selectClass": "",
+    "allClasses": "",
+    "reset": "",
+    "selectTeacher": "",
+    "weekView": "",
+    "dayView": "",
+    "legend": "",
+    "scheduledCourses": "",
+    "timeHeader": "",
+    "days": {
+      "monday": "",
+      "tuesday": "",
+      "wednesday": "",
+      "thursday": "",
+      "friday": "",
+      "saturday": ""
+    },
+    "columns": {
+      "time": "",
+      "subject": "",
+      "teacher": "",
+      "room": "",
+      "class": ""
+    },
+    "slot": {
+      "startTime": "",
+      "endTime": "",
+      "duration": ""
+    },
+    "filterDay": "",
+    "filterClass": "",
+    "filterType": "",
+    "searchPlaceholder": ""
+  }
+}

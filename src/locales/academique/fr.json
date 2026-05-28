@@ -1,0 +1,121 @@
+{
+  "students": {
+    "pageTitle": "Gestion des Étudiants",
+    "pageSubtitle": "Liste et gestion des étudiants inscrits",
+    "addStudent": "Ajouter un étudiant",
+    "editStudent": "Modifier l'étudiant",
+    "deleteStudent": "Supprimer l'étudiant",
+    "studentDetails": "Détails de l'étudiant",
+    "searchPlaceholder": "Rechercher un étudiant...",
+    "columns": {
+      "code": "Code Étudiant",
+      "fullName": "Nom Complet",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "class": "Classe",
+      "filiere": "Filière",
+      "session": "Session",
+      "gender": "Genre",
+      "birthDate": "Date de Naissance",
+      "phone": "Téléphone",
+      "email": "Email",
+      "address": "Adresse",
+      "guardian": "Tuteur",
+      "guardianPhone": "Tél. Tuteur",
+      "enrollmentDate": "Date d'Inscription",
+      "status": "Statut",
+      "average": "Moyenne",
+      "absences": "Absences",
+      "balance": "Solde"
+    },
+    "status": {
+      "actif": "Actif",
+      "suspendu": "Suspendu",
+      "diplome": "Diplômé",
+      "abandonne": "Abandonné"
+    }
+  },
+  "admissions": {
+    "pageTitle": "Admissions",
+    "pageSubtitle": "Gestion des candidatures et admissions",
+    "newAdmission": "Nouvelle Admission",
+    "editAdmission": "Modifier la candidature",
+    "searchPlaceholder": "Rechercher une admission...",
+    "columns": {
+      "candidate": "Candidat",
+      "applicationDate": "Date de Candidature",
+      "desiredClass": "Classe Souhaitée",
+      "status": "Statut"
+    },
+    "status": {
+      "admitted": "Admis",
+      "rejected": "Refusé",
+      "pending": "En Attente",
+      "waitlisted": "Liste d'Attente",
+      "interview": "Entretien"
+    }
+  },
+  "sessions": {
+    "pageTitle": "Sessions Académiques",
+    "pageSubtitle": "Gestion des années et sessions scolaires",
+    "newSession": "Nouvelle Session",
+    "editSession": "Modifier la session",
+    "columns": {
+      "name": "Nom de la Session",
+      "startDate": "Date de Début",
+      "endDate": "Date de Fin",
+      "status": "Statut",
+      "studentsCount": "Étudiants"
+    },
+    "currentSession": "Session en cours",
+    "academicYear": "Année Académique"
+  },
+  "classes": {
+    "pageTitle": "Classes",
+    "pageSubtitle": "Gestion des classes et niveaux scolaires",
+    "addClass": "Ajouter une Classe",
+    "editClass": "Modifier la classe",
+    "columns": {
+      "name": "Nom de la Classe",
+      "level": "Niveau",
+      "filiere": "Filière",
+      "capacity": "Capacité",
+      "headTeacher": "Professeur Principal",
+      "studentsCount": "Étudiants",
+      "session": "Session"
+    }
+  },
+  "subjects": {
+    "pageTitle": "Matières",
+    "pageSubtitle": "Gestion des matières et disciplines enseignées",
+    "addSubject": "Ajouter une Matière",
+    "editSubject": "Modifier la matière",
+    "columns": {
+      "code": "Code Matière",
+      "name": "Nom de la Matière",
+      "coefficient": "Coefficient",
+      "teacher": "Enseignant",
+      "hoursPerWeek": "H/Semaine",
+      "class": "Classe"
+    }
+  },
+  "configuration": {
+    "pageTitle": "Configuration Année Scolaire",
+    "pageSubtitle": "Paramétrage de l'année académique en cours",
+    "academicYear": "Année Académique",
+    "semesters": "Semestres",
+    "trimesters": "Trimestres",
+    "gradingScale": "Barème de Notation",
+    "periods": "Périodes d'évaluation",
+    "addPeriod": "Ajouter une période"
+  },
+  "configAcademique": {
+    "pageTitle": "Configuration Académique",
+    "pageSubtitle": "Configuration avancée du système académique",
+    "evaluationSystem": "Système d'évaluation",
+    "gradingRules": "Règles de notation",
+    "promotionCriteria": "Critères de promotion",
+    "passingGrade": "Note de passage",
+    "maxGrade": "Note maximale"
+  }
+}

@@ -1,22 +1,23 @@
 "use client";
 import { useState, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Save, Send, Lock, Unlock, Download, Upload,
   AlertTriangle, CheckCircle, Users, TrendingUp,
-  Info, ChevronDown, RotateCcw,
+  Info, RotateCcw,
 } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduBadge } from "@/components/shared/EduBadge";
 import { EduAvatar } from "@/components/shared/EduAvatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { useEvaluationStore, selectTypesEvalPeriode } from "@/stores/useEvaluationStore";
-import { normalizeTo20, getMention, pourcentageColor, validateTypesEvaluation } from "@/lib/calcul-engine";
+import { useEvaluationStore } from "@/stores/useEvaluationStore";
+import { normalizeTo20, getMention, validateTypesEvaluation } from "@/lib/calcul-engine";
 import { STUDENTS, MATIERES, CLASSES } from "@/constants/mock-data";
-import type { NoteEntree, TypeEvaluation } from "@/types/evaluation";
+import type { TypeEvaluation } from "@/types/evaluation";
 
 // ─── Types locaux ─────────────────────────────────────────────────────────────
 
@@ -137,7 +138,7 @@ function NoteCell({ value, max, locked, onChange }: NoteCellProps) {
 interface StudentRowProps {
   student: { code: string; nom: string; prenom: string; classe: string };
   typesEval: TypeEvaluation[];
-  notes: Map<string, CellValue>; // typeEvalId → valeur
+  notes: Map<string, CellValue>;
   locked: boolean;
   isSelected: boolean;
   moyenneGenerale: number | null;
@@ -155,6 +156,7 @@ function StudentRow({
   onSelectToggle,
   onNoteChange,
 }: StudentRowProps) {
+  const { t } = useTranslation("evaluations");
   const mention = moyenneGenerale !== null ? getMention(moyenneGenerale) : null;
 
   return (
@@ -162,7 +164,6 @@ function StudentRow({
       border-b border-[var(--line)] transition-colors
       ${isSelected ? "bg-[var(--blue-lighter)]" : "hover:bg-[var(--ivory)]"}
     `}>
-      {/* Sélection */}
       <td className="px-3 py-2 w-8">
         <input
           type="checkbox"
@@ -171,13 +172,7 @@ function StudentRow({
           className="accent-[var(--blue)] cursor-pointer"
         />
       </td>
-
-      {/* Rang placeholder */}
-      <td className="px-2 py-2 text-center text-[11px] text-[var(--ink-4)] w-10 font-mono">
-        —
-      </td>
-
-      {/* Étudiant */}
+      <td className="px-2 py-2 text-center text-[11px] text-[var(--ink-4)] w-10 font-mono">—</td>
       <td className="px-3 py-2 min-w-[180px]">
         <div className="flex items-center gap-2">
           <EduAvatar name={`${student.prenom} ${student.nom}`} size={26} />
@@ -189,8 +184,6 @@ function StudentRow({
           </div>
         </div>
       </td>
-
-      {/* Notes par type d'évaluation */}
       {typesEval.map(te => (
         <td key={te.id} className="px-1 py-1.5 w-24">
           <div className="h-8">
@@ -203,15 +196,10 @@ function StudentRow({
           </div>
         </td>
       ))}
-
-      {/* Moyenne */}
       <td className="px-3 py-2 w-24 text-center">
         {moyenneGenerale !== null ? (
           <div>
-            <p
-              className="text-[13px] font-bold"
-              style={{ color: mention?.couleur }}
-            >
+            <p className="text-[13px] font-bold" style={{ color: mention?.couleur }}>
               {moyenneGenerale.toFixed(2)}
             </p>
             <p className="text-[9px] text-[var(--ink-4)]">/ 20</p>
@@ -220,19 +208,17 @@ function StudentRow({
           <span className="text-[11px] text-[var(--ink-4)]">—</span>
         )}
       </td>
-
-      {/* Statut */}
       <td className="px-2 py-2 w-24 text-center">
         {moyenneGenerale !== null ? (
           <EduBadge variant={
             moyenneGenerale >= 10 ? "green" :
             moyenneGenerale >= 8 ? "amber" : "red"
           }>
-            {moyenneGenerale >= 10 ? "Validé" :
-             moyenneGenerale >= 8 ? "Rattr." : "Ajourné"}
+            {moyenneGenerale >= 10 ? t("gradeEntry.statusPassed") :
+             moyenneGenerale >= 8 ? t("gradeEntry.statusMakeup") : t("gradeEntry.statusFailed")}
           </EduBadge>
         ) : (
-          <span className="text-[10px] text-[var(--ink-4)]">En saisie</span>
+          <span className="text-[10px] text-[var(--ink-4)]">{t("gradeEntry.statusEntry")}</span>
         )}
       </td>
     </tr>
@@ -242,6 +228,7 @@ function StudentRow({
 // ─── Page principale ───────────────────────────────────────────────────────────
 
 export default function SaisieNotesPage() {
+  const { t } = useTranslation("evaluations");
   const { periodes, typesEval, notes, setNote, soumettreLot, verrouillerLot } =
     useEvaluationStore();
 
@@ -255,7 +242,6 @@ export default function SaisieNotesPage() {
   const [localNotes, setLocalNotes] = useState<Map<string, Map<string, CellValue>>>(new Map());
   const [saved, setSaved] = useState(false);
 
-  // Derived
   const periodeCourante = periodes.find(p => p.id === selectedPeriodeId);
   const typesEvalPeriode = useMemo(() =>
     typesEval
@@ -275,7 +261,6 @@ export default function SaisieNotesPage() {
 
   const matiere = MATIERES.find(m => m.code === selectedMatiere);
 
-  // Calcule la moyenne pour un étudiant
   function calcMoyenne(etudiantId: string): number | null {
     const studentNotes = localNotes.get(etudiantId);
     if (!studentNotes || studentNotes.size === 0) return null;
@@ -305,10 +290,8 @@ export default function SaisieNotesPage() {
   }
 
   function handleSave() {
-    // Persist to store
     localNotes.forEach((studentMap, etudiantId) => {
       studentMap.forEach((val, typeEvalId) => {
-        // We use typeEvalId as a proxy examenId for demo
         setNote(
           typeEvalId,
           etudiantId,
@@ -330,7 +313,6 @@ export default function SaisieNotesPage() {
     setLocked(true);
   }
 
-  // Stats
   const moyennes = studentsClasse.map(s => calcMoyenne(s.code)).filter(m => m !== null) as number[];
   const moyClasse = moyennes.length > 0 ? moyennes.reduce((a, b) => a + b, 0) / moyennes.length : null;
   const moyMax = moyennes.length > 0 ? Math.max(...moyennes) : null;
@@ -356,27 +338,27 @@ export default function SaisieNotesPage() {
   return (
     <div>
       <PageHeader
-        title="Saisie des notes"
+        title={t("gradeEntry.pageTitle")}
         subtitle={`${matiere?.lib ?? "—"} · ${selectedClasse} · ${periodeCourante?.nom ?? "—"}`}
         actions={
           <div className="flex items-center gap-2">
             {saved && (
               <div className="flex items-center gap-1.5 text-[11px] text-[var(--success)]">
                 <CheckCircle className="w-3.5 h-3.5" />
-                Sauvegardé
+                {t("gradeEntry.savedSuccess")}
               </div>
             )}
             <Button variant="outline" size="sm" onClick={() => {}}>
-              <Upload className="w-3.5 h-3.5 mr-1.5" /> Import Excel
+              <Upload className="w-3.5 h-3.5 mr-1.5" /> {t("gradeEntry.importExcel")}
             </Button>
             <Button variant="outline" size="sm" onClick={() => {}}>
-              <Download className="w-3.5 h-3.5 mr-1.5" /> Exporter
+              <Download className="w-3.5 h-3.5 mr-1.5" /> {t("actions.export", { ns: "common" })}
             </Button>
             <Button variant="outline" size="sm" onClick={handleSave} disabled={locked}>
-              <Save className="w-3.5 h-3.5 mr-1.5" /> Brouillon
+              <Save className="w-3.5 h-3.5 mr-1.5" /> {t("gradeEntry.draft")}
             </Button>
             <Button size="sm" onClick={handleSoumettre} disabled={locked}>
-              <Send className="w-3.5 h-3.5 mr-1.5" /> Soumettre
+              <Send className="w-3.5 h-3.5 mr-1.5" /> {t("gradeEntry.submit")}
             </Button>
           </div>
         }
@@ -386,7 +368,7 @@ export default function SaisieNotesPage() {
       <div className="flex items-center gap-3 mb-4 p-3 bg-white border border-[var(--line)] rounded-[12px]">
         <Select value={selectedClasse} onValueChange={setSelectedClasse}>
           <SelectTrigger className="h-8 text-[12px] w-40">
-            <SelectValue placeholder="Classe" />
+            <SelectValue placeholder={t("gradeEntry.selectClass")} />
           </SelectTrigger>
           <SelectContent>
             {CLASSES.map(c => (
@@ -397,7 +379,7 @@ export default function SaisieNotesPage() {
 
         <Select value={selectedMatiere} onValueChange={setSelectedMatiere}>
           <SelectTrigger className="h-8 text-[12px] w-48">
-            <SelectValue placeholder="Matière" />
+            <SelectValue placeholder={t("gradeEntry.selectSubject")} />
           </SelectTrigger>
           <SelectContent>
             {MATIERES.map(m => (
@@ -408,20 +390,18 @@ export default function SaisieNotesPage() {
 
         <Select value={selectedPeriodeId} onValueChange={setSelectedPeriodeId}>
           <SelectTrigger className="h-8 text-[12px] w-40">
-            <SelectValue placeholder="Période" />
+            <SelectValue placeholder={t("gradeEntry.selectPeriod")} />
           </SelectTrigger>
           <SelectContent>
             {periodesSimples.map(p => (
               <SelectItem key={p.id} value={p.id}>
-                {p.nom}
-                {p.statut === "EN_COURS" && " ●"}
+                {p.nom}{p.statut === "EN_COURS" && " ●"}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
         <div className="ml-auto flex items-center gap-2">
-          {/* Completion */}
           <div className="flex items-center gap-2">
             <div className="w-24 h-1.5 rounded-full bg-[var(--line)] overflow-hidden">
               <div
@@ -435,7 +415,6 @@ export default function SaisieNotesPage() {
             <span className="text-[11px] text-[var(--ink-4)]">{completionPct}%</span>
           </div>
 
-          {/* Lock toggle */}
           <Button
             variant="outline"
             size="sm"
@@ -443,8 +422,8 @@ export default function SaisieNotesPage() {
             className={locked ? "border-[var(--danger)] text-[var(--danger)]" : ""}
           >
             {locked
-              ? <><Unlock className="w-3.5 h-3.5 mr-1.5" /> Déverrouiller</>
-              : <><Lock className="w-3.5 h-3.5 mr-1.5" /> Verrouiller</>
+              ? <><Unlock className="w-3.5 h-3.5 mr-1.5" /> {t("gradeEntry.unlock")}</>
+              : <><Lock className="w-3.5 h-3.5 mr-1.5" /> {t("gradeEntry.lock")}</>
             }
           </Button>
         </div>
@@ -453,11 +432,11 @@ export default function SaisieNotesPage() {
       {/* ── Stats rapides ── */}
       <div className="grid grid-cols-5 gap-3 mb-4">
         {[
-          { label: "Étudiants", value: studentsClasse.length, icon: Users },
-          { label: "Moy. classe", value: moyClasse !== null ? moyClasse.toFixed(2) : "—", icon: TrendingUp, color: moyClasse ? getMention(moyClasse).couleur : undefined },
-          { label: "Meilleure", value: moyMax !== null ? moyMax.toFixed(2) : "—", icon: TrendingUp, color: "var(--success)" },
-          { label: "Plus basse", value: moyMin !== null ? moyMin.toFixed(2) : "—", icon: TrendingUp, color: moyMin !== null && moyMin < 10 ? "var(--danger)" : "var(--warning)" },
-          { label: "Notes saisies", value: `${saisiesCount}/${totalCells}`, icon: CheckCircle },
+          { label: t("gradeEntry.columns.student"), value: studentsClasse.length, icon: Users },
+          { label: t("gradeEntry.average"), value: moyClasse !== null ? moyClasse.toFixed(2) : "—", icon: TrendingUp, color: moyClasse ? getMention(moyClasse).couleur : undefined },
+          { label: t("gradeEntry.highest"), value: moyMax !== null ? moyMax.toFixed(2) : "—", icon: TrendingUp, color: "var(--success)" },
+          { label: t("gradeEntry.lowest"), value: moyMin !== null ? moyMin.toFixed(2) : "—", icon: TrendingUp, color: moyMin !== null && moyMin < 10 ? "var(--danger)" : "var(--warning)" },
+          { label: t("gradeEntry.absentCount"), value: `${saisiesCount}/${totalCells}`, icon: CheckCircle },
         ].map(stat => (
           <Card key={stat.label} className="border-[var(--line)] shadow-none">
             <CardContent className="p-3 text-center">
@@ -475,7 +454,7 @@ export default function SaisieNotesPage() {
         <div className="flex items-start gap-2 p-3 mb-4 rounded-[10px] bg-[var(--warning-light)] border border-[rgba(180,83,9,0.2)]">
           <AlertTriangle className="w-4 h-4 text-[var(--warning)] shrink-0 mt-[1px]" />
           <div>
-            <p className="text-[12px] font-semibold text-[var(--warning)]">Configuration invalide</p>
+            <p className="text-[12px] font-semibold text-[var(--warning)]">{t("gradeEntry.invalidConfig")}</p>
             {validation.erreurs.map((e, i) => (
               <p key={i} className="text-[11px] text-[var(--warning)]">{e}</p>
             ))}
@@ -487,9 +466,9 @@ export default function SaisieNotesPage() {
         <div className="flex items-center gap-2 p-4 mb-4 rounded-[12px] border border-dashed border-[var(--line)] text-[var(--ink-4)]">
           <Info className="w-4 h-4 shrink-0" />
           <p className="text-[12px]">
-            Aucun type d&apos;évaluation configuré pour cette période.
+            {t("gradeEntry.noEvalTypes")}
             <a href="/dashboard/academique/evaluation-system" className="text-[var(--blue)] underline ml-1">
-              Configurer le système d&apos;évaluation
+              {t("gradeEntry.configureSystem")}
             </a>
           </p>
         </div>
@@ -497,11 +476,10 @@ export default function SaisieNotesPage() {
 
       {/* ── Spreadsheet ── */}
       <Card className="border-[var(--line)] shadow-none overflow-hidden">
-        {/* Barre d'actions de sélection */}
         {selectedStudents.size > 0 && (
           <div className="flex items-center gap-3 px-4 py-2.5 bg-[var(--blue-light)] border-b border-[var(--line)]">
             <span className="text-[12px] text-[var(--blue)] font-medium">
-              {selectedStudents.size} étudiant{selectedStudents.size > 1 ? "s" : ""} sélectionné{selectedStudents.size > 1 ? "s" : ""}
+              {selectedStudents.size} {t("gradeEntry.studentsSelected", { count: selectedStudents.size })}
             </span>
             <Button
               size="sm"
@@ -513,7 +491,7 @@ export default function SaisieNotesPage() {
                 });
               }}
             >
-              Marquer absents
+              {t("gradeEntry.markAbsent")}
             </Button>
             <Button
               size="sm"
@@ -525,20 +503,19 @@ export default function SaisieNotesPage() {
                 });
               }}
             >
-              <RotateCcw className="w-3 h-3 mr-1" /> Réinitialiser
+              <RotateCcw className="w-3 h-3 mr-1" /> {t("actions.reset", { ns: "common" })}
             </Button>
             <button
               onClick={() => setSelectedStudents(new Set())}
               className="ml-auto text-[11px] text-[var(--ink-4)] hover:text-[var(--danger)]"
             >
-              Désélectionner
+              {t("gradeEntry.deselect")}
             </button>
           </div>
         )}
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
-            {/* En-tête */}
             <thead>
               <tr className="bg-[var(--blue)] text-white">
                 <th className="px-3 py-3 w-8">
@@ -549,13 +526,10 @@ export default function SaisieNotesPage() {
                     className="accent-white cursor-pointer"
                   />
                 </th>
-                <th className="px-2 py-3 text-center text-[10px] font-bold w-10 uppercase tracking-wide">
-                  #
-                </th>
+                <th className="px-2 py-3 text-center text-[10px] font-bold w-10 uppercase tracking-wide">#</th>
                 <th className="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wide min-w-[180px]">
-                  Étudiant
+                  {t("gradeEntry.columns.student")}
                 </th>
-
                 {typesEvalPeriode.map(te => {
                   const total = typesEvalPeriode
                     .filter(t => t.statut === "ACTIF")
@@ -582,17 +556,15 @@ export default function SaisieNotesPage() {
                     </th>
                   );
                 })}
-
                 <th className="px-3 py-3 w-24 text-center text-[10px] font-bold uppercase tracking-wide">
-                  Moy./20
+                  {t("gradeEntry.average")}
                 </th>
                 <th className="px-2 py-3 w-24 text-center text-[10px] font-bold uppercase tracking-wide">
-                  Statut
+                  {t("fields.status", { ns: "common" })}
                 </th>
               </tr>
             </thead>
 
-            {/* Corps */}
             <tbody>
               {studentsClasse.length === 0 && (
                 <tr>
@@ -600,15 +572,13 @@ export default function SaisieNotesPage() {
                     colSpan={4 + typesEvalPeriode.length}
                     className="py-10 text-center text-[var(--ink-4)] text-[12px]"
                   >
-                    Aucun étudiant dans cette classe.
+                    {t("gradeEntry.noStudents")}
                   </td>
                 </tr>
               )}
-
               {studentsClasse.map(student => {
                 const studentNotes = localNotes.get(student.code) ?? new Map();
                 const moy = calcMoyenne(student.code);
-
                 return (
                   <StudentRow
                     key={student.code}
@@ -625,27 +595,23 @@ export default function SaisieNotesPage() {
                         return next;
                       })
                     }
-                    onNoteChange={(typeEvalId, val) =>
-                      handleNoteChange(student.code, typeEvalId, val)
-                    }
+                    onNoteChange={(typeEvalId, val) => handleNoteChange(student.code, typeEvalId, val)}
                   />
                 );
               })}
             </tbody>
 
-            {/* Pied de tableau — stats colonne */}
             {studentsClasse.length > 0 && typesEvalPeriode.length > 0 && (
               <tfoot>
                 <tr className="border-t-2 border-[var(--line-dark)] bg-[var(--ivory)]">
                   <td colSpan={3} className="px-3 py-2.5">
                     <p className="text-[11px] font-semibold text-[var(--ink)]">
-                      Statistiques colonne
+                      {t("gradeEntry.columnStats")}
                     </p>
                     <p className="text-[10px] text-[var(--ink-4)]">
-                      {studentsClasse.length} étudiants · {completionPct}% saisis
+                      {studentsClasse.length} {t("gradeEntry.studentsCount")} · {completionPct}% {t("gradeEntry.entered")}
                     </p>
                   </td>
-
                   {typesEvalPeriode.map(te => {
                     const vals = studentsClasse
                       .map(s => {
@@ -653,21 +619,15 @@ export default function SaisieNotesPage() {
                         return v !== null && v !== "ABS" && v !== undefined ? v as number : null;
                       })
                       .filter(v => v !== null) as number[];
-
                     const moy = vals.length > 0
                       ? vals.reduce((a, b) => a + b, 0) / vals.length
                       : null;
-
                     return (
                       <td key={te.id} className="px-1 py-2.5 text-center w-24">
                         {moy !== null ? (
                           <div>
-                            <p className="text-[12px] font-bold text-[var(--ink)]">
-                              {moy.toFixed(1)}
-                            </p>
-                            <p className="text-[9px] text-[var(--ink-4)]">
-                              moy. ({vals.length})
-                            </p>
+                            <p className="text-[12px] font-bold text-[var(--ink)]">{moy.toFixed(1)}</p>
+                            <p className="text-[9px] text-[var(--ink-4)]">{t("gradeEntry.average")} ({vals.length})</p>
                           </div>
                         ) : (
                           <span className="text-[11px] text-[var(--ink-4)]">—</span>
@@ -675,13 +635,9 @@ export default function SaisieNotesPage() {
                       </td>
                     );
                   })}
-
                   <td className="px-3 py-2.5 text-center w-24">
                     {moyClasse !== null ? (
-                      <p
-                        className="text-[13px] font-bold"
-                        style={{ color: getMention(moyClasse).couleur }}
-                      >
+                      <p className="text-[13px] font-bold" style={{ color: getMention(moyClasse).couleur }}>
                         {moyClasse.toFixed(2)}
                       </p>
                     ) : (
@@ -695,22 +651,21 @@ export default function SaisieNotesPage() {
           </table>
         </div>
 
-        {/* Footer info */}
         <div className="px-4 py-3 border-t border-[var(--line)] bg-[var(--ivory)] flex items-center gap-4">
           <div className="flex items-center gap-1.5 text-[11px] text-[var(--ink-4)]">
             <div className="w-2.5 h-2.5 rounded-[2px] bg-[var(--danger-light)] border border-[var(--danger)]" />
-            ABS = Absent
+            {t("gradeEntry.absLegend")}
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-[var(--ink-4)]">
             <kbd className="px-1.5 py-[1px] rounded border border-[var(--line-dark)] text-[9px] font-mono bg-white">Tab</kbd>
-            Cellule suivante
+            {t("gradeEntry.nextCell")}
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-[var(--ink-4)]">
             <kbd className="px-1.5 py-[1px] rounded border border-[var(--line-dark)] text-[9px] font-mono bg-white">A</kbd>
-            Absent
+            {t("gradeEntry.columns.absent")}
           </div>
           <div className="ml-auto text-[11px] text-[var(--ink-4)]">
-            La moyenne est calculée en temps réel selon les pourcentages configurés.
+            {t("gradeEntry.realtimeHint")}
           </div>
         </div>
       </Card>

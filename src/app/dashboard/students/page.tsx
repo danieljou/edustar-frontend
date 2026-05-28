@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { UserPlus, Search, Download, Edit } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -13,18 +14,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogBody } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table";
-import { studentsColumns } from "@/components/data-table/columns/students-columns";
+import { getStudentsColumns } from "@/components/data-table/columns/students-columns";
 import { STUDENTS } from "@/constants/mock-data";
 import { formatCurrency, age, formatDate } from "@/lib/utils";
 import type { Student } from "@/types";
 
 type Filter = "all" | "actif" | "suspendu" | "risque";
 
-const FILTER_LABELS: Record<Filter, string> = {
-  all: "Tous", actif: "Actifs", suspendu: "Suspendus", risque: "À risque",
-};
-
 export default function StudentsPage() {
+  const { t } = useTranslation("academique");
+  const { t: tc } = useTranslation("common");
+
+  const FILTER_LABELS: Record<Filter, string> = {
+    all: tc("misc.all"),
+    actif: t("students.status.actif"),
+    suspendu: t("students.status.suspendu"),
+    risque: "À risque",
+  };
+
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [showForm, setShowForm] = useState(false);
@@ -34,6 +41,8 @@ export default function StudentsPage() {
     nom: "", prenom: "", dob: "", sexe: "M", tel: "", email: "",
     adresse: "", classe: "", filiere: "", tuteurNom: "", tuteurTel: "", notes: "",
   });
+
+  const columns = useMemo(() => getStudentsColumns(t), [t]);
 
   const filtered = useMemo(() => {
     let list = STUDENTS;
@@ -56,12 +65,12 @@ export default function StudentsPage() {
   return (
     <div>
       <PageHeader
-        title="Étudiants"
+        title={t("students.pageTitle")}
         subtitle={`${filtered.length} étudiant(s) · ${STUDENTS.filter(s => s.statut === "Actif").length} actifs`}
         actions={
           <>
-            <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5" /> Exporter</Button>
-            <Button size="sm" onClick={() => setShowForm(true)}><UserPlus className="w-3.5 h-3.5" /> Nouvel étudiant</Button>
+            <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5" /> {tc("actions.export")}</Button>
+            <Button size="sm" onClick={() => setShowForm(true)}><UserPlus className="w-3.5 h-3.5" /> {t("students.addStudent")}</Button>
           </>
         }
       />
@@ -70,7 +79,7 @@ export default function StudentsPage() {
       <div className="flex items-center gap-2.5 mb-4 flex-wrap">
         <div className="relative flex-1 max-w-xs">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--ink-4)] pointer-events-none" />
-          <Input placeholder="Nom, prénom, code…" value={query} onChange={e => setQuery(e.target.value)} className="pl-8" />
+          <Input placeholder={t("students.searchPlaceholder")} value={query} onChange={e => setQuery(e.target.value)} className="pl-8" />
         </div>
         {(Object.keys(FILTER_LABELS) as Filter[]).map(f => (
           <button
@@ -90,21 +99,21 @@ export default function StudentsPage() {
       {/* DataTable */}
       <Card>
         <DataTable
-          columns={studentsColumns}
+          columns={columns}
           data={filtered}
           searchKey="code"
-          searchPlaceholder="Rechercher par code…"
+          searchPlaceholder={t("students.searchPlaceholder")}
           filterFields={[
-            { columnId: "statut", title: "Statut", options: [
-              { label: "Actif", value: "Actif" },
-              { label: "Suspendu", value: "Suspendu" },
+            { columnId: "statut", title: t("students.columns.status"), options: [
+              { label: t("students.status.actif"), value: "Actif" },
+              { label: t("students.status.suspendu"), value: "Suspendu" },
             ]},
-            { columnId: "filiere", title: "Filière", options: [
+            { columnId: "filiere", title: t("students.columns.filiere"), options: [
               { label: "Informatique", value: "Informatique" },
               { label: "Gestion", value: "Gestion" },
               { label: "Droit", value: "Droit" },
             ]},
-            { columnId: "classe", title: "Classe", options: [
+            { columnId: "classe", title: t("students.columns.class"), options: [
               { label: "L1-INFO-A", value: "L1-INFO-A" },
               { label: "L1-INFO-B", value: "L1-INFO-B" },
               { label: "L2-INFO-B", value: "L2-INFO-B" },
@@ -117,7 +126,7 @@ export default function StudentsPage() {
           initialColumnVisibility={{ filiere: false }}
           pagination
           pageSize={10}
-          emptyContent={<EmptyState title="Aucun étudiant trouvé" description="Ajustez les filtres ou créez un nouveau dossier étudiant." />}
+          emptyContent={<EmptyState title={tc("misc.noData")} description="Ajustez les filtres ou créez un nouveau dossier étudiant." />}
         />
       </Card>
 
@@ -139,10 +148,10 @@ export default function StudentsPage() {
               <DialogBody>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
                   {[
-                    { label: "Moyenne", value: `${selected.moy}/20`, color: selected.moy >= 14 ? "var(--success)" : selected.moy >= 10 ? "var(--warning)" : "var(--danger)" },
-                    { label: "Absences", value: `${selected.absences}`, color: selected.absences >= 10 ? "var(--danger)" : "var(--ink)" },
-                    { label: "Solde dû", value: selected.solde > 0 ? formatCurrency(selected.solde) : "Soldé", color: selected.solde > 0 ? "var(--danger)" : "var(--success)" },
-                    { label: "Inscription", value: formatDate(selected.created), color: "var(--ink)" },
+                    { label: t("students.columns.average"), value: `${selected.moy}/20`, color: selected.moy >= 14 ? "var(--success)" : selected.moy >= 10 ? "var(--warning)" : "var(--danger)" },
+                    { label: t("students.columns.absences"), value: `${selected.absences}`, color: selected.absences >= 10 ? "var(--danger)" : "var(--ink)" },
+                    { label: t("students.columns.balance"), value: selected.solde > 0 ? formatCurrency(selected.solde) : "Soldé", color: selected.solde > 0 ? "var(--danger)" : "var(--success)" },
+                    { label: t("students.columns.enrollmentDate"), value: formatDate(selected.created), color: "var(--ink)" },
                   ].map(item => (
                     <div key={item.label} className="bg-[var(--ivory)] rounded-[10px] p-3 text-center">
                       <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-4)] mb-1">{item.label}</div>
@@ -155,11 +164,11 @@ export default function StudentsPage() {
                     <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-4)] mb-2">Informations personnelles</div>
                     <div className="space-y-2">
                       {[
-                        { label: "Date de naissance", value: `${formatDate(selected.dob)} (${age(selected.dob)} ans)` },
-                        { label: "Téléphone", value: selected.tel },
-                        { label: "Email", value: selected.email || "—" },
-                        { label: "Adresse", value: selected.adresse },
-                        { label: "Sexe", value: selected.sexe === "F" ? "Féminin" : "Masculin" },
+                        { label: t("students.columns.birthDate"), value: `${formatDate(selected.dob)} (${age(selected.dob)} ans)` },
+                        { label: t("students.columns.phone"), value: selected.tel },
+                        { label: t("students.columns.email"), value: selected.email || "—" },
+                        { label: t("students.columns.address"), value: selected.adresse },
+                        { label: t("students.columns.gender"), value: selected.sexe === "F" ? tc("fields.female") : tc("fields.male") },
                       ].map(({ label, value }) => (
                         <div key={label} className="flex justify-between text-[12.5px]">
                           <span className="text-[var(--ink-4)]">{label}</span>
@@ -169,12 +178,12 @@ export default function StudentsPage() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-4)] mb-2">Tuteur / Contact urgence</div>
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-4)] mb-2">{t("students.columns.guardian")} / Contact urgence</div>
                     <div className="space-y-2">
                       {[
-                        { label: "Nom", value: selected.tuteurNom || "—" },
-                        { label: "Téléphone", value: selected.tuteurTel || "—" },
-                        { label: "Session", value: selected.session },
+                        { label: tc("fields.name"), value: selected.tuteurNom || "—" },
+                        { label: t("students.columns.guardianPhone"), value: selected.tuteurTel || "—" },
+                        { label: t("students.columns.session"), value: selected.session },
                       ].map(({ label, value }) => (
                         <div key={label} className="flex justify-between text-[12.5px]">
                           <span className="text-[var(--ink-4)]">{label}</span>
@@ -192,8 +201,8 @@ export default function StudentsPage() {
                 </div>
               </DialogBody>
               <DialogFooter>
-                <Button variant="outline" size="sm" onClick={() => setSelected(null)}>Fermer</Button>
-                <Button size="sm"><Edit className="w-3.5 h-3.5" /> Modifier</Button>
+                <Button variant="outline" size="sm" onClick={() => setSelected(null)}>{tc("actions.close")}</Button>
+                <Button size="sm"><Edit className="w-3.5 h-3.5" /> {tc("actions.edit")}</Button>
               </DialogFooter>
             </>
           )}
@@ -204,19 +213,19 @@ export default function StudentsPage() {
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Nouvel étudiant</DialogTitle>
+            <DialogTitle>{t("students.addStudent")}</DialogTitle>
           </DialogHeader>
           <DialogBody>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { id: "nom", label: "Nom *", placeholder: "Mballa" },
-                { id: "prenom", label: "Prénom *", placeholder: "Christian" },
-                { id: "dob", label: "Date de naissance *", type: "date" },
-                { id: "tel", label: "Téléphone *", placeholder: "+237 6XX XXX XXX" },
-                { id: "email", label: "Email", placeholder: "email@exemple.cm" },
-                { id: "adresse", label: "Adresse", placeholder: "Quartier, Ville" },
-                { id: "tuteurNom", label: "Nom tuteur", placeholder: "Nom du tuteur" },
-                { id: "tuteurTel", label: "Tél. tuteur", placeholder: "+237 6XX XXX XXX" },
+                { id: "nom", label: `${t("students.columns.lastName")} *`, placeholder: "Mballa" },
+                { id: "prenom", label: `${t("students.columns.firstName")} *`, placeholder: "Christian" },
+                { id: "dob", label: `${t("students.columns.birthDate")} *`, type: "date" },
+                { id: "tel", label: `${t("students.columns.phone")} *`, placeholder: "+237 6XX XXX XXX" },
+                { id: "email", label: t("students.columns.email"), placeholder: "email@exemple.cm" },
+                { id: "adresse", label: t("students.columns.address"), placeholder: "Quartier, Ville" },
+                { id: "tuteurNom", label: t("students.columns.guardian"), placeholder: "Nom du tuteur" },
+                { id: "tuteurTel", label: t("students.columns.guardianPhone"), placeholder: "+237 6XX XXX XXX" },
               ].map(({ id, label, placeholder, type }) => (
                 <div key={id} className={id === "adresse" ? "col-span-2" : ""}>
                   <Label htmlFor={id}>{label}</Label>
@@ -230,17 +239,17 @@ export default function StudentsPage() {
                 </div>
               ))}
               <div>
-                <Label htmlFor="sexe">Sexe</Label>
+                <Label htmlFor="sexe">{t("students.columns.gender")}</Label>
                 <Select value={formData.sexe} onValueChange={v => setFormData(prev => ({ ...prev, sexe: v }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="M">Masculin</SelectItem>
-                    <SelectItem value="F">Féminin</SelectItem>
+                    <SelectItem value="M">{tc("fields.male")}</SelectItem>
+                    <SelectItem value="F">{tc("fields.female")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="filiere">Filière</Label>
+                <Label htmlFor="filiere">{t("students.columns.filiere")}</Label>
                 <Select value={formData.filiere} onValueChange={v => setFormData(prev => ({ ...prev, filiere: v }))}>
                   <SelectTrigger><SelectValue placeholder="Choisir…" /></SelectTrigger>
                   <SelectContent>
@@ -251,7 +260,7 @@ export default function StudentsPage() {
                 </Select>
               </div>
               <div className="col-span-2">
-                <Label htmlFor="classe">Classe</Label>
+                <Label htmlFor="classe">{t("students.columns.class")}</Label>
                 <Select value={formData.classe} onValueChange={v => setFormData(prev => ({ ...prev, classe: v }))}>
                   <SelectTrigger><SelectValue placeholder="Choisir une classe…" /></SelectTrigger>
                   <SelectContent>
@@ -264,9 +273,9 @@ export default function StudentsPage() {
             </div>
           </DialogBody>
           <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>Annuler</Button>
+            <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>{tc("actions.cancel")}</Button>
             <Button size="sm" onClick={() => { setShowForm(false); toast("Étudiant créé avec succès !"); }}>
-              <UserPlus className="w-3.5 h-3.5" /> Créer le dossier
+              <UserPlus className="w-3.5 h-3.5" /> {tc("actions.create")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,0 +1,313 @@
+{
+  "reports": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "generateReport": "",
+    "exportPdf": "",
+    "exportExcel": "",
+    "pageTitle2": "",
+    "pageSubtitle2": "",
+    "totalEnrolled": "",
+    "successRate": "",
+    "totalRevenue": "",
+    "attendanceRate": "",
+    "vsLastYear": "",
+    "effectifsTitle": "",
+    "filiereTitle": "",
+    "revenueTitle": "",
+    "performanceTitle": "",
+    "types": {
+      "academic": "",
+      "financial": "",
+      "attendance": "",
+      "students": "",
+      "hr": "",
+      "global": ""
+    },
+    "filters": {
+      "period": "",
+      "class": "",
+      "session": "",
+      "campus": ""
+    },
+    "periods": {
+      "weekly": "",
+      "monthly": "",
+      "trimester": "",
+      "semester": "",
+      "annual": "",
+      "custom": ""
+    }
+  },
+  "users": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "pageTitle2": "",
+    "addUser": "",
+    "createAccount": "",
+    "editUser": "",
+    "resetPassword": "",
+    "deactivate": "",
+    "activate": "",
+    "searchPlaceholder": "",
+    "searchNameEmail": "",
+    "allProfiles": "",
+    "allStatuses": "",
+    "accountsCount": "",
+    "columns": {
+      "username": "",
+      "fullName": "",
+      "email": "",
+      "role": "",
+      "profile": "",
+      "phone": "",
+      "campus": "",
+      "lastLogin": "",
+      "lastLoginShort": "",
+      "createdAt": "",
+      "status": "",
+      "user": ""
+    },
+    "roles": {
+      "superAdmin": "",
+      "admin": "",
+      "teacher": "",
+      "secretary": "",
+      "accountant": "",
+      "librarian": "",
+      "parent": "",
+      "direction": "",
+      "scolarite": "",
+      "comptabilite": ""
+    },
+    "statuses": {
+      "active": "",
+      "inactive": "",
+      "suspended": ""
+    },
+    "tooltips": {
+      "edit": "",
+      "permissions": "",
+      "resetPassword": ""
+    },
+    "permissions": {
+      "title": "",
+      "read": "",
+      "write": "",
+      "delete": "",
+      "admin": ""
+    }
+  },
+  "settings": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "pageTitle2": "",
+    "pageSubtitle2": "",
+    "tabs": {
+      "general": "",
+      "school": "",
+      "security": "",
+      "notifications": "",
+      "appearance": "",
+      "backup": "",
+      "data": ""
+    },
+    "general": {
+      "language": "",
+      "french": "",
+      "english": "",
+      "timezone": "",
+      "dateFormat": "",
+      "currency": "",
+      "currencySymbol": "",
+      "primaryLanguage": "",
+      "currentSession": ""
+    },
+    "school": {
+      "schoolName": "",
+      "schoolNameLabel": "",
+      "logo": "",
+      "address": "",
+      "addressFull": "",
+      "phone": "",
+      "mainPhone": "",
+      "email": "",
+      "officialEmail": "",
+      "website": "",
+      "motto": "",
+      "foundingYear": "",
+      "infoTitle": ""
+    },
+    "security": {
+      "passwordPolicy": "",
+      "minLength": "",
+      "requireUppercase": "",
+      "requireNumbers": "",
+      "sessionTimeout": "",
+      "twoFactor": "",
+      "changePassword": "",
+      "currentPassword": "",
+      "newPassword": "",
+      "confirmPassword": "",
+      "changeBtn": ""
+    },
+    "appearance": {
+      "theme": "",
+      "dark": "",
+      "light": "",
+      "auto": "",
+      "primaryColor": "",
+      "colorLabel": "",
+      "displayMode": "",
+      "fontSize": "",
+      "themeTitle": "",
+      "colorBlue": "",
+      "colorPurple": "",
+      "colorGreen": ""
+    },
+    "notifItems": {
+      "payments": {
+        "label": "",
+        "desc": ""
+      },
+      "admissions": {
+        "label": "",
+        "desc": ""
+      },
+      "absences": {
+        "label": "",
+        "desc": ""
+      },
+      "resultats": {
+        "label": "",
+        "desc": ""
+      },
+      "rapports": {
+        "label": "",
+        "desc": ""
+      }
+    },
+    "data": {
+      "exportTitle": "",
+      "exportDesc": "",
+      "exportAction": "",
+      "backupTitle": "",
+      "backupDesc": "",
+      "backupAction": "",
+      "importTitle": "",
+      "importDesc": "",
+      "importAction": "",
+      "actionInProgress": ""
+    },
+    "saveChanges": "",
+    "resetDefaults": "",
+    "save": "",
+    "settingsSaved": "",
+    "notifSaved": "",
+    "passwordChanged": ""
+  },
+  "notifications": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "markAllRead": "",
+    "markAllReadBtn": "",
+    "clearAll": "",
+    "noNotifications": "",
+    "viewAll": "",
+    "notifCount": "",
+    "newBadge": "",
+    "types": {
+      "newStudent": "",
+      "paymentReceived": "",
+      "attendanceAlert": "",
+      "examScheduled": "",
+      "gradePublished": "",
+      "announcement": "",
+      "systemAlert": ""
+    },
+    "status": {
+      "unread": "",
+      "read": ""
+    }
+  },
+  "profile": {
+    "editProfile": "",
+    "cancel": "",
+    "save": "",
+    "online": "",
+    "stats": {
+      "connections": "",
+      "actions": "",
+      "sessions": "",
+      "since": ""
+    },
+    "personalInfo": "",
+    "edit": "",
+    "fields": {
+      "firstName": "",
+      "lastName": "",
+      "email": "",
+      "phone": "",
+      "position": "",
+      "department": "",
+      "location": "",
+      "bio": ""
+    },
+    "infoLabels": {
+      "email": "",
+      "phone": "",
+      "position": "",
+      "department": "",
+      "location": ""
+    },
+    "security": {
+      "title": "",
+      "currentPassword": "",
+      "newPassword": "",
+      "confirm": "",
+      "strength": "",
+      "changeBtn": "",
+      "strengthLabels": {
+        "weak": "",
+        "fair": "",
+        "good": "",
+        "strong": ""
+      },
+      "requirements": {
+        "minChars": "",
+        "uppercase": "",
+        "number": "",
+        "special": ""
+      },
+      "errors": {
+        "fillAll": "",
+        "noMatch": "",
+        "tooShort": ""
+      }
+    },
+    "recentActivity": {
+      "title": "",
+      "today": "",
+      "viewAll": ""
+    },
+    "accountStatus": {
+      "title": "",
+      "verified": "",
+      "verifiedDesc": "",
+      "adminAccess": "",
+      "adminDesc": "",
+      "memberSince": "",
+      "memberDesc": "",
+      "disconnect": ""
+    },
+    "toasts": {
+      "profileUpdated": "",
+      "passwordChanged": ""
+    },
+    "changePhoto": "",
+    "adminBadge": ""
+  },
+  "actions": {
+    "refresh": ""
+  }
+}

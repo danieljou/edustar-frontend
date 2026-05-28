@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Search, BookOpen, Clock, AlertTriangle, Plus, RotateCcw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduBadge } from "@/components/shared/EduBadge";
 import { EduAvatar } from "@/components/shared/EduAvatar";
@@ -20,6 +21,7 @@ const STATUT_VARIANT: Record<string, "green" | "red" | "amber"> = {
 };
 
 export default function LibraryPage() {
+  const { t } = useTranslation("administration");
   const [catFilter, setCatFilter] = useState("all");
   const [searchLivre, setSearchLivre] = useState("");
 
@@ -37,12 +39,12 @@ export default function LibraryPage() {
   return (
     <div>
       <PageHeader
-        title="Bibliothèque"
+        title={t("library.pageTitle")}
         subtitle={`${LIVRES.length} ouvrages · ${totalDispo} disponibles`}
         actions={
           <div className="flex gap-2">
-            <Button variant="outline" size="sm"><RotateCcw className="w-3.5 h-3.5" /> Enregistrer retour</Button>
-            <Button size="sm"><Plus className="w-3.5 h-3.5" /> Nouvel emprunt</Button>
+            <Button variant="outline" size="sm"><RotateCcw className="w-3.5 h-3.5" /> {t("library.returnBook")}</Button>
+            <Button size="sm"><Plus className="w-3.5 h-3.5" /> {t("library.borrowBook")}</Button>
           </div>
         }
       />
@@ -50,10 +52,10 @@ export default function LibraryPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-5">
         {[
-          { label: "Total ouvrages", value: LIVRES.length, color: "var(--blue)", icon: <BookOpen className="w-4 h-4" /> },
-          { label: "Exemplaires disponibles", value: `${totalDispo}/${totalExemplaires}`, color: "var(--success)", icon: <BookOpen className="w-4 h-4" /> },
-          { label: "Emprunts en cours", value: enCours, color: "var(--cyan)", icon: <Clock className="w-4 h-4" /> },
-          { label: "Retards", value: enRetard, color: enRetard > 0 ? "var(--danger)" : "var(--success)", icon: <AlertTriangle className="w-4 h-4" /> },
+          { label: t("library.columns.quantity"), value: LIVRES.length, color: "var(--blue)", icon: <BookOpen className="w-4 h-4" /> },
+          { label: t("library.columns.available"), value: `${totalDispo}/${totalExemplaires}`, color: "var(--success)", icon: <BookOpen className="w-4 h-4" /> },
+          { label: t("library.columns.borrowed"), value: enCours, color: "var(--cyan)", icon: <Clock className="w-4 h-4" /> },
+          { label: t("library.status.overdue"), value: enRetard, color: enRetard > 0 ? "var(--danger)" : "var(--success)", icon: <AlertTriangle className="w-4 h-4" /> },
         ].map(k => (
           <div key={k.label} className="bg-white border border-[var(--line)] rounded-[14px] p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: `${k.color}18`, color: k.color }}>
@@ -79,7 +81,7 @@ export default function LibraryPage() {
           <div className="flex items-center gap-2.5 mb-4 flex-wrap">
             <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--ink-4)] pointer-events-none" />
-              <Input placeholder="Titre, auteur, ISBN…" value={searchLivre} onChange={e => setSearchLivre(e.target.value)} className="pl-8" />
+              <Input placeholder={t("library.searchPlaceholder")} value={searchLivre} onChange={e => setSearchLivre(e.target.value)} className="pl-8" />
             </div>
             <div className="w-40">
               <Select value={catFilter} onValueChange={setCatFilter}>
@@ -137,7 +139,14 @@ export default function LibraryPage() {
               <table className="w-full text-[12.5px]">
                 <thead>
                   <tr className="bg-[var(--ivory)]">
-                    {["Ouvrage", "Étudiant", "Date emprunt", "Date retour prévue", "Statut", "Action"].map(h => (
+                    {[
+                      t("library.columns.title"),
+                      t("library.columns.borrower"),
+                      t("library.columns.borrowDate"),
+                      t("library.columns.dueDate"),
+                      t("library.columns.status"),
+                      "Action",
+                    ].map(h => (
                       <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
@@ -166,7 +175,7 @@ export default function LibraryPage() {
                         <td className="px-3.5 py-[10px] text-[var(--ink-3)]">{new Date(emp.dateEmprunt).toLocaleDateString("fr-FR")}</td>
                         <td className="px-3.5 py-[10px] text-[var(--ink-3)]">{new Date(emp.dateRetourPrevu).toLocaleDateString("fr-FR")}</td>
                         <td className="px-3.5 py-[10px]"><EduBadge variant={STATUT_VARIANT[emp.statut]}>{emp.statut}</EduBadge></td>
-                        <td className="px-3.5 py-[10px]"><Button variant="outline" size="xs">Retour</Button></td>
+                        <td className="px-3.5 py-[10px]"><Button variant="outline" size="xs">{t("library.returnBook")}</Button></td>
                       </tr>
                     );
                   })}
@@ -188,7 +197,14 @@ export default function LibraryPage() {
                 <table className="w-full text-[12.5px]">
                   <thead>
                     <tr className="bg-[var(--danger-light)]">
-                      {["Ouvrage", "Étudiant", "Date emprunt", "Date retour prévue", "Jours de retard", "Action"].map(h => (
+                      {[
+                        t("library.columns.title"),
+                        t("library.columns.borrower"),
+                        t("library.columns.borrowDate"),
+                        t("library.columns.dueDate"),
+                        "Jours de retard",
+                        "Action",
+                      ].map(h => (
                         <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--danger)] border-b border-[var(--line)] whitespace-nowrap">{h}</th>
                       ))}
                     </tr>

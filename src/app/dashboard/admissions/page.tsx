@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Plus, Search, CheckCircle, XCircle, Clock, MoreVertical, Eye, Check, X } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -17,6 +18,9 @@ import { age, formatDate } from "@/lib/utils";
 import type { Admission } from "@/types";
 
 export default function AdmissionsPage() {
+  const { t } = useTranslation("academique");
+  const { t: tc } = useTranslation("common");
+
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Admission | null>(null);
   const toast = useToast();
@@ -40,17 +44,17 @@ export default function AdmissionsPage() {
   return (
     <div>
       <PageHeader
-        title="Admissions"
+        title={t("admissions.pageTitle")}
         subtitle={`${counts.all} dossiers · ${counts.pending} en attente`}
-        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> Nouveau dossier</Button>}
+        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> {t("admissions.newAdmission")}</Button>}
       />
 
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-3.5 mb-5">
         {[
-          { label: "En attente", value: counts.pending, icon: <Clock className="w-4 h-4" />, accent: "bg-[var(--warning-light)] text-[var(--warning)]" },
-          { label: "Validées", value: counts.validated, icon: <CheckCircle className="w-4 h-4" />, accent: "bg-[var(--success-light)] text-[var(--success)]" },
-          { label: "Rejetées", value: counts.rejected, icon: <XCircle className="w-4 h-4" />, accent: "bg-[var(--danger-light)] text-[var(--danger)]" },
+          { label: t("admissions.status.pending"), value: counts.pending, icon: <Clock className="w-4 h-4" />, accent: "bg-[var(--warning-light)] text-[var(--warning)]" },
+          { label: t("admissions.status.admitted"), value: counts.validated, icon: <CheckCircle className="w-4 h-4" />, accent: "bg-[var(--success-light)] text-[var(--success)]" },
+          { label: t("admissions.status.rejected"), value: counts.rejected, icon: <XCircle className="w-4 h-4" />, accent: "bg-[var(--danger-light)] text-[var(--danger)]" },
         ].map(c => (
           <div key={c.label} className="bg-white border border-[var(--line)] rounded-[14px] p-4 flex items-center gap-3">
             <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center ${c.accent}`}>{c.icon}</div>
@@ -65,16 +69,16 @@ export default function AdmissionsPage() {
       <div className="flex items-center gap-2.5 mb-4">
         <div className="relative flex-1 max-w-xs">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--ink-4)] pointer-events-none" />
-          <Input placeholder="Nom, ID, filière…" value={query} onChange={e => setQuery(e.target.value)} className="pl-8" />
+          <Input placeholder={t("admissions.searchPlaceholder")} value={query} onChange={e => setQuery(e.target.value)} className="pl-8" />
         </div>
       </div>
 
       <Tabs defaultValue="all">
         <TabsList>
-          <TabsTrigger value="all">Tous <span className="ml-1 text-[9.5px] font-bold font-mono bg-[var(--ivory)] text-[var(--ink-4)] rounded-full px-1.5 py-0.5">{counts.all}</span></TabsTrigger>
-          <TabsTrigger value="pending">En attente <span className="ml-1 text-[9.5px] font-bold font-mono bg-[var(--ivory)] text-[var(--ink-4)] rounded-full px-1.5 py-0.5">{counts.pending}</span></TabsTrigger>
-          <TabsTrigger value="validated">Validées</TabsTrigger>
-          <TabsTrigger value="rejected">Rejetées</TabsTrigger>
+          <TabsTrigger value="all">{tc("misc.all")} <span className="ml-1 text-[9.5px] font-bold font-mono bg-[var(--ivory)] text-[var(--ink-4)] rounded-full px-1.5 py-0.5">{counts.all}</span></TabsTrigger>
+          <TabsTrigger value="pending">{t("admissions.status.pending")} <span className="ml-1 text-[9.5px] font-bold font-mono bg-[var(--ivory)] text-[var(--ink-4)] rounded-full px-1.5 py-0.5">{counts.pending}</span></TabsTrigger>
+          <TabsTrigger value="validated">{t("admissions.status.admitted")}</TabsTrigger>
+          <TabsTrigger value="rejected">{t("admissions.status.rejected")}</TabsTrigger>
         </TabsList>
 
         {(["all", "pending", "validated", "rejected"] as const).map(tab => {
@@ -91,7 +95,7 @@ export default function AdmissionsPage() {
                   <table className="w-full text-[12.5px]">
                     <thead>
                       <tr className="bg-[var(--ivory)]">
-                        {["ID", "Candidat", "Filière / Niveau", "Documents", "Date", "Statut", ""].map(h => (
+                        {["ID", t("admissions.columns.candidate"), "Filière / Niveau", "Documents", t("admissions.columns.applicationDate"), t("admissions.columns.status"), ""].map(h => (
                           <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap last:w-10">
                             {h}
                           </th>
@@ -100,7 +104,7 @@ export default function AdmissionsPage() {
                     </thead>
                     <tbody>
                       {tabFiltered.length === 0 && (
-                        <tr><td colSpan={7}><EmptyState title="Aucune admission" description="Aucun dossier ne correspond aux critères." /></td></tr>
+                        <tr><td colSpan={7}><EmptyState title={tc("misc.noData")} description="Aucun dossier ne correspond aux critères." /></td></tr>
                       )}
                       {tabFiltered.map(a => (
                         <tr key={a.id} className="border-b border-[var(--line)] last:border-0 hover:bg-[var(--blue-lighter)] cursor-pointer transition-colors" onClick={() => setSelected(a)}>
@@ -110,7 +114,7 @@ export default function AdmissionsPage() {
                               <EduAvatar name={`${a.prenom} ${a.nom}`} size={28} />
                               <div>
                                 <div className="font-semibold text-[var(--ink)]">{a.prenom} {a.nom}</div>
-                                <div className="text-[10.5px] text-[var(--ink-4)]">{a.sexe === "F" ? "Féminin" : "Masculin"} · {age(a.dob)} ans</div>
+                                <div className="text-[10.5px] text-[var(--ink-4)]">{a.sexe === "F" ? tc("fields.female") : tc("fields.male")} · {age(a.dob)} ans</div>
                               </div>
                             </div>
                           </td>
@@ -137,11 +141,11 @@ export default function AdmissionsPage() {
                                 <Button variant="ghost" size="icon"><MoreVertical className="w-3.5 h-3.5" /></Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => setSelected(a)}><Eye className="w-3.5 h-3.5" /> Voir dossier</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setSelected(a)}><Eye className="w-3.5 h-3.5" /> {tc("actions.view")}</DropdownMenuItem>
                                 {a.statut === "En attente" && (
                                   <>
-                                    <DropdownMenuItem onClick={() => toast(`Admission ${a.id} validée !`)}><Check className="w-3.5 h-3.5" /> Valider</DropdownMenuItem>
-                                    <DropdownMenuItem destructive onClick={() => toast(`Admission ${a.id} rejetée.`)}><X className="w-3.5 h-3.5" /> Rejeter</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => toast(`Admission ${a.id} validée !`)}><Check className="w-3.5 h-3.5" /> {tc("actions.confirm")}</DropdownMenuItem>
+                                    <DropdownMenuItem destructive onClick={() => toast(`Admission ${a.id} rejetée.`)}><X className="w-3.5 h-3.5" /> {tc("actions.delete")}</DropdownMenuItem>
                                   </>
                                 )}
                               </DropdownMenuContent>
@@ -177,10 +181,10 @@ export default function AdmissionsPage() {
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="space-y-2">
                     {[
-                      { label: "Date de naissance", value: `${formatDate(selected.dob)} (${age(selected.dob)} ans)` },
-                      { label: "Téléphone", value: selected.tel },
-                      { label: "Email", value: selected.email || "—" },
-                      { label: "Date dossier", value: formatDate(selected.date) },
+                      { label: tc("fields.birthDate"), value: `${formatDate(selected.dob)} (${age(selected.dob)} ans)` },
+                      { label: tc("fields.phone"), value: selected.tel },
+                      { label: tc("fields.email"), value: selected.email || "—" },
+                      { label: t("admissions.columns.applicationDate"), value: formatDate(selected.date) },
                     ].map(({ label, value }) => (
                       <div key={label} className="flex justify-between text-[12.5px]">
                         <span className="text-[var(--ink-4)]">{label}</span>
@@ -210,11 +214,11 @@ export default function AdmissionsPage() {
                 </div>
               </DialogBody>
               <DialogFooter>
-                <Button variant="outline" size="sm" onClick={() => setSelected(null)}>Fermer</Button>
+                <Button variant="outline" size="sm" onClick={() => setSelected(null)}>{tc("actions.close")}</Button>
                 {selected.statut === "En attente" && (
                   <>
-                    <Button variant="danger" size="sm" onClick={() => { setSelected(null); toast("Admission rejetée."); }}><X className="w-3.5 h-3.5" /> Rejeter</Button>
-                    <Button variant="success" size="sm" onClick={() => { setSelected(null); toast("Admission validée !"); }}><Check className="w-3.5 h-3.5" /> Valider</Button>
+                    <Button variant="danger" size="sm" onClick={() => { setSelected(null); toast("Admission rejetée."); }}><X className="w-3.5 h-3.5" /> {t("admissions.status.rejected")}</Button>
+                    <Button variant="success" size="sm" onClick={() => { setSelected(null); toast("Admission validée !"); }}><Check className="w-3.5 h-3.5" /> {t("admissions.status.admitted")}</Button>
                   </>
                 )}
               </DialogFooter>

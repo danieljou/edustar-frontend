@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { Plus, Search, Download, MoreVertical, Eye, CreditCard, AlertTriangle, TrendingUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useToast } from "@/components/ui/toast";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduAvatar } from "@/components/shared/EduAvatar";
@@ -16,6 +17,7 @@ import { PAYMENTS, MORATORIUMS, STUDENTS } from "@/constants/mock-data";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default function PaymentsPage() {
+  const { t } = useTranslation("administration");
   const [query, setQuery] = useState("");
   const toast = useToast();
 
@@ -34,12 +36,12 @@ export default function PaymentsPage() {
   return (
     <div>
       <PageHeader
-        title="Paiements"
-        subtitle="Gestion des paiements, moratoires et soldes"
+        title={t("payments.pageTitle")}
+        subtitle={t("payments.pageSubtitle")}
         actions={
           <>
-            <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5" /> Exporter</Button>
-            <Button size="sm"><Plus className="w-3.5 h-3.5" /> Nouveau paiement</Button>
+            <Button variant="outline" size="sm"><Download className="w-3.5 h-3.5" /> {t("actions.export", { ns: "common" })}</Button>
+            <Button size="sm"><Plus className="w-3.5 h-3.5" /> {t("payments.addPayment")}</Button>
           </>
         }
       />
@@ -47,9 +49,9 @@ export default function PaymentsPage() {
       {/* KPI row */}
       <div className="grid grid-cols-3 gap-3.5 mb-5">
         {[
-          { label: "Revenus collectés", value: formatCurrency(totalCollected), icon: <TrendingUp className="w-4 h-4" />, color: "bg-[var(--success-light)] text-[var(--success)]", accent: "var(--success)" },
-          { label: "En attente validation", value: formatCurrency(totalPending), icon: <CreditCard className="w-4 h-4" />, color: "bg-[var(--warning-light)] text-[var(--warning)]", accent: "var(--warning)" },
-          { label: "Soldes impayés total", value: formatCurrency(totalDebt), icon: <AlertTriangle className="w-4 h-4" />, color: "bg-[var(--danger-light)] text-[var(--danger)]", accent: "var(--danger)" },
+          { label: t("payments.stats.totalPaid"), value: formatCurrency(totalCollected), icon: <TrendingUp className="w-4 h-4" />, color: "bg-[var(--success-light)] text-[var(--success)]", accent: "var(--success)" },
+          { label: t("payments.stats.totalPending"), value: formatCurrency(totalPending), icon: <CreditCard className="w-4 h-4" />, color: "bg-[var(--warning-light)] text-[var(--warning)]", accent: "var(--warning)" },
+          { label: t("payments.stats.totalOverdue"), value: formatCurrency(totalDebt), icon: <AlertTriangle className="w-4 h-4" />, color: "bg-[var(--danger-light)] text-[var(--danger)]", accent: "var(--danger)" },
         ].map(c => (
           <div key={c.label} className="bg-white border border-[var(--line)] rounded-[14px] p-4 relative overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-[14px]" style={{ background: c.accent }} />
@@ -75,7 +77,7 @@ export default function PaymentsPage() {
           <div className="flex items-center gap-2.5 mb-4">
             <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--ink-4)] pointer-events-none" />
-              <Input placeholder="ID paiement, étudiant…" value={query} onChange={e => setQuery(e.target.value)} className="pl-8" />
+              <Input placeholder={t("payments.searchPlaceholder")} value={query} onChange={e => setQuery(e.target.value)} className="pl-8" />
             </div>
           </div>
           <Card className="overflow-hidden">
@@ -83,13 +85,22 @@ export default function PaymentsPage() {
               <table className="w-full text-[12.5px]">
                 <thead>
                   <tr className="bg-[var(--ivory)]">
-                    {["Réf.", "Étudiant", "Type", "Montant", "Mode", "Date", "Statut", ""].map(h => (
+                    {[
+                      t("payments.columns.reference"),
+                      t("payments.columns.student"),
+                      t("payments.columns.type"),
+                      t("payments.columns.amount"),
+                      t("payments.columns.method"),
+                      t("payments.columns.date"),
+                      t("payments.columns.status"),
+                      "",
+                    ].map(h => (
                       <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap last:w-10">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.length === 0 && <tr><td colSpan={8}><EmptyState title="Aucune transaction" /></td></tr>}
+                  {filtered.length === 0 && <tr><td colSpan={8}><EmptyState title={t("table.noResults", { ns: "common" })} /></td></tr>}
                   {filtered.map(p => {
                     const stu = getStudent(p.etuCode);
                     return (
@@ -115,8 +126,8 @@ export default function PaymentsPage() {
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreVertical className="w-3.5 h-3.5" /></Button></DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem><Eye className="w-3.5 h-3.5" /> Détails</DropdownMenuItem>
-                              <DropdownMenuItem><Download className="w-3.5 h-3.5" /> Reçu PDF</DropdownMenuItem>
+                              <DropdownMenuItem><Eye className="w-3.5 h-3.5" /> {t("actions.view", { ns: "common" })}</DropdownMenuItem>
+                              <DropdownMenuItem><Download className="w-3.5 h-3.5" /> {t("payments.generateReceipt")}</DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </td>
@@ -176,7 +187,13 @@ export default function PaymentsPage() {
               <table className="w-full text-[12.5px]">
                 <thead>
                   <tr className="bg-[var(--ivory)]">
-                    {["Étudiant", "Classe", "Solde dû", "Absences", "Statut"].map(h => (
+                    {[
+                      t("payments.columns.student"),
+                      "Classe",
+                      "Solde dû",
+                      "Absences",
+                      t("payments.columns.status"),
+                    ].map(h => (
                       <th key={h} className="px-3.5 py-[9px] text-left text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)] border-b border-[var(--line)] whitespace-nowrap">{h}</th>
                     ))}
                   </tr>

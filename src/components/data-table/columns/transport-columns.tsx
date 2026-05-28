@@ -1,5 +1,6 @@
 "use client";
 
+import { TFunction } from "i18next";
 import { ColumnDef } from "@tanstack/react-table";
 import { Bus, MapPin } from "lucide-react";
 import { Bus as BusType } from "@/types";
@@ -18,10 +19,10 @@ const STATUT_VARIANT: Record<string, "green" | "red" | "amber"> = {
   "En maintenance": "amber",
 };
 
-export const transportColumns: ColumnDef<BusType>[] = [
+export const getTransportColumns = (t: TFunction): ColumnDef<BusType>[] => [
   {
     id: "bus",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Bus" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("transport.columns.vehicle")} />,
     cell: ({ row }) => {
       const bus = row.original;
       return (
@@ -36,17 +37,17 @@ export const transportColumns: ColumnDef<BusType>[] = [
   },
   {
     accessorKey: "immatriculation",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Immatriculation" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("transport.columns.licensePlate")} />,
     cell: ({ row }) => <span className="font-mono text-[11px] text-[var(--ink-4)]">{row.getValue("immatriculation")}</span>,
   },
   {
     accessorKey: "chauffeur",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Chauffeur" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("transport.columns.driver")} />,
     cell: ({ row }) => <span className="text-[var(--ink-3)]">{row.getValue("chauffeur")}</span>,
   },
   {
     accessorKey: "itineraire",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Itinéraire" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("transport.columns.routeName")} />,
     cell: ({ row }) => (
       <div className="flex items-center gap-1.5">
         <MapPin className="w-3 h-3 text-[var(--ink-4)] shrink-0" />
@@ -56,19 +57,19 @@ export const transportColumns: ColumnDef<BusType>[] = [
   },
   {
     accessorKey: "depart",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Départ" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("transport.columns.departureTime")} />,
     cell: ({ row }) => <span className="font-mono font-bold text-[var(--blue)]">{row.getValue("depart")}</span>,
     size: 70,
   },
   {
     accessorKey: "capacite",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Capacité" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("transport.columns.capacity")} />,
     cell: ({ row }) => <span className="text-center font-medium">{row.getValue("capacite")}</span>,
     size: 70,
   },
   {
     accessorKey: "passagers",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Passagers" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("transport.columns.studentsCount")} />,
     cell: ({ row }) => {
       const bus = row.original;
       return bus.statut === "En service" ? (
@@ -80,7 +81,7 @@ export const transportColumns: ColumnDef<BusType>[] = [
   {
     accessorKey: "statut",
     filterFn: 'arrIncludes',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("transport.columns.status")} />,
     cell: ({ row }) => {
       const statut = row.getValue("statut") as string;
       return <EduBadge variant={STATUT_VARIANT[statut]}>{statut}</EduBadge>;

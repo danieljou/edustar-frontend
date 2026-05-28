@@ -1,0 +1,151 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome",
+  "stats": {
+    "totalStudents": "Total Students",
+    "totalTeachers": "Total Teachers",
+    "totalClasses": "Total Classes",
+    "totalRevenue": "Total Revenue",
+    "attendanceRate": "Attendance Rate",
+    "passRate": "Pass Rate",
+    "newAdmissions": "New Admissions",
+    "pendingPayments": "Pending Payments",
+    "enrolledStudents": "Enrolled Students",
+    "recoveryRate": "Recovery Rate",
+    "passRateLabel": "Pass Rate",
+    "attendanceRateLabel": "Attendance Rate",
+    "unpaidBalances": "Unpaid Balances",
+    "staffAbsenteeism": "Staff Absenteeism",
+    "pendingAdmissions": "Pending Admissions",
+    "atRiskMoratoriums": "At-Risk Moratoriums"
+  },
+  "sections": {
+    "recentStudents": "Recent Students",
+    "quickActions": "Quick Actions",
+    "activityFeed": "Recent Activity",
+    "classPerformance": "Class Performance",
+    "financialSummary": "Financial Summary",
+    "upcomingExams": "Upcoming Exams"
+  },
+  "quickActions": {
+    "addStudent": "Add a student",
+    "recordPayment": "Record a payment",
+    "takeAttendance": "Take attendance",
+    "generateReport": "Generate a report",
+    "scheduleExam": "Schedule an exam",
+    "sendAnnouncement": "Send an announcement",
+    "newStudent": "New student",
+    "newAdmission": "New admission",
+    "recordPaymentShort": "Record payment",
+    "enterGrades": "Enter grades",
+    "attendance": "Attendance",
+    "newHR": "New HR"
+  },
+  "activityFeed": {
+    "newStudentEnrolled": "New student enrolled",
+    "paymentReceived": "Payment received",
+    "examScheduled": "Exam scheduled",
+    "absenceRecorded": "Absence recorded",
+    "gradePublished": "Grades published",
+    "announcementSent": "Announcement sent",
+    "ago": "ago",
+    "today": "Today"
+  },
+  "filters": {
+    "label": "Filters",
+    "active": "active",
+    "filiere": "Field",
+    "periode": "Period",
+    "statut": "Status",
+    "reset": "Reset",
+    "all": "All",
+    "allFilieres": "All",
+    "allStatuts": "All"
+  },
+  "kpi": {
+    "activeStudents": "{{count}} active",
+    "goalReached": "Goal reached",
+    "alertThreshold": "Alert threshold < {{pct}}%",
+    "sessionOk": "Session on track",
+    "satisfactory": "Satisfactory",
+    "total": "{{amount}} total",
+    "activeStaff": "{{active}} active / {{total}}",
+    "validatedThisSession": "{{count}} validated this session",
+    "activeMoratoriums": "{{count}} active morat."
+  },
+  "chart": {
+    "title": "Activity — Session 2025–2026",
+    "views": {
+      "inscrits": "Enrollment",
+      "paiements": "Payments",
+      "reussite": "Pass Rate",
+      "presences": "Attendance"
+    },
+    "desc": {
+      "inscrits": "Enrolled & admissions / month",
+      "paiements": "Monthly revenue in FCFA",
+      "reussite": "Grade distribution by class",
+      "presences": "Attendance rate by class"
+    },
+    "legend": {
+      "excellent": "Excellent ≥15",
+      "bien": "Good 12–14",
+      "passable": "Pass 10–11",
+      "rattrapage": "Retake <10"
+    },
+    "bars": {
+      "students": "Students",
+      "admissions": "Admissions",
+      "presenceRate": "Attendance rate"
+    },
+    "vsLastSemester": "↑↓ vs previous semester"
+  },
+  "classPerformance": {
+    "title": "Performance by class",
+    "subtitle": "Overall avg / 20 — S1 2025–2026",
+    "students": "{{count}} stu."
+  },
+  "financial": {
+    "title": "Financial Summary",
+    "session": "Session 2025–2026",
+    "paymentModes": "Payment modes",
+    "pending": "+{{amount}} pending",
+    "moratoriums": "Payment moratoriums",
+    "remainingToRecover": "Total remaining to recover",
+    "activeMoratoriums": "over {{count}} active moratoriums",
+    "statuses": {
+      "enCours": "In progress",
+      "enRetard": "Late",
+      "critique": "Critical"
+    }
+  },
+  "recentStudents": {
+    "title": "Recent students",
+    "viewAll": "View all",
+    "columns": {
+      "code": "Code",
+      "student": "Student",
+      "class": "Class",
+      "avg": "Avg.",
+      "balance": "Balance",
+      "status": "Status"
+    },
+    "settled": "Settled",
+    "feminine": "Female",
+    "masculine": "Male"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "newCount": "{{count}} new",
+    "viewAll": "View all notifications",
+    "ago": "{{time}} ago"
+  },
+  "userMenu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "search": {
+    "placeholder": "Search… (⌘K)"
+  }
+}

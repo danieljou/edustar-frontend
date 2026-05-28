@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Bus, Users, AlertTriangle, Wrench, CheckCircle2, Plus, MapPin } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table";
-import { transportColumns } from "@/components/data-table/columns/transport-columns";
+import { getTransportColumns } from "@/components/data-table/columns/transport-columns";
 import { BUS_LIST } from "@/constants/mock-data";
 
 const STATUT_ICON: Record<string, React.ReactNode> = {
@@ -33,7 +34,10 @@ const STATUT_VARIANT: Record<string, "green" | "red" | "amber"> = {
 };
 
 export default function TransportPage() {
+  const { t } = useTranslation("administration");
   const [view, setView] = useState<"cards" | "table">("cards");
+
+  const columns = useMemo(() => getTransportColumns(t), [t]);
 
   const enService = BUS_LIST.filter(b => b.statut === "En service").length;
   const enPanne = BUS_LIST.filter(b => b.statut === "En panne").length;
@@ -43,7 +47,7 @@ export default function TransportPage() {
   return (
     <div>
       <PageHeader
-        title="Transport Scolaire"
+        title={t("transport.pageTitle")}
         subtitle={`${BUS_LIST.length} bus · ${enService} en service`}
         actions={
           <div className="flex gap-2">
@@ -51,7 +55,7 @@ export default function TransportPage() {
               <button onClick={() => setView("cards")} className={`px-3 py-1.5 text-[11px] font-medium transition-colors ${view === "cards" ? "bg-[var(--blue)] text-white" : "bg-white text-[var(--ink-4)] hover:bg-[var(--ivory)]"}`}>Cartes</button>
               <button onClick={() => setView("table")} className={`px-3 py-1.5 text-[11px] font-medium transition-colors ${view === "table" ? "bg-[var(--blue)] text-white" : "bg-white text-[var(--ink-4)] hover:bg-[var(--ivory)]"}`}>Tableau</button>
             </div>
-            <Button size="sm">Ajouter un bus</Button>
+            <Button size="sm">{t("transport.addRoute")}</Button>
           </div>
         }
       />
@@ -59,9 +63,9 @@ export default function TransportPage() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-5">
         {[
-          { label: "En service", value: enService, color: "var(--success)", icon: <CheckCircle2 className="w-4 h-4" /> },
-          { label: "En panne", value: enPanne, color: "var(--danger)", icon: <AlertTriangle className="w-4 h-4" /> },
-          { label: "En maintenance", value: enMaintenance, color: "var(--warning)", icon: <Wrench className="w-4 h-4" /> },
+          { label: t("transport.status.active"), value: enService, color: "var(--success)", icon: <CheckCircle2 className="w-4 h-4" /> },
+          { label: t("transport.status.inactive"), value: enPanne, color: "var(--danger)", icon: <AlertTriangle className="w-4 h-4" /> },
+          { label: t("transport.status.maintenance"), value: enMaintenance, color: "var(--warning)", icon: <Wrench className="w-4 h-4" /> },
           { label: "Passagers aujourd'hui", value: totalPassagers, color: "var(--blue)", icon: <Users className="w-4 h-4" /> },
         ].map(k => (
           <div key={k.label} className="bg-white border border-[var(--line)] rounded-[14px] p-4 flex items-center gap-3">
@@ -106,15 +110,15 @@ export default function TransportPage() {
 
                   <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[var(--line)]">
                     <div className="text-center">
-                      <div className="text-[10px] text-[var(--ink-4)]">Chauffeur</div>
+                      <div className="text-[10px] text-[var(--ink-4)]">{t("transport.columns.driver")}</div>
                       <div className="text-[11px] font-medium text-[var(--ink)] truncate">{bus.chauffeur.split(" ")[0]}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-[10px] text-[var(--ink-4)]">Départ</div>
+                      <div className="text-[10px] text-[var(--ink-4)]">{t("transport.columns.departureTime")}</div>
                       <div className="text-[12px] font-bold font-mono text-[var(--blue)]">{bus.depart}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-[10px] text-[var(--ink-4)]">Capacité</div>
+                      <div className="text-[10px] text-[var(--ink-4)]">{t("transport.columns.capacity")}</div>
                       <div className="text-[11px] font-medium text-[var(--ink)]">
                         {bus.statut === "En service" ? <><span className="font-bold text-[var(--ink)]">{bus.passagers}</span>/{bus.capacite}</> : `—/${bus.capacite}`}
                       </div>
@@ -140,15 +144,15 @@ export default function TransportPage() {
       ) : (
         <Card>
           <DataTable
-            columns={transportColumns}
+            columns={columns}
             data={BUS_LIST}
             searchKey="numero"
-            searchPlaceholder="Rechercher un bus…"
+            searchPlaceholder={t("transport.searchPlaceholder")}
             filterFields={[
-              { columnId: "statut", title: "Statut", options: [
-                { label: "En service", value: "En service" },
-                { label: "En panne", value: "En panne" },
-                { label: "En maintenance", value: "En maintenance" },
+              { columnId: "statut", title: t("transport.columns.status"), options: [
+                { label: t("transport.status.active"), value: "En service" },
+                { label: t("transport.status.inactive"), value: "En panne" },
+                { label: t("transport.status.maintenance"), value: "En maintenance" },
               ]},
             ]}
             pagination

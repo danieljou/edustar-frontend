@@ -1,13 +1,17 @@
+"use client";
+import { useTranslation } from "react-i18next";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ACTIVITY_FEED } from "@/constants/mock-data";
 import { cn } from "@/lib/utils";
 
 export function ActivityFeed() {
+  const { t } = useTranslation("dashboard");
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Activité récente</CardTitle>
-        <span className="text-[10.5px] text-[var(--ink-4)]">Aujourd'hui</span>
+        <CardTitle>{t("sections.activityFeed")}</CardTitle>
+        <span className="text-[10.5px] text-[var(--ink-4)]">{t("activityFeed.today")}</span>
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y divide-[var(--line)]">

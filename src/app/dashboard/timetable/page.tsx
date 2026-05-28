@@ -1,16 +1,18 @@
 "use client";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Plus, Filter } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table";
-import { scheduleColumns } from "@/components/data-table/columns/schedule-columns";
+import { getScheduleColumns } from "@/components/data-table/columns/schedule-columns";
 import { EMPLOI_DU_TEMPS, CLASSES, MATIERES } from "@/constants/mock-data";
 import { cn } from "@/lib/utils";
 
-const JOURS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+const JOURS_KEYS = ["monday", "tuesday", "wednesday", "thursday", "friday"] as const;
+const JOURS_VALUES = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"] as const;
 const HEURES = ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"];
 
 const TYPE_COLORS: Record<string, string> = {
@@ -20,7 +22,10 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default function TimetablePage() {
+  const { t } = useTranslation("pedagogie");
   const [classeFilter, setClasseFilter] = useState("all");
+
+  const columns = getScheduleColumns(t);
 
   const filteredEDT = classeFilter === "all"
     ? EMPLOI_DU_TEMPS
@@ -34,9 +39,9 @@ export default function TimetablePage() {
   return (
     <div>
       <PageHeader
-        title="Emplois du temps"
-        subtitle={`${EMPLOI_DU_TEMPS.length} cours planifiés · Session 2025–2026`}
-        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> Ajouter créneau</Button>}
+        title={t("timetable.pageTitle")}
+        subtitle={t("timetable.subtitle", { count: EMPLOI_DU_TEMPS.length })}
+        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> {t("timetable.addSlot")}</Button>}
       />
 
       {/* Filter */}
@@ -44,16 +49,16 @@ export default function TimetablePage() {
         <Filter className="w-4 h-4 text-[var(--ink-4)]" />
         <div className="w-48">
           <Select value={classeFilter} onValueChange={setClasseFilter}>
-            <SelectTrigger><SelectValue placeholder="Toutes les classes" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder={t("timetable.allClasses")} /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Toutes les classes</SelectItem>
+              <SelectItem value="all">{t("timetable.allClasses")}</SelectItem>
               {CLASSES.map(c => <SelectItem key={c.code} value={c.code}>{c.code}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
         {classeFilter !== "all" && (
           <button onClick={() => setClasseFilter("all")} className="text-[12px] text-[var(--blue)] hover:underline">
-            Réinitialiser
+            {t("timetable.reset")}
           </button>
         )}
       </div>
@@ -64,11 +69,11 @@ export default function TimetablePage() {
           <div className="grid gap-[1px] bg-[var(--line)] rounded-[14px] overflow-hidden border border-[var(--line)]" style={{ gridTemplateColumns: "80px repeat(5, 1fr)" }}>
             {/* Header row */}
             <div className="bg-[var(--ivory)] px-2 py-2.5 flex items-center justify-center">
-              <span className="text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)]">Heure</span>
+              <span className="text-[9.5px] font-bold uppercase tracking-[0.07em] text-[var(--ink-4)]">{t("timetable.timeHeader")}</span>
             </div>
-            {JOURS.map(j => (
-              <div key={j} className="bg-[var(--ivory)] px-2 py-2.5 flex items-center justify-center">
-                <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-[var(--ink-4)]">{j}</span>
+            {JOURS_KEYS.map((key, i) => (
+              <div key={key} className="bg-[var(--ivory)] px-2 py-2.5 flex items-center justify-center">
+                <span className="text-[10px] font-bold uppercase tracking-[0.06em] text-[var(--ink-4)]">{t(`timetable.days.${key}`)}</span>
               </div>
             ))}
 
@@ -78,10 +83,10 @@ export default function TimetablePage() {
                 <div key={`time-${h}`} className="bg-white flex items-center justify-center px-2 min-h-[72px]">
                   <span className="font-mono text-[11px] text-[var(--ink-4)] font-semibold">{h}</span>
                 </div>
-                {JOURS.map(j => {
-                  const slots = getSlot(j, h);
+                {JOURS_VALUES.map((jour, i) => {
+                  const slots = getSlot(jour, h);
                   return (
-                    <div key={`${j}-${h}`} className="bg-white p-1.5 min-h-[72px]">
+                    <div key={`${jour}-${h}`} className="bg-white p-1.5 min-h-[72px]">
                       {slots.map(slot => (
                         <div
                           key={slot.id}
@@ -107,7 +112,7 @@ export default function TimetablePage() {
 
       {/* Legend */}
       <div className="flex items-center gap-4 mt-4">
-        <span className="text-[11px] font-bold text-[var(--ink-4)] uppercase tracking-widest">Légende :</span>
+        <span className="text-[11px] font-bold text-[var(--ink-4)] uppercase tracking-widest">{t("timetable.legend")}</span>
         {Object.entries(TYPE_COLORS).map(([type, cls]) => (
           <div key={type} className={cn("flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-[11px] font-bold border", cls)}>
             {type}
@@ -118,23 +123,17 @@ export default function TimetablePage() {
       {/* List view */}
       <Card className="mt-5">
         <CardHeader>
-          <CardTitle>Liste des cours planifiés</CardTitle>
+          <CardTitle>{t("timetable.scheduledCourses")}</CardTitle>
         </CardHeader>
         <CardContent>
           <DataTable
-            columns={scheduleColumns}
+            columns={columns}
             data={filteredEDT}
             searchKey="jour"
-            searchPlaceholder="Rechercher par jour ou matière…"
+            searchPlaceholder={t("timetable.searchPlaceholder")}
             filterFields={[
-              { columnId: "jour", title: "Jour", options: [
-                { label: "Lundi", value: "Lundi" },
-                { label: "Mardi", value: "Mardi" },
-                { label: "Mercredi", value: "Mercredi" },
-                { label: "Jeudi", value: "Jeudi" },
-                { label: "Vendredi", value: "Vendredi" },
-              ]},
-              { columnId: "classe", title: "Classe", options: [
+              { columnId: "jour", title: t("timetable.filterDay"), options: JOURS_VALUES.map((v, i) => ({ label: t(`timetable.days.${JOURS_KEYS[i]}`), value: v })) },
+              { columnId: "classe", title: t("timetable.filterClass"), options: [
                 { label: "L1-INFO-A", value: "L1-INFO-A" },
                 { label: "L1-INFO-B", value: "L1-INFO-B" },
                 { label: "L2-INFO-B", value: "L2-INFO-B" },
@@ -143,7 +142,7 @@ export default function TimetablePage() {
                 { label: "L3-DROIT-A", value: "L3-DROIT-A" },
                 { label: "M1-INFO-A", value: "M1-INFO-A" },
               ]},
-              { columnId: "type", title: "Type", options: [
+              { columnId: "type", title: t("timetable.filterType"), options: [
                 { label: "CM", value: "CM" },
                 { label: "TD", value: "TD" },
                 { label: "TP", value: "TP" },

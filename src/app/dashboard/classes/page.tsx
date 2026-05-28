@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { BookOpen, Plus, Search, TrendingUp, Users } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -7,12 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DataTable } from "@/components/data-table";
-import { classesColumns } from "@/components/data-table/columns/classes-columns";
+import { getClassesColumns } from "@/components/data-table/columns/classes-columns";
 import { CLASSES, STUDENTS, MATIERES } from "@/constants/mock-data";
 import type { Classe } from "@/types";
-
-const FILIERES = ["Toutes", "Informatique", "Gestion", "Droit"];
-
 
 const FILIERE_COLORS: Record<string, string> = {
   Informatique: "var(--blue)",
@@ -22,11 +20,18 @@ const FILIERE_COLORS: Record<string, string> = {
 };
 
 export default function ClassesPage() {
+  const { t } = useTranslation("academique");
+  const { t: tc } = useTranslation("common");
+
+  const FILIERES = [tc("misc.all"), "Informatique", "Gestion", "Droit"];
+
   const [query, setQuery] = useState("");
-  const [filiere, setFiliere] = useState("Toutes");
+  const [filiere, setFiliere] = useState(tc("misc.all"));
+
+  const columns = useMemo(() => getClassesColumns(t), [t]);
 
   const filtered = CLASSES.filter(c => {
-    const matchFiliere = filiere === "Toutes" || c.filiere === filiere;
+    const matchFiliere = filiere === tc("misc.all") || c.filiere === filiere;
     const matchQuery = !query.trim() || c.code.toLowerCase().includes(query.toLowerCase()) || c.responsable.toLowerCase().includes(query.toLowerCase());
     return matchFiliere && matchQuery;
   });
@@ -37,18 +42,18 @@ export default function ClassesPage() {
   return (
     <div>
       <PageHeader
-        title="Classes & Filières"
+        title={t("classes.pageTitle")}
         subtitle={`${CLASSES.length} classes · Session 2025–2026`}
-        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> Nouvelle classe</Button>}
+        actions={<Button size="sm"><Plus className="w-3.5 h-3.5" /> {t("classes.addClass")}</Button>}
       />
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-5">
         {[
-          { label: "Total classes", value: CLASSES.length, color: "var(--blue)", icon: <BookOpen className="w-4 h-4" /> },
-          { label: "Étudiants inscrits", value: totalStudents, color: "var(--cyan)", icon: <Users className="w-4 h-4" /> },
+          { label: t("classes.pageTitle"), value: CLASSES.length, color: "var(--blue)", icon: <BookOpen className="w-4 h-4" /> },
+          { label: t("students.pageTitle"), value: totalStudents, color: "var(--cyan)", icon: <Users className="w-4 h-4" /> },
           { label: "Moy. par classe", value: avgPerClass, color: "var(--purple)", icon: <TrendingUp className="w-4 h-4" /> },
-          { label: "Filieres actives", value: 4, color: "var(--success)", icon: <BookOpen className="w-4 h-4" /> },
+          { label: "Filières actives", value: 4, color: "var(--success)", icon: <BookOpen className="w-4 h-4" /> },
         ].map(k => (
           <div key={k.label} className="bg-white border border-[var(--line)] rounded-[14px] p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: `${k.color}18`, color: k.color }}>
@@ -121,20 +126,20 @@ export default function ClassesPage() {
       {/* Table */}
       <Card>
         <DataTable
-          columns={classesColumns}
+          columns={columns}
           data={filtered}
           searchKey="code"
           searchPlaceholder="Rechercher une classe…"
           filterFields={[
             {
-              columnId: "filiere", title: "Filière", options: [
+              columnId: "filiere", title: t("classes.columns.filiere"), options: [
                 { label: "Informatique", value: "Informatique" },
                 { label: "Gestion", value: "Gestion" },
                 { label: "Droit", value: "Droit" },
               ]
             },
             {
-              columnId: "niveau", title: "Niveau", options: [
+              columnId: "niveau", title: t("classes.columns.level"), options: [
                 { label: "Licence 1", value: "Licence 1" },
                 { label: "Licence 2", value: "Licence 2" },
                 { label: "Licence 3", value: "Licence 3" },

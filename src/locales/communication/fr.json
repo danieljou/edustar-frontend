@@ -1,0 +1,108 @@
+{
+  "messaging": {
+    "pageTitle": "Messagerie",
+    "pageSubtitle": "Communication interne entre les membres de l'établissement",
+    "newMessage": "Nouveau Message",
+    "compose": "Rédiger",
+    "reply": "Répondre",
+    "forward": "Transférer",
+    "delete": "Supprimer",
+    "markRead": "Marquer comme lu",
+    "markUnread": "Marquer comme non lu",
+    "archive": "Archiver",
+    "pageTitle2": "Messagerie interne",
+    "unreadCount": "{{count}} message non lu",
+    "unreadCountPlural": "{{count}} messages non lus",
+    "newMessageBtn": "Nouveau message",
+    "folders": {
+      "inbox": "Boîte de Réception",
+      "inboxShort": "Boîte de réception",
+      "sent": "Envoyés",
+      "drafts": "Brouillons",
+      "archived": "Archivés",
+      "trash": "Corbeille"
+    },
+    "composeForm": {
+      "title": "Nouveau message",
+      "to": "À",
+      "recipient": "Destinataire",
+      "recipientPlaceholder": "Nom ou email…",
+      "cc": "Cc",
+      "subject": "Objet",
+      "subjectPlaceholder": "Sujet du message…",
+      "message": "Message",
+      "messagePlaceholder": "Rédigez votre message…",
+      "attachments": "Pièces Jointes",
+      "addAttachment": "Ajouter une pièce jointe",
+      "send": "Envoyer",
+      "saveDraft": "Sauvegarder brouillon",
+      "cancel": "Annuler"
+    },
+    "status": {
+      "unread": "Non lu",
+      "read": "Lu",
+      "sent": "Envoyé",
+      "draft": "Brouillon"
+    },
+    "empty": "Aucun message",
+    "searchPlaceholder": "Rechercher…",
+    "to": "À :",
+    "selectMessage": "Sélectionnez un message pour le lire"
+  },
+  "announcements": {
+    "pageTitle": "Annonces",
+    "pageSubtitle": "Gestion des annonces et communications officielles",
+    "newAnnouncement": "Nouvelle Annonce",
+    "newAnnouncementBtn": "Nouvelle annonce",
+    "editAnnouncement": "Modifier l'annonce",
+    "deleteAnnouncement": "Supprimer l'annonce",
+    "publish": "Publier",
+    "unpublish": "Dépublier",
+    "searchPlaceholder": "Rechercher une annonce...",
+    "publishedCount": "{{count}} annonces publiées",
+    "urgentCount": "{{count}} urgente",
+    "urgentCountPlural": "{{count}} urgentes",
+    "announcementCount": "annonce",
+    "announcementCountPlural": "annonces",
+    "allTargets": "Toutes les cibles",
+    "allPriorities": "Toutes priorités",
+    "modify": "Modifier",
+    "archive": "Archiver",
+    "noResults": "Aucune annonce pour les filtres sélectionnés",
+    "columns": {
+      "title": "Titre",
+      "content": "Contenu",
+      "author": "Auteur",
+      "targetAudience": "Destinataires",
+      "publishDate": "Date de Publication",
+      "expiryDate": "Date d'Expiration",
+      "status": "Statut",
+      "pinned": "Épinglé"
+    },
+    "audience": {
+      "all": "Tout le monde",
+      "tous": "Tous",
+      "students": "Tous les Étudiants",
+      "etudiants": "Étudiants",
+      "teachers": "Tous les Enseignants",
+      "enseignants": "Enseignants",
+      "parents": "Tous les Parents",
+      "staff": "Tout le Personnel",
+      "administratifs": "Administratifs",
+      "specificClass": "Classe Spécifique"
+    },
+    "priorities": {
+      "urgent": "Urgente",
+      "normal": "Normale",
+      "info": "Info"
+    },
+    "status": {
+      "published": "Publié",
+      "draft": "Brouillon",
+      "scheduled": "Planifié",
+      "expired": "Expiré"
+    },
+    "pin": "Épingler",
+    "unpin": "Désépingler"
+  }
+}

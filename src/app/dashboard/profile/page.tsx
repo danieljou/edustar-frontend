@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   Camera, Save, Shield, Key, LogOut, Mail, Phone, MapPin,
   Briefcase, Building2, Calendar, Clock, CheckCircle2,
@@ -18,31 +19,6 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 
-/* ── Static data ──────────────────────────────────────────────────────────── */
-
-const RECENT_ACTIVITY = [
-  { icon: GraduationCap, color: "bg-[var(--blue-light)] text-[var(--blue)]",     text: "Admission de Patrick Essono validée",          time: "Il y a 12 min" },
-  { icon: CreditCard,    color: "bg-[var(--success-light)] text-[var(--success)]",text: "Paiement de 250 000 FCFA enregistré — ETU-009", time: "Il y a 34 min" },
-  { icon: FileText,      color: "bg-purple-50 text-purple-600",                   text: "Rapport semestriel exporté (PDF)",               time: "Il y a 2h"    },
-  { icon: UserCheck,     color: "bg-[var(--cyan-light)] text-[var(--cyan)]",      text: "Feuille de présence INF101 clôturée",            time: "Il y a 3h"    },
-  { icon: Shield,        color: "bg-amber-50 text-amber-600",                     text: "Connexion depuis un nouvel appareil",            time: "Hier, 18:42"  },
-];
-
-const STATS = [
-  { label: "Connexions",  value: "38",  icon: TrendingUp, color: "text-[var(--blue)]",    bg: "bg-[var(--blue-light)]"   },
-  { label: "Actions",     value: "214", icon: Zap,        color: "text-[var(--cyan)]",    bg: "bg-[var(--cyan-light)]"   },
-  { label: "Sessions",    value: "1",   icon: Activity,   color: "text-[var(--success)]", bg: "bg-[var(--success-light)]"},
-  { label: "Depuis",      value: "2022",icon: Star,       color: "text-purple-500",        bg: "bg-purple-50"             },
-];
-
-const INFO_FIELDS = [
-  { icon: Mail,      label: "Email",        key: "email",        color: "bg-[var(--blue-light)] text-[var(--blue)]"     },
-  { icon: Phone,     label: "Téléphone",    key: "phone",        color: "bg-[var(--cyan-light)] text-[var(--cyan)]"     },
-  { icon: Briefcase, label: "Poste",        key: "poste",        color: "bg-[var(--blue-light)] text-[var(--blue)]"     },
-  { icon: Building2, label: "Département",  key: "departement",  color: "bg-purple-50 text-purple-500"                   },
-  { icon: MapPin,    label: "Localisation", key: "location",     color: "bg-[var(--success-light)] text-[var(--success)]"},
-] as const;
-
 /* ── Password helpers ─────────────────────────────────────────────────────── */
 
 function getPwStrength(pw: string) {
@@ -54,21 +30,46 @@ function getPwStrength(pw: string) {
   ];
 }
 
-const PW_REQS = [
-  { label: "8 caractères minimum",  test: (pw: string) => pw.length >= 8         },
-  { label: "Une majuscule",         test: (pw: string) => /[A-Z]/.test(pw)       },
-  { label: "Un chiffre",            test: (pw: string) => /[0-9]/.test(pw)       },
-  { label: "Un caractère spécial",  test: (pw: string) => /[^A-Za-z0-9]/.test(pw)},
-];
-
-const STRENGTH_LABELS = ["", "Faible", "Passable", "Bon", "Fort"];
 const STRENGTH_COLORS = ["", "bg-[var(--danger)]", "bg-[var(--warning)]", "bg-[var(--cyan)]", "bg-[var(--success)]"];
 const STRENGTH_TEXT   = ["", "text-[var(--danger)]", "text-[var(--warning)]", "text-[var(--cyan)]", "text-[var(--success)]"];
 
 /* ── Component ────────────────────────────────────────────────────────────── */
 
 export default function ProfilePage() {
+  const { t } = useTranslation("systeme");
   const showToast = useToast();
+
+  const RECENT_ACTIVITY = [
+    { icon: GraduationCap, color: "bg-[var(--blue-light)] text-[var(--blue)]",      text: "Admission de Patrick Essono validée",          time: "Il y a 12 min"   },
+    { icon: CreditCard,    color: "bg-[var(--success-light)] text-[var(--success)]", text: "Paiement de 250 000 FCFA enregistré — ETU-009", time: "Il y a 34 min"   },
+    { icon: FileText,      color: "bg-purple-50 text-purple-600",                    text: "Rapport semestriel exporté (PDF)",              time: "Il y a 2h"       },
+    { icon: UserCheck,     color: "bg-[var(--cyan-light)] text-[var(--cyan)]",       text: "Feuille de présence INF101 clôturée",           time: "Il y a 3h"       },
+    { icon: Shield,        color: "bg-amber-50 text-amber-600",                      text: "Connexion depuis un nouvel appareil",           time: "Hier, 18:42"     },
+  ];
+
+  const STATS = [
+    { label: t("profile.stats.connections"), value: "38",   icon: TrendingUp, color: "text-[var(--blue)]",    bg: "bg-[var(--blue-light)]"    },
+    { label: t("profile.stats.actions"),     value: "214",  icon: Zap,        color: "text-[var(--cyan)]",    bg: "bg-[var(--cyan-light)]"    },
+    { label: t("profile.stats.sessions"),    value: "1",    icon: Activity,   color: "text-[var(--success)]", bg: "bg-[var(--success-light)]" },
+    { label: t("profile.stats.since"),       value: "2022", icon: Star,       color: "text-purple-500",       bg: "bg-purple-50"              },
+  ];
+
+  const INFO_FIELDS = [
+    { icon: Mail,      label: t("profile.infoLabels.email"),      key: "email"       as const, color: "bg-[var(--blue-light)] text-[var(--blue)]"      },
+    { icon: Phone,     label: t("profile.infoLabels.phone"),      key: "phone"       as const, color: "bg-[var(--cyan-light)] text-[var(--cyan)]"      },
+    { icon: Briefcase, label: t("profile.infoLabels.position"),   key: "poste"       as const, color: "bg-[var(--blue-light)] text-[var(--blue)]"      },
+    { icon: Building2, label: t("profile.infoLabels.department"), key: "departement" as const, color: "bg-purple-50 text-purple-500"                    },
+    { icon: MapPin,    label: t("profile.infoLabels.location"),   key: "location"    as const, color: "bg-[var(--success-light)] text-[var(--success)]" },
+  ];
+
+  const PW_REQS = [
+    { label: t("profile.security.requirements.minChars"), test: (pw: string) => pw.length >= 8          },
+    { label: t("profile.security.requirements.uppercase"), test: (pw: string) => /[A-Z]/.test(pw)       },
+    { label: t("profile.security.requirements.number"),   test: (pw: string) => /[0-9]/.test(pw)        },
+    { label: t("profile.security.requirements.special"),  test: (pw: string) => /[^A-Za-z0-9]/.test(pw) },
+  ];
+
+  const STRENGTH_LABELS = ["", t("profile.security.strengthLabels.weak"), t("profile.security.strengthLabels.fair"), t("profile.security.strengthLabels.good"), t("profile.security.strengthLabels.strong")];
 
   const [editMode, setEditMode] = useState(false);
   const [profile, setProfile] = useState({
@@ -92,16 +93,16 @@ export default function ProfilePage() {
 
   function handleSaveProfile() {
     setEditMode(false);
-    showToast("Profil mis à jour avec succès !");
+    showToast(t("profile.toasts.profileUpdated"));
   }
 
   function handleChangePassword() {
-    if (!passwords.current || !passwords.next) { setPwError("Veuillez remplir tous les champs."); return; }
-    if (passwords.next !== passwords.confirm)  { setPwError("Les mots de passe ne correspondent pas."); return; }
-    if (passwords.next.length < 8)            { setPwError("Le mot de passe doit contenir au moins 8 caractères."); return; }
+    if (!passwords.current || !passwords.next) { setPwError(t("profile.security.errors.fillAll")); return; }
+    if (passwords.next !== passwords.confirm)  { setPwError(t("profile.security.errors.noMatch")); return; }
+    if (passwords.next.length < 8)            { setPwError(t("profile.security.errors.tooShort")); return; }
     setPwError("");
     setPasswords({ current: "", next: "", confirm: "" });
-    showToast("Mot de passe modifié !");
+    showToast(t("profile.toasts.passwordChanged"));
   }
 
   /* ────────────────────────────────────────────────────────────────────────── */
@@ -150,7 +151,7 @@ export default function ProfilePage() {
                 </div>
                 <button
                   className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-[var(--line)] flex items-center justify-center shadow-sm hover:bg-white hover:scale-110 transition-all"
-                  title="Changer la photo"
+                  title={t("profile.changePhoto")}
                 >
                   <Camera className="w-3.5 h-3.5 text-[var(--ink-3)]" />
                 </button>
@@ -163,7 +164,7 @@ export default function ProfilePage() {
                   </h1>
                   {/* Admin badge */}
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-semibold bg-gradient-to-r from-[var(--blue)] to-[var(--cyan)] text-white shadow-sm">
-                    <Shield className="w-2.5 h-2.5" /> Admin
+                    <Shield className="w-2.5 h-2.5" /> {t("profile.adminBadge")}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 mt-1">
@@ -173,7 +174,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex items-center gap-1 mt-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)]" />
-                  <span className="text-[11px] text-[var(--success)] font-medium">En ligne</span>
+                  <span className="text-[11px] text-[var(--success)] font-medium">{t("profile.online")}</span>
                 </div>
               </div>
             </div>
@@ -183,15 +184,15 @@ export default function ProfilePage() {
               <AnimatePresence mode="wait">
                 {editMode ? (
                   <motion.div key="edit" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 8 }} className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setEditMode(false)}>Annuler</Button>
+                    <Button variant="outline" size="sm" onClick={() => setEditMode(false)}>{t("profile.cancel")}</Button>
                     <Button size="sm" onClick={handleSaveProfile} className="gap-1.5">
-                      <Save className="w-3.5 h-3.5" /> Sauvegarder
+                      <Save className="w-3.5 h-3.5" /> {t("profile.save")}
                     </Button>
                   </motion.div>
                 ) : (
                   <motion.div key="view" initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 8 }}>
                     <Button variant="outline" size="sm" onClick={() => setEditMode(true)} className="gap-1.5">
-                      <Edit2 className="w-3.5 h-3.5" /> Modifier le profil
+                      <Edit2 className="w-3.5 h-3.5" /> {t("profile.editProfile")}
                     </Button>
                   </motion.div>
                 )}
@@ -231,13 +232,13 @@ export default function ProfilePage() {
           {/* Informations personnelles */}
           <Card className="border-[var(--line)]">
             <CardHeader>
-              <CardTitle>Informations personnelles</CardTitle>
+              <CardTitle>{t("profile.personalInfo")}</CardTitle>
               {!editMode && (
                 <button
                   onClick={() => setEditMode(true)}
                   className="text-[12px] text-[var(--blue)] font-semibold hover:underline flex items-center gap-1"
                 >
-                  <Edit2 className="w-3 h-3" /> Modifier
+                  <Edit2 className="w-3 h-3" /> {t("profile.edit")}
                 </button>
               )}
             </CardHeader>
@@ -248,13 +249,13 @@ export default function ProfilePage() {
                   <motion.div key="edit-form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[
-                        { id: "prenom",      label: "Prénom",       key: "prenom"      as const },
-                        { id: "nom",         label: "Nom",          key: "nom"         as const },
-                        { id: "email",       label: "Email",        key: "email"       as const, type: "email" },
-                        { id: "phone",       label: "Téléphone",    key: "phone"       as const },
-                        { id: "poste",       label: "Poste",        key: "poste"       as const },
-                        { id: "departement", label: "Département",  key: "departement" as const },
-                        { id: "location",    label: "Localisation", key: "location"    as const },
+                        { id: "prenom",      label: t("profile.fields.firstName"),  key: "prenom"      as const },
+                        { id: "nom",         label: t("profile.fields.lastName"),   key: "nom"         as const },
+                        { id: "email",       label: t("profile.fields.email"),      key: "email"       as const, type: "email" },
+                        { id: "phone",       label: t("profile.fields.phone"),      key: "phone"       as const },
+                        { id: "poste",       label: t("profile.fields.position"),   key: "poste"       as const },
+                        { id: "departement", label: t("profile.fields.department"), key: "departement" as const },
+                        { id: "location",    label: t("profile.fields.location"),   key: "location"    as const },
                       ].map(({ id, label, key, type }) => (
                         <div key={id}>
                           <Label htmlFor={id}>{label}</Label>
@@ -263,15 +264,15 @@ export default function ProfilePage() {
                         </div>
                       ))}
                       <div className="sm:col-span-2">
-                        <Label htmlFor="bio">Biographie</Label>
+                        <Label htmlFor="bio">{t("profile.fields.bio")}</Label>
                         <Textarea id="bio" value={profile.bio}
                           onChange={e => setProfile(p => ({ ...p, bio: e.target.value }))}
                           className="resize-none" rows={3} />
                       </div>
                       <div className="sm:col-span-2 flex justify-end gap-2 pt-1">
-                        <Button variant="outline" size="sm" onClick={() => setEditMode(false)}>Annuler</Button>
+                        <Button variant="outline" size="sm" onClick={() => setEditMode(false)}>{t("profile.cancel")}</Button>
                         <Button size="sm" onClick={handleSaveProfile} className="gap-1.5">
-                          <Save className="w-3.5 h-3.5" /> Sauvegarder
+                          <Save className="w-3.5 h-3.5" /> {t("profile.save")}
                         </Button>
                       </div>
                     </div>
@@ -297,7 +298,7 @@ export default function ProfilePage() {
                     {/* Bio */}
                     {profile.bio && (
                       <div className="mt-2 px-3 py-3.5 rounded-xl bg-[var(--blue-lighter)] border-l-[3px] border-[var(--blue)]">
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--blue)] mb-1">Biographie</div>
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--blue)] mb-1">{t("profile.fields.bio")}</div>
                         <p className="text-[13px] text-[var(--ink-3)] leading-relaxed">{profile.bio}</p>
                       </div>
                     )}
@@ -314,7 +315,7 @@ export default function ProfilePage() {
                 <div className="w-8 h-8 rounded-[8px] bg-amber-50 flex items-center justify-center">
                   <Key className="w-4 h-4 text-amber-500" />
                 </div>
-                <CardTitle>Sécurité du compte</CardTitle>
+                <CardTitle>{t("profile.security.title")}</CardTitle>
               </div>
             </CardHeader>
 
@@ -323,7 +324,7 @@ export default function ProfilePage() {
 
                 {/* Current password */}
                 <div className="space-y-1.5">
-                  <Label htmlFor="pw-current">Mot de passe actuel</Label>
+                  <Label htmlFor="pw-current">{t("profile.security.currentPassword")}</Label>
                   <div className="relative">
                     <Input
                       id="pw-current"
@@ -348,7 +349,7 @@ export default function ProfilePage() {
                   {(["next", "confirm"] as const).map((field) => (
                     <div key={field} className="space-y-1.5">
                       <Label htmlFor={`pw-${field}`}>
-                        {field === "next" ? "Nouveau mot de passe" : "Confirmer"}
+                        {field === "next" ? t("profile.security.newPassword") : t("profile.security.confirm")}
                       </Label>
                       <div className="relative">
                         <Input
@@ -383,7 +384,7 @@ export default function ProfilePage() {
                       {/* Strength bar */}
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] text-[var(--ink-4)] font-medium uppercase tracking-wider">Force</span>
+                          <span className="text-[11px] text-[var(--ink-4)] font-medium uppercase tracking-wider">{t("profile.security.strength")}</span>
                           <span className={cn("text-[11px] font-semibold", STRENGTH_TEXT[pwScore])}>
                             {STRENGTH_LABELS[pwScore]}
                           </span>
@@ -442,7 +443,7 @@ export default function ProfilePage() {
 
                 <div className="flex justify-end pt-1">
                   <Button size="sm" onClick={handleChangePassword} className="gap-1.5">
-                    <Key className="w-3.5 h-3.5" /> Modifier le mot de passe
+                    <Key className="w-3.5 h-3.5" /> {t("profile.security.changeBtn")}
                   </Button>
                 </div>
               </div>
@@ -461,8 +462,8 @@ export default function ProfilePage() {
                   <Activity className="w-4 h-4 text-[var(--blue)]" />
                 </div>
                 <div>
-                  <CardTitle>Activité récente</CardTitle>
-                  <p className="text-[10.5px] text-[var(--ink-4)]">Aujourd'hui</p>
+                  <CardTitle>{t("profile.recentActivity.title")}</CardTitle>
+                  <p className="text-[10.5px] text-[var(--ink-4)]">{t("profile.recentActivity.today")}</p>
                 </div>
               </div>
             </CardHeader>
@@ -495,7 +496,7 @@ export default function ProfilePage() {
 
               <div className="px-5 py-3 border-t border-[var(--line)]">
                 <button className="text-[12px] text-[var(--blue)] font-semibold hover:underline flex items-center gap-1 w-full justify-center">
-                  Voir tout l'historique <ChevronRight className="w-3.5 h-3.5" />
+                  {t("profile.recentActivity.viewAll")} <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </CardContent>
@@ -504,26 +505,29 @@ export default function ProfilePage() {
           {/* Statut du compte */}
           <Card className="border-[var(--line)]">
             <CardHeader>
-              <CardTitle>Statut du compte</CardTitle>
+              <CardTitle>{t("profile.accountStatus.title")}</CardTitle>
             </CardHeader>
 
             <CardContent className="space-y-2">
               {[
                 {
-                  icon: CheckCircle2, label: "Compte vérifié",
-                  desc: "Email confirmé",
+                  icon: CheckCircle2,
+                  label: t("profile.accountStatus.verified"),
+                  desc: t("profile.accountStatus.verifiedDesc"),
                   iconBg: "bg-[var(--success-light)]", iconColor: "text-[var(--success)]",
                   dot: "bg-[var(--success)]",
                 },
                 {
-                  icon: Shield, label: "Accès administrateur",
-                  desc: "Toutes permissions",
+                  icon: Shield,
+                  label: t("profile.accountStatus.adminAccess"),
+                  desc: t("profile.accountStatus.adminDesc"),
                   iconBg: "bg-[var(--blue-light)]", iconColor: "text-[var(--blue)]",
                   dot: "bg-[var(--blue)]",
                 },
                 {
-                  icon: Calendar, label: "Membre depuis 2022",
-                  desc: "3 ans d'ancienneté",
+                  icon: Calendar,
+                  label: t("profile.accountStatus.memberSince"),
+                  desc: t("profile.accountStatus.memberDesc"),
                   iconBg: "bg-amber-50", iconColor: "text-amber-500",
                   dot: "bg-amber-400",
                 },
@@ -546,7 +550,7 @@ export default function ProfilePage() {
               <div className="px-3 py-2.5 rounded-xl bg-[var(--danger-light)]/60 border border-[var(--danger)]/15">
                 <button className="flex items-center gap-2 text-[12.5px] text-[var(--danger)] font-semibold w-full hover:opacity-80 transition-opacity">
                   <LogOut className="w-4 h-4" />
-                  <span className="flex-1 text-left">Déconnecter tous les appareils</span>
+                  <span className="flex-1 text-left">{t("profile.accountStatus.disconnect")}</span>
                   <ChevronRight className="w-3.5 h-3.5 opacity-60" />
                 </button>
               </div>

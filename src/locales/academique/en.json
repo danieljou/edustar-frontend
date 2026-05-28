@@ -1,0 +1,121 @@
+{
+  "students": {
+    "pageTitle": "Student Management",
+    "pageSubtitle": "List and management of registered students",
+    "addStudent": "",
+    "editStudent": "Edit Student",
+    "deleteStudent": "Delete student",
+    "studentDetails": "Student Details",
+    "searchPlaceholder": "",
+    "columns": {
+      "code": "",
+      "fullName": "",
+      "firstName": "First name",
+      "lastName": "",
+      "class": "",
+      "filiere": "",
+      "session": "",
+      "gender": "",
+      "birthDate": "",
+      "phone": "",
+      "email": "",
+      "address": "",
+      "guardian": "",
+      "guardianPhone": "",
+      "enrollmentDate": "",
+      "status": "Status",
+      "average": "",
+      "absences": "",
+      "balance": ""
+    },
+    "status": {
+      "actif": "",
+      "suspendu": "",
+      "diplome": "",
+      "abandonne": ""
+    }
+  },
+  "admissions": {
+    "pageTitle": "Admissions",
+    "pageSubtitle": "Management of applications and admissions",
+    "newAdmission": "New Admission",
+    "editAdmission": "",
+    "searchPlaceholder": "Search for admission...",
+    "columns": {
+      "candidate": "",
+      "applicationDate": "Application Date",
+      "desiredClass": "Desired Class",
+      "status": ""
+    },
+    "status": {
+      "admitted": "",
+      "rejected": "",
+      "pending": "On hold",
+      "waitlisted": "",
+      "interview": ""
+    }
+  },
+  "sessions": {
+    "pageTitle": "Academic Sessions",
+    "pageSubtitle": "Management of years and school sessions",
+    "newSession": "",
+    "editSession": "Edit session",
+    "columns": {
+      "name": "",
+      "startDate": "",
+      "endDate": "",
+      "status": "",
+      "studentsCount": ""
+    },
+    "currentSession": "Current session",
+    "academicYear": ""
+  },
+  "classes": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "addClass": "",
+    "editClass": "",
+    "columns": {
+      "name": "",
+      "level": "",
+      "filiere": "",
+      "capacity": "",
+      "headTeacher": "",
+      "studentsCount": "Students",
+      "session": ""
+    }
+  },
+  "subjects": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "addSubject": "Add a Material",
+    "editSubject": "",
+    "columns": {
+      "code": "Material Code",
+      "name": "",
+      "coefficient": "Coefficient",
+      "teacher": "",
+      "hoursPerWeek": "",
+      "class": "Class"
+    }
+  },
+  "configuration": {
+    "pageTitle": "School Year Configuration",
+    "pageSubtitle": "Setting the current academic year",
+    "academicYear": "",
+    "semesters": "Semesters",
+    "trimesters": "Quarters",
+    "gradingScale": "",
+    "periods": "Evaluation periods",
+    "addPeriod": ""
+  },
+  "configAcademique": {
+    "pageTitle": "Academic Configuration",
+    "pageSubtitle": "Advanced Academic System Configuration",
+    "evaluationSystem": "Rating system",
+    "gradingRules": "Scoring Rules",
+    "promotionCriteria": "",
+    "passingGrade": "",
+    "maxGrade": "Maximum score"
+  }
+}

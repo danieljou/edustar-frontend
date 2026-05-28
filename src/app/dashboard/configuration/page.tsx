@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Plus, Trash2, Copy, Upload, Settings2, BookOpen,
   Layers, GraduationCap, AlertTriangle, FileSpreadsheet,
@@ -103,6 +104,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function ConfigurationPage() {
+  const { t } = useTranslation("academique");
+  const { t: tc } = useTranslation("common");
   const toast = useToast();
   const [sessionId, setSessionId] = useState("ses-3");
 
@@ -235,8 +238,8 @@ export default function ConfigurationPage() {
   return (
     <div>
       <PageHeader
-        title="Configuration année scolaire"
-        subtitle={`Session sélectionnée : ${currentSession?.lib} — paramétrage pédagogique complet`}
+        title={t("configuration.pageTitle")}
+        subtitle={`Session sélectionnée : ${currentSession?.lib} — ${t("configuration.pageSubtitle")}`}
         actions={
           <div className="flex items-center gap-2 flex-wrap">
             <Select value={sessionId} onValueChange={setSessionId}>
@@ -246,7 +249,7 @@ export default function ConfigurationPage() {
               </SelectContent>
             </Select>
             <Button variant="outline" size="sm" onClick={() => setImportDlg(true)}>
-              <FileSpreadsheet className="w-3.5 h-3.5" /> Importer Excel
+              <FileSpreadsheet className="w-3.5 h-3.5" /> {tc("actions.import")}
             </Button>
             <Button variant="outline" size="sm" onClick={() => setDupDlg(true)}>
               <Copy className="w-3.5 h-3.5" /> Dupliquer
@@ -259,8 +262,8 @@ export default function ConfigurationPage() {
         <TabsList>
           <TabsTrigger value="niveaux"><Layers className="w-3.5 h-3.5" />Niveaux ({sesNiveaux.length})</TabsTrigger>
           <TabsTrigger value="filieres"><GraduationCap className="w-3.5 h-3.5" />Filières ({sesFilieres.length})</TabsTrigger>
-          <TabsTrigger value="classes"><Settings2 className="w-3.5 h-3.5" />Classes ({sesClasses.length})</TabsTrigger>
-          <TabsTrigger value="matieres"><BookOpen className="w-3.5 h-3.5" />Matières & Unités ({sesMatieres.length})</TabsTrigger>
+          <TabsTrigger value="classes"><Settings2 className="w-3.5 h-3.5" />{t("classes.pageTitle")} ({sesClasses.length})</TabsTrigger>
+          <TabsTrigger value="matieres"><BookOpen className="w-3.5 h-3.5" />{t("subjects.pageTitle")} ({sesMatieres.length})</TabsTrigger>
           <TabsTrigger value="particularites">Particularités ({particularites.length})</TabsTrigger>
         </TabsList>
 
@@ -322,7 +325,7 @@ export default function ConfigurationPage() {
         <TabsContent value="classes">
           <div className="flex justify-end mb-4">
             <Button size="sm" onClick={() => setClasseDlg({ open: true, data: null })}>
-              <Plus className="w-3.5 h-3.5" /> Ajouter une classe
+              <Plus className="w-3.5 h-3.5" /> {t("classes.addClass")}
             </Button>
           </div>
           <div className="space-y-6">
@@ -368,7 +371,7 @@ export default function ConfigurationPage() {
         <TabsContent value="matieres">
           <div className="flex justify-end mb-4">
             <Button size="sm" onClick={() => setMatiereDlg({ open: true, data: null })}>
-              <Plus className="w-3.5 h-3.5" /> Ajouter une matière
+              <Plus className="w-3.5 h-3.5" /> {t("subjects.addSubject")}
             </Button>
           </div>
           <div className="space-y-6">
@@ -387,8 +390,8 @@ export default function ConfigurationPage() {
                         <table className="w-full text-[12.5px]">
                           <thead>
                             <tr className="bg-[var(--ivory)] border-b border-[var(--line)]">
-                              {["Code", "Matière", "Coeff", "Vol. H", "Crédits", "Oblig.", ""].map(h => (
-                                <th key={h} className={`px-3 py-2.5 font-medium text-[var(--ink-3)] ${h === "Code" || h === "Matière" ? "text-left" : "text-center"}`}>{h}</th>
+                              {[t("subjects.columns.code"), t("subjects.pageTitle"), t("subjects.columns.coefficient"), "Vol. H", "Crédits", "Oblig.", ""].map(h => (
+                                <th key={h} className={`px-3 py-2.5 font-medium text-[var(--ink-3)] ${h === t("subjects.columns.code") || h === t("subjects.pageTitle") ? "text-left" : "text-center"}`}>{h}</th>
                               ))}
                             </tr>
                           </thead>
@@ -433,21 +436,21 @@ export default function ConfigurationPage() {
               Spécificités d'une matière pour une classe donnée : coefficient différent, option, enseignant dédié, volume horaire ajusté…
             </p>
             <Button size="sm" onClick={() => setParticulariteDlg({ open: true, data: null })}>
-              <Plus className="w-3.5 h-3.5" /> Ajouter
+              <Plus className="w-3.5 h-3.5" /> {tc("actions.add")}
             </Button>
           </div>
           <div className="border border-[var(--line)] rounded-[10px] overflow-hidden">
             <table className="w-full text-[12.5px]">
               <thead>
                 <tr className="bg-[var(--ivory)] border-b border-[var(--line)]">
-                  {["Classe", "Matière", "Coeff", "Vol. H", "Statut", "Note", ""].map(h => (
-                    <th key={h} className={`px-3 py-2.5 font-medium text-[var(--ink-3)] ${h === "Classe" || h === "Matière" || h === "Note" ? "text-left" : "text-center"}`}>{h}</th>
+                  {[t("classes.columns.name"), t("subjects.columns.name"), t("subjects.columns.coefficient"), "Vol. H", tc("fields.status"), "Note", ""].map(h => (
+                    <th key={h} className={`px-3 py-2.5 font-medium text-[var(--ink-3)] ${h === t("classes.columns.name") || h === t("subjects.columns.name") || h === "Note" ? "text-left" : "text-center"}`}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {particularites.length === 0 && (
-                  <tr><td colSpan={7} className="text-center py-10 text-[var(--ink-4)]">Aucune particularité définie.</td></tr>
+                  <tr><td colSpan={7} className="text-center py-10 text-[var(--ink-4)]">{tc("misc.noData")}</td></tr>
                 )}
                 {particularites.map((p, i) => {
                   const cl = sesClasses.find(c => c.id === p.classeId);
@@ -487,6 +490,7 @@ export default function ConfigurationPage() {
         initial={niveauDlg.data}
         onSave={saveNiveau}
         onClose={() => setNiveauDlg({ open: false, data: null })}
+        tc={tc}
       />
       <FiliereDialog
         key={`fil-${filiereDlg.open}-${filiereDlg.data?.id}`}
@@ -494,6 +498,7 @@ export default function ConfigurationPage() {
         initial={filiereDlg.data}
         onSave={saveFiliere}
         onClose={() => setFiliereDlg({ open: false, data: null })}
+        tc={tc}
       />
       <ClasseDialog
         key={`cls-${classeDlg.open}-${classeDlg.data?.id}`}
@@ -503,6 +508,7 @@ export default function ConfigurationPage() {
         filieres={sesFilieres}
         onSave={saveClasse}
         onClose={() => setClasseDlg({ open: false, data: null })}
+        tc={tc}
       />
       <MatiereDialog
         key={`mat-${matiereDlg.open}-${matiereDlg.data?.code}`}
@@ -511,6 +517,7 @@ export default function ConfigurationPage() {
         niveaux={sesNiveaux}
         onSave={saveMatiere}
         onClose={() => setMatiereDlg({ open: false, data: null })}
+        tc={tc}
       />
       <ParticulariteDialog
         key={`par-${particulariteDlg.open}-${particulariteDlg.data?.id}`}
@@ -520,6 +527,7 @@ export default function ConfigurationPage() {
         matieres={sesMatieres}
         onSave={saveParticularite}
         onClose={() => setParticulariteDlg({ open: false, data: null })}
+        tc={tc}
       />
 
       {/* Duplicate */}
@@ -548,7 +556,7 @@ export default function ConfigurationPage() {
             </div>
           </DialogBody>
           <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setDupDlg(false)}>Annuler</Button>
+            <Button variant="outline" size="sm" onClick={() => setDupDlg(false)}>{tc("actions.cancel")}</Button>
             <Button size="sm" onClick={handleDuplicate}><Copy className="w-3.5 h-3.5" /> Dupliquer</Button>
           </DialogFooter>
         </DialogContent>
@@ -557,7 +565,7 @@ export default function ConfigurationPage() {
       {/* Import Excel */}
       <Dialog open={importDlg} onOpenChange={setImportDlg}>
         <DialogContent>
-          <DialogHeader><DialogTitle>Importer depuis Excel</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{tc("actions.import")} Excel</DialogTitle></DialogHeader>
           <DialogBody>
             <div className="space-y-4">
               <p className="text-[12.5px] text-[var(--ink-3)]">
@@ -569,14 +577,14 @@ export default function ConfigurationPage() {
                 <div className="text-[11.5px] text-[var(--ink-4)] mt-1">.xlsx ou .xls — 5 Mo max</div>
               </div>
               <button className="text-[12px] text-[var(--blue)] underline underline-offset-2 hover:text-[var(--blue-dark)]">
-                Télécharger le modèle de fichier
+                {tc("actions.download")}
               </button>
             </div>
           </DialogBody>
           <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setImportDlg(false)}>Annuler</Button>
+            <Button variant="outline" size="sm" onClick={() => setImportDlg(false)}>{tc("actions.cancel")}</Button>
             <Button size="sm" onClick={() => { setImportDlg(false); toast("Aucun fichier sélectionné.", "warning"); }}>
-              <Upload className="w-3.5 h-3.5" /> Importer
+              <Upload className="w-3.5 h-3.5" /> {tc("actions.import")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -608,9 +616,11 @@ function EmptyMsg({ text, cols = 1 }: { text: string; cols?: number }) {
 // Dialog sub-components
 // ════════════════════════════════════════════════════════════════════════════
 
-function NiveauDialog({ open, initial, onSave, onClose }: {
+type TcFn = (key: string) => string;
+
+function NiveauDialog({ open, initial, onSave, onClose, tc }: {
   open: boolean; initial: Niveau | null;
-  onSave: (d: Omit<Niveau, "id" | "sessionId">) => void; onClose: () => void;
+  onSave: (d: Omit<Niveau, "id" | "sessionId">) => void; onClose: () => void; tc: TcFn;
 }) {
   const [form, setForm] = useState({ code: initial?.code ?? "", lib: initial?.lib ?? "", ordre: initial?.ordre ?? 1 });
   useEffect(() => { if (open) setForm({ code: initial?.code ?? "", lib: initial?.lib ?? "", ordre: initial?.ordre ?? 1 }); }, [open]);
@@ -626,17 +636,17 @@ function NiveauDialog({ open, initial, onSave, onClose }: {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose}>Annuler</Button>
-          <Button size="sm" onClick={() => onSave(form)}>{initial ? "Enregistrer" : "Ajouter"}</Button>
+          <Button variant="outline" size="sm" onClick={onClose}>{tc("actions.cancel")}</Button>
+          <Button size="sm" onClick={() => onSave(form)}>{initial ? tc("actions.save") : tc("actions.add")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-function FiliereDialog({ open, initial, onSave, onClose }: {
+function FiliereDialog({ open, initial, onSave, onClose, tc }: {
   open: boolean; initial: Filiere | null;
-  onSave: (d: Omit<Filiere, "id" | "sessionId">) => void; onClose: () => void;
+  onSave: (d: Omit<Filiere, "id" | "sessionId">) => void; onClose: () => void; tc: TcFn;
 }) {
   const [form, setForm] = useState({ code: initial?.code ?? "", lib: initial?.lib ?? "", description: initial?.description ?? "" });
   useEffect(() => { if (open) setForm({ code: initial?.code ?? "", lib: initial?.lib ?? "", description: initial?.description ?? "" }); }, [open]);
@@ -652,17 +662,17 @@ function FiliereDialog({ open, initial, onSave, onClose }: {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose}>Annuler</Button>
-          <Button size="sm" onClick={() => onSave(form)}>{initial ? "Enregistrer" : "Ajouter"}</Button>
+          <Button variant="outline" size="sm" onClick={onClose}>{tc("actions.cancel")}</Button>
+          <Button size="sm" onClick={() => onSave(form)}>{initial ? tc("actions.save") : tc("actions.add")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-function ClasseDialog({ open, initial, niveaux, filieres, onSave, onClose }: {
+function ClasseDialog({ open, initial, niveaux, filieres, onSave, onClose, tc }: {
   open: boolean; initial: ClasseConfig | null; niveaux: Niveau[]; filieres: Filiere[];
-  onSave: (d: Omit<ClasseConfig, "id" | "sessionId">) => void; onClose: () => void;
+  onSave: (d: Omit<ClasseConfig, "id" | "sessionId">) => void; onClose: () => void; tc: TcFn;
 }) {
   const [form, setForm] = useState({ code: initial?.code ?? "", niveauId: initial?.niveauId ?? niveaux[0]?.id ?? "", filiereId: initial?.filiereId ?? "", effectifMax: initial?.effectifMax ?? 50 });
   useEffect(() => { if (open) setForm({ code: initial?.code ?? "", niveauId: initial?.niveauId ?? niveaux[0]?.id ?? "", filiereId: initial?.filiereId ?? "", effectifMax: initial?.effectifMax ?? 50 }); }, [open]);
@@ -694,8 +704,8 @@ function ClasseDialog({ open, initial, niveaux, filieres, onSave, onClose }: {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose}>Annuler</Button>
-          <Button size="sm" onClick={() => onSave(form)}>{initial ? "Enregistrer" : "Ajouter"}</Button>
+          <Button variant="outline" size="sm" onClick={onClose}>{tc("actions.cancel")}</Button>
+          <Button size="sm" onClick={() => onSave(form)}>{initial ? tc("actions.save") : tc("actions.add")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -704,9 +714,9 @@ function ClasseDialog({ open, initial, niveaux, filieres, onSave, onClose }: {
 
 type MatiereDialogInput = (MatiereConfig & { unite?: Partial<UniteEnseignement> }) | null;
 
-function MatiereDialog({ open, initial, niveaux, onSave, onClose }: {
+function MatiereDialog({ open, initial, niveaux, onSave, onClose, tc }: {
   open: boolean; initial: MatiereDialogInput; niveaux: Niveau[];
-  onSave: (mat: MatiereConfig, ue: Partial<UniteEnseignement>) => void; onClose: () => void;
+  onSave: (mat: MatiereConfig, ue: Partial<UniteEnseignement>) => void; onClose: () => void; tc: TcFn;
 }) {
   const [mat, setMat] = useState({ code: initial?.code ?? "", lib: initial?.lib ?? "", niveauId: initial?.niveauId ?? niveaux[0]?.id ?? "", sessionId: initial?.sessionId ?? "" });
   const [ue, setUe] = useState({ coeff: initial?.unite?.coeff ?? 2, volumeH: initial?.unite?.volumeH ?? 2, credits: initial?.unite?.credits ?? 2, isObligatoire: initial?.unite?.isObligatoire ?? true });
@@ -747,17 +757,17 @@ function MatiereDialog({ open, initial, niveaux, onSave, onClose }: {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose}>Annuler</Button>
-          <Button size="sm" onClick={() => onSave(mat, ue)}>{initial ? "Enregistrer" : "Ajouter"}</Button>
+          <Button variant="outline" size="sm" onClick={onClose}>{tc("actions.cancel")}</Button>
+          <Button size="sm" onClick={() => onSave(mat, ue)}>{initial ? tc("actions.save") : tc("actions.add")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-function ParticulariteDialog({ open, initial, classes, matieres, onSave, onClose }: {
+function ParticulariteDialog({ open, initial, classes, matieres, onSave, onClose, tc }: {
   open: boolean; initial: ParticulariteMatiere | null; classes: ClasseConfig[]; matieres: MatiereConfig[];
-  onSave: (d: Omit<ParticulariteMatiere, "id">) => void; onClose: () => void;
+  onSave: (d: Omit<ParticulariteMatiere, "id">) => void; onClose: () => void; tc: TcFn;
 }) {
   const blank: Omit<ParticulariteMatiere, "id"> = { matiereCode: "", classeId: "", coeff: null, isOptionnel: false, enseignantId: "", volumeH: null, note: "" };
   const [form, setForm] = useState<Omit<ParticulariteMatiere, "id">>(initial ? { ...initial } : blank);
@@ -803,8 +813,8 @@ function ParticulariteDialog({ open, initial, classes, matieres, onSave, onClose
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" size="sm" onClick={onClose}>Annuler</Button>
-          <Button size="sm" onClick={() => onSave(form)}>{initial ? "Enregistrer" : "Ajouter"}</Button>
+          <Button variant="outline" size="sm" onClick={onClose}>{tc("actions.cancel")}</Button>
+          <Button size="sm" onClick={() => onSave(form)}>{initial ? tc("actions.save") : tc("actions.add")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

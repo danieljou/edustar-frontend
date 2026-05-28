@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Plus, CalendarRange, Users, AlertTriangle, Lock } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduBadge, statusBadge } from "@/components/shared/EduBadge";
@@ -20,6 +21,8 @@ const INITIAL_SESSIONS: Session[] = [
 ];
 
 export default function SessionsPage() {
+  const { t } = useTranslation("academique");
+  const { t: tc } = useTranslation("common");
   const toast = useToast();
   const [sessions, setSessions] = useState<Session[]>(INITIAL_SESSIONS);
   const [showForm, setShowForm] = useState(false);
@@ -74,11 +77,11 @@ export default function SessionsPage() {
   return (
     <div>
       <PageHeader
-        title="Sessions scolaires"
-        subtitle={`${sessions.length} sessions · Session active : ${activeSession?.lib || "Aucune"}`}
+        title={t("sessions.pageTitle")}
+        subtitle={`${sessions.length} sessions · ${t("sessions.currentSession")} : ${activeSession?.lib || tc("misc.none")}`}
         actions={
           <Button size="sm" onClick={() => setShowForm(true)}>
-            <Plus className="w-3.5 h-3.5" /> Nouvelle session
+            <Plus className="w-3.5 h-3.5" /> {t("sessions.newSession")}
           </Button>
         }
       />
@@ -112,7 +115,7 @@ export default function SessionsPage() {
                     <div className="flex items-center gap-1.5">
                       <Users className="w-3.5 h-3.5 text-[var(--ink-4)]" />
                       <span className="text-[13px] font-bold text-[var(--ink)]">{s.effectif}</span>
-                      <span className="text-[11px] text-[var(--ink-4)]">étudiants</span>
+                      <span className="text-[11px] text-[var(--ink-4)]">{t("sessions.columns.studentsCount")}</span>
                     </div>
 
                     {s.statut === "À venir" && (
@@ -140,7 +143,7 @@ export default function SessionsPage() {
 
       {/* Classes section */}
       <div className="mb-2">
-        <h2 className="font-serif text-[16px] text-[var(--ink)] mb-4">Classes — Session active</h2>
+        <h2 className="font-serif text-[16px] text-[var(--ink)] mb-4">{t("classes.pageTitle")} — {t("sessions.currentSession")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
           {CLASSES.map(c => (
             <Card key={c.id} className="p-4 hover:border-[var(--blue)] cursor-pointer transition-colors">
@@ -172,12 +175,12 @@ export default function SessionsPage() {
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Nouvelle session scolaire</DialogTitle>
+            <DialogTitle>{t("sessions.newSession")}</DialogTitle>
           </DialogHeader>
           <DialogBody>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="lib">Libellé de la session *</Label>
+                <Label htmlFor="lib">{t("sessions.columns.name")} *</Label>
                 <Input
                   id="lib"
                   placeholder="ex : 2026–2027"
@@ -187,7 +190,7 @@ export default function SessionsPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label htmlFor="debut">Date de début *</Label>
+                  <Label htmlFor="debut">{t("sessions.columns.startDate")} *</Label>
                   <Input
                     id="debut"
                     type="date"
@@ -196,7 +199,7 @@ export default function SessionsPage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="fin">Date de fin *</Label>
+                  <Label htmlFor="fin">{t("sessions.columns.endDate")} *</Label>
                   <Input
                     id="fin"
                     type="date"
@@ -212,9 +215,9 @@ export default function SessionsPage() {
             </div>
           </DialogBody>
           <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>Annuler</Button>
+            <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>{tc("actions.cancel")}</Button>
             <Button size="sm" onClick={handleCreate}>
-              <Plus className="w-3.5 h-3.5" /> Créer la session
+              <Plus className="w-3.5 h-3.5" /> {tc("actions.create")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -238,9 +241,9 @@ export default function SessionsPage() {
             </div>
           </DialogBody>
           <DialogFooter>
-            <Button variant="outline" size="sm" onClick={() => setShowCloseConfirm(null)}>Annuler</Button>
+            <Button variant="outline" size="sm" onClick={() => setShowCloseConfirm(null)}>{tc("actions.cancel")}</Button>
             <Button variant="danger" size="sm" onClick={confirmClose}>
-              <Lock className="w-3.5 h-3.5" /> Confirmer la clôture
+              <Lock className="w-3.5 h-3.5" /> {tc("actions.confirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

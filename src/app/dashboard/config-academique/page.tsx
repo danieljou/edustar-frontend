@@ -1,5 +1,6 @@
 "use client";
 import { useState, useReducer } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Plus, Edit2, Trash2, ChevronDown, Check, Search,
   Calendar, BookOpen, ListChecks, RefreshCw, AlertTriangle,
@@ -420,6 +421,7 @@ function UEModal({ modal, dispatch, toast }: {
   modal: UEModal; dispatch: (a: Action) => void;
   toast: (m: string, v?: "success" | "error") => void;
 }) {
+  const { t: tc } = useTranslation("common");
   const isEdit = modal.mode === "edit";
   const [ue, setUE] = useState<UE>(
     isEdit ? { ...modal.ue, matieres: modal.ue.matieres.map(m => ({ ...m })) }
@@ -527,8 +529,8 @@ function UEModal({ modal, dispatch, toast }: {
           )}
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" onClick={() => dispatch({ type: "CLOSE_UE_MODAL" })}>Annuler</Button>
-          <Button onClick={save}><Check className="w-3.5 h-3.5" /> {isEdit ? "Enregistrer" : "Créer l'UE"}</Button>
+          <Button variant="outline" onClick={() => dispatch({ type: "CLOSE_UE_MODAL" })}>{tc("actions.cancel")}</Button>
+          <Button onClick={save}><Check className="w-3.5 h-3.5" /> {isEdit ? tc("actions.save") : "Créer l'UE"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -540,6 +542,7 @@ function EvalTypeModal({ modal, dispatch, toast }: {
   modal: EvalModal; dispatch: (a: Action) => void;
   toast: (m: string, v?: "success" | "error") => void;
 }) {
+  const { t: tc } = useTranslation("common");
   const isEdit = modal.mode === "edit";
   const [et, setET] = useState<EvalType>(
     isEdit ? { ...modal.et } : { id: uid(), code: "", label: "", color: "#6366f1", icon: "📝" }
@@ -595,8 +598,8 @@ function EvalTypeModal({ modal, dispatch, toast }: {
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" onClick={() => dispatch({ type: "CLOSE_EVAL_MODAL" })}>Annuler</Button>
-          <Button onClick={save}><Check className="w-3.5 h-3.5" /> {isEdit ? "Enregistrer" : "Créer"}</Button>
+          <Button variant="outline" onClick={() => dispatch({ type: "CLOSE_EVAL_MODAL" })}>{tc("actions.cancel")}</Button>
+          <Button onClick={save}><Check className="w-3.5 h-3.5" /> {isEdit ? tc("actions.save") : tc("actions.create")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -605,6 +608,7 @@ function EvalTypeModal({ modal, dispatch, toast }: {
 
 // ── Wizard ─────────────────────────────────────────────────────────────────────
 function WizardStep1({ wizard, dispatch }: { wizard: WizardState; dispatch: (a: Action) => void }) {
+  const { t: tc } = useTranslation("common");
   const { yearInfo } = wizard;
   const up = (k: keyof typeof yearInfo, v: string) =>
     dispatch({ type: "WIZARD_SET_YEAR_INFO", yearInfo: { [k]: v } });
@@ -642,7 +646,7 @@ function WizardStep1({ wizard, dispatch }: { wizard: WizardState; dispatch: (a: 
       </div>
       <div className="flex justify-end">
         <Button disabled={!valid} onClick={() => valid && dispatch({ type: "WIZARD_NEXT" })}>
-          Suivant →
+          {tc("actions.next")} →
         </Button>
       </div>
     </div>
@@ -650,6 +654,7 @@ function WizardStep1({ wizard, dispatch }: { wizard: WizardState; dispatch: (a: 
 }
 
 function WizardStep2({ wizard, dispatch }: { wizard: WizardState; dispatch: (a: Action) => void }) {
+  const { t: tc } = useTranslation("common");
   const select = (mode: CalendarMode) => {
     dispatch({ type: "WIZARD_SET_MODE", mode });
     dispatch({ type: "WIZARD_NEXT" });
@@ -686,7 +691,7 @@ function WizardStep2({ wizard, dispatch }: { wizard: WizardState; dispatch: (a: 
         ))}
       </div>
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: "WIZARD_PREV" })}>← Précédent</Button>
+        <Button variant="outline" onClick={() => dispatch({ type: "WIZARD_PREV" })}>← {tc("actions.back")}</Button>
       </div>
     </div>
   );
@@ -695,6 +700,7 @@ function WizardStep2({ wizard, dispatch }: { wizard: WizardState; dispatch: (a: 
 function WizardStep3({ wizard, dispatch, evalTypes }: {
   wizard: WizardState; dispatch: (a: Action) => void; evalTypes: EvalType[];
 }) {
+  const { t: tc } = useTranslation("common");
   const [open, setOpen] = useState<Record<string, boolean>>({ [wizard.periodes[0]?.id]: true });
   const toggle = (id: string) => setOpen(s => ({ ...s, [id]: !s[id] }));
 
@@ -756,7 +762,7 @@ function WizardStep3({ wizard, dispatch, evalTypes }: {
       })}
 
       <div className="flex justify-between mt-4">
-        <Button variant="outline" onClick={() => dispatch({ type: "WIZARD_PREV" })}>← Précédent</Button>
+        <Button variant="outline" onClick={() => dispatch({ type: "WIZARD_PREV" })}>← {tc("actions.back")}</Button>
         <Button disabled={!allValid} onClick={() => allValid && dispatch({ type: "WIZARD_NEXT" })}>
           Récapitulatif →
         </Button>
@@ -769,6 +775,7 @@ function WizardStep4({ wizard, dispatch, evalTypes, toast }: {
   wizard: WizardState; dispatch: (a: Action) => void;
   evalTypes: EvalType[]; toast: (m: string, v?: "success" | "error") => void;
 }) {
+  const { t: tc } = useTranslation("common");
   const { yearInfo, calendarMode } = wizard;
   const tpl = CALENDAR_TEMPLATES[calendarMode];
   const save = () => {
@@ -827,9 +834,9 @@ function WizardStep4({ wizard, dispatch, evalTypes, toast }: {
       </div>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => dispatch({ type: "WIZARD_PREV" })}>← Précédent</Button>
+        <Button variant="outline" onClick={() => dispatch({ type: "WIZARD_PREV" })}>← {tc("actions.back")}</Button>
         <Button variant="success" onClick={save}>
-          <Check className="w-3.5 h-3.5" /> Valider et créer l'année
+          <Check className="w-3.5 h-3.5" /> {tc("actions.confirm")}
         </Button>
       </div>
     </div>
@@ -871,6 +878,7 @@ function UETab({ ues, dispatch, toast }: {
   ues: UE[]; dispatch: (a: Action) => void;
   toast: (m: string, v?: "success" | "error") => void;
 }) {
+  const { t: tc } = useTranslation("common");
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState<Niveau | "ALL">("ALL");
 
@@ -904,7 +912,7 @@ function UETab({ ues, dispatch, toast }: {
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState icon={<BookOpen className="w-8 h-8" />} title="Aucune UE trouvée" description={search ? "Modifiez votre recherche" : "Créez votre première Unité d'Enseignement"} />
+        <EmptyState icon={<BookOpen className="w-8 h-8" />} title={tc("misc.noData")} description={search ? "Modifiez votre recherche" : "Créez votre première Unité d'Enseignement"} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map(ue => (
@@ -956,6 +964,7 @@ function EvalTypesTab({ evalTypes, dispatch, toast }: {
   evalTypes: EvalType[]; dispatch: (a: Action) => void;
   toast: (m: string, v?: "success" | "error") => void;
 }) {
+  const { t: tc } = useTranslation("common");
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
@@ -993,7 +1002,7 @@ function EvalTypesTab({ evalTypes, dispatch, toast }: {
           className="border-[1.5px] border-dashed border-[var(--line-dark)] rounded-xl py-6 flex flex-col items-center justify-center gap-1.5 text-[var(--ink-4)] hover:border-[var(--blue)] hover:text-[var(--blue)] hover:bg-[var(--blue-lighter)] transition-all cursor-pointer"
         >
           <Plus className="w-5 h-5" />
-          <span className="text-[11.5px] font-medium">Ajouter</span>
+          <span className="text-[11.5px] font-medium">{tc("actions.add")}</span>
         </button>
       </div>
     </div>
@@ -1004,6 +1013,7 @@ function EvalTypesTab({ evalTypes, dispatch, toast }: {
 function YearsTab({ academicYears, dispatch }: {
   academicYears: AcademicYear[]; dispatch: (a: Action) => void;
 }) {
+  const { t: tc } = useTranslation("common");
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
@@ -1017,7 +1027,7 @@ function YearsTab({ academicYears, dispatch }: {
       </div>
 
       {academicYears.length === 0 ? (
-        <EmptyState icon={<Calendar className="w-8 h-8" />} title="Aucune année configurée" description="Lancez l'assistant pour configurer votre première année académique."
+        <EmptyState icon={<Calendar className="w-8 h-8" />} title={tc("misc.noData")} description="Lancez l'assistant pour configurer votre première année académique."
           action={<Button onClick={() => dispatch({ type: "OPEN_WIZARD" })}><Calendar className="w-3.5 h-3.5" /> Configurer une année</Button>}
         />
       ) : (
@@ -1043,7 +1053,7 @@ function YearsTab({ academicYears, dispatch }: {
                       <span className="font-mono text-[10.5px]">{ay.startDate} → {ay.endDate}</span>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm"><Edit2 className="w-3.5 h-3.5" /> Modifier</Button>
+                  <Button variant="outline" size="sm"><Edit2 className="w-3.5 h-3.5" /> {tc("actions.edit")}</Button>
                 </div>
                 <div className="px-5 pb-4 flex gap-2 flex-wrap border-t border-[var(--line)] pt-3 bg-[var(--ivory)]">
                   {ay.periodes.map(p => (
@@ -1063,6 +1073,8 @@ function YearsTab({ academicYears, dispatch }: {
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 export default function ConfigAcademiquePage() {
+  const { t } = useTranslation("academique");
+  const { t: tc } = useTranslation("common");
   const [state, dispatch] = useReducer(reducer, initialState);
   const { ues, evalTypes, academicYears, ueModal, evalModal, wizard } = state;
   const toast = useToast();
@@ -1072,8 +1084,8 @@ export default function ConfigAcademiquePage() {
   return (
     <div>
       <PageHeader
-        title="Configuration Académique"
-        subtitle="Gérez les UE, les types d'évaluation et les années scolaires"
+        title={t("configAcademique.pageTitle")}
+        subtitle={t("configAcademique.pageSubtitle")}
         actions={
           <Button onClick={() => dispatch({ type: "OPEN_WIZARD" })}>
             <Calendar className="w-3.5 h-3.5" /> Nouvelle année

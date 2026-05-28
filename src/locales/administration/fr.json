@@ -1,0 +1,337 @@
+{
+  "campus": {
+    "pageTitle": "Établissements",
+    "pageSubtitle": "Gestion du réseau d'établissements",
+    "networkTitle": "Réseau d'établissements",
+    "networkSubtitle": "{{count}} établissements · {{active}} actifs · {{total}} élèves au total",
+    "addCampus": "Ajouter un établissement",
+    "editCampus": "Modifier l'établissement",
+    "newCampus": "Nouvel établissement",
+    "searchPlaceholder": "Rechercher un établissement...",
+    "activeContext": "Contexte actif :",
+    "switchBtn": "Changer",
+    "kpi": {
+      "activeCampuses": "Établissements actifs",
+      "totalStudents": "Élèves total",
+      "totalClasses": "Classes total",
+      "totalTeachers": "Enseignants total"
+    },
+    "tabs": {
+      "overview": "Vue d'ensemble",
+      "stats": "Statistiques comparatives",
+      "transfers": "Transferts"
+    },
+    "director": "Directeur :",
+    "switchTo": "Basculer vers cet établissement",
+    "isActive": "Établissement actif",
+    "transferLink": "Transfert d'élèves",
+    "compareTable": "Tableau comparatif — Session 2025–2026",
+    "tableCol": {
+      "establishment": "Établissement",
+      "type": "Type",
+      "city": "Ville",
+      "students": "Élèves",
+      "classes": "Classes",
+      "teachers": "Enseignants",
+      "status": "Statut"
+    },
+    "networkTotal": "Total réseau",
+    "studentsUnit": "élèves",
+    "classesUnit": "classes",
+    "teachersUnit": "enseignants",
+    "distribution": {
+      "students": "Répartition des élèves",
+      "classes": "Répartition des classes",
+      "teachers": "Répartition des enseignants"
+    },
+    "columns": {
+      "name": "Nom de l'Établissement",
+      "type": "Type",
+      "address": "Adresse",
+      "director": "Directeur",
+      "phone": "Téléphone",
+      "email": "Email",
+      "studentsCount": "Étudiants",
+      "status": "Statut"
+    },
+    "types": {
+      "Principal": "Principal",
+      "Annexe": "Annexe",
+      "Partenaire": "Partenaire",
+      "primary": "École Primaire",
+      "secondary": "Collège",
+      "highSchool": "Lycée",
+      "university": "Université",
+      "vocational": "Formation Professionnelle"
+    },
+    "transfers": {
+      "title": "Transferts d'élèves inter-établissements",
+      "subtitle": "Chaque transfert est soumis à validation administrative.",
+      "newTransfer": "Nouveau transfert",
+      "pendingAlert": "{{count}} transfert(s) en attente de validation.",
+      "noRecords": "Aucun transfert enregistré.",
+      "columns": {
+        "student": "Élève",
+        "from": "De",
+        "to": "Vers",
+        "date": "Date",
+        "reason": "Motif",
+        "status": "Statut"
+      },
+      "statuses": {
+        "approved": "Approuvé",
+        "pending": "En attente",
+        "rejected": "Rejeté"
+      }
+    },
+    "deleteDlg": {
+      "title": "Supprimer l'établissement",
+      "warning": "Confirmation requise",
+      "message": "Supprimer {{name}} retirera définitivement cet établissement du réseau. Les historiques de transfert associés seront également supprimés."
+    },
+    "switchDlg": {
+      "title": "Changer de contexte",
+      "subtitle": "Sélectionnez l'établissement sur lequel vous souhaitez travailler :"
+    },
+    "dialog": {
+      "editTitle": "Modifier l'établissement",
+      "newTitle": "Nouvel établissement",
+      "fields": {
+        "code": "Code *",
+        "type": "Type *",
+        "name": "Nom de l'établissement *",
+        "city": "Ville",
+        "address": "Adresse",
+        "phone": "Téléphone",
+        "email": "Email",
+        "director": "Directeur / Responsable",
+        "status": "Statut",
+        "session": "Session active",
+        "color": "Couleur d'identification"
+      },
+      "codePlaceholder": "ex : ANNEXE-EST",
+      "namePlaceholder": "ex : Annexe Est",
+      "cityPlaceholder": "ex : Yaoundé",
+      "addressPlaceholder": "ex : Rue de la Paix",
+      "phonePlaceholder": "+237 6XX XXX XXX",
+      "emailPlaceholder": "annexe@edustar.cm",
+      "directorPlaceholder": "ex : M. NDOUMBE Paul",
+      "sessionPlaceholder": "ex : 2025–2026"
+    },
+    "transferDialog": {
+      "title": "Demande de transfert",
+      "fields": {
+        "student": "Élève *",
+        "source": "Établissement source *",
+        "dest": "Établissement destination *",
+        "date": "Date effective",
+        "reason": "Motif du transfert *"
+      },
+      "reasonPlaceholder": "ex : Rapprochement familial",
+      "studentPlaceholder": "Sélectionner un élève",
+      "sourcePlaceholder": "Source",
+      "destPlaceholder": "Destination",
+      "notice": "La demande sera soumise à validation. L'élève restera inscrit dans l'établissement source jusqu'à approbation.",
+      "submitBtn": "Soumettre la demande"
+    },
+    "toasts": {
+      "modified": "Établissement modifié.",
+      "added": "Établissement ajouté.",
+      "deleted": "Établissement supprimé.",
+      "cannotDelete": "Impossible de supprimer l'établissement actif.",
+      "switched": "Contexte basculé sur : {{name}}",
+      "transferPending": "Demande de transfert enregistrée. En attente de validation.",
+      "transferApproved": "Transfert approuvé.",
+      "transferRejected": "Transfert rejeté.",
+      "codeRequired": "Code et nom requis."
+    },
+    "errors": {
+      "requiredFields": "Tous les champs obligatoires doivent être remplis.",
+      "sameLocation": "Source et destination doivent être différentes."
+    }
+  },
+  "payments": {
+    "pageTitle": "Paiements",
+    "pageSubtitle": "Gestion des paiements et frais scolaires",
+    "addPayment": "Enregistrer un Paiement",
+    "editPayment": "Modifier le paiement",
+    "generateReceipt": "Générer le Reçu",
+    "searchPlaceholder": "Rechercher un paiement...",
+    "columns": {
+      "reference": "Référence",
+      "student": "Étudiant",
+      "amount": "Montant",
+      "date": "Date",
+      "method": "Mode de Paiement",
+      "type": "Type de Frais",
+      "status": "Statut",
+      "receipt": "Reçu"
+    },
+    "methods": {
+      "cash": "Espèces",
+      "bankTransfer": "Virement Bancaire",
+      "mobileMoney": "Mobile Money",
+      "check": "Chèque"
+    },
+    "types": {
+      "tuition": "Frais de Scolarité",
+      "registration": "Frais d'Inscription",
+      "transport": "Frais de Transport",
+      "canteen": "Frais de Cantine",
+      "library": "Frais de Bibliothèque",
+      "exam": "Frais d'Examen",
+      "other": "Autres Frais"
+    },
+    "status": {
+      "paid": "Payé",
+      "pending": "En Attente",
+      "partial": "Partiel",
+      "overdue": "En Retard",
+      "cancelled": "Annulé"
+    },
+    "stats": {
+      "totalRevenue": "Revenu Total",
+      "totalPaid": "Total Encaissé",
+      "totalPending": "Total En Attente",
+      "totalOverdue": "Total En Retard"
+    }
+  },
+  "hr": {
+    "pageTitle": "Ressources Humaines",
+    "pageSubtitle": "Gestion du personnel de l'établissement",
+    "addStaff": "Ajouter un Membre du Personnel",
+    "editStaff": "Modifier le profil",
+    "searchPlaceholder": "Rechercher un membre du personnel...",
+    "columns": {
+      "matricule": "Matricule",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "role": "Fonction",
+      "department": "Département",
+      "hireDate": "Date d'Embauche",
+      "salary": "Salaire",
+      "phone": "Téléphone",
+      "email": "Email",
+      "status": "Statut",
+      "contract": "Type de Contrat"
+    },
+    "roles": {
+      "teacher": "Enseignant",
+      "admin": "Administrateur",
+      "secretary": "Secrétaire",
+      "accountant": "Comptable",
+      "guard": "Gardien",
+      "cleaner": "Agent d'entretien",
+      "librarian": "Bibliothécaire",
+      "driver": "Chauffeur"
+    },
+    "contracts": {
+      "permanent": "CDI",
+      "fixedTerm": "CDD",
+      "partTime": "Temps Partiel",
+      "intern": "Stagiaire"
+    },
+    "leaveBalance": "Solde de Congés",
+    "leaveRequest": "Demande de Congé"
+  },
+  "library": {
+    "pageTitle": "Bibliothèque",
+    "pageSubtitle": "Gestion du fonds documentaire et des emprunts",
+    "addBook": "Ajouter un Livre",
+    "editBook": "Modifier le livre",
+    "borrowBook": "Enregistrer un Emprunt",
+    "returnBook": "Retourner",
+    "searchPlaceholder": "Rechercher un livre...",
+    "columns": {
+      "isbn": "ISBN",
+      "title": "Titre",
+      "author": "Auteur",
+      "category": "Catégorie",
+      "quantity": "Quantité",
+      "available": "Disponibles",
+      "borrowed": "Empruntés",
+      "borrower": "Emprunteur",
+      "borrowDate": "Date d'Emprunt",
+      "dueDate": "Date de Retour",
+      "status": "Statut"
+    },
+    "status": {
+      "available": "Disponible",
+      "borrowed": "Emprunté",
+      "reserved": "Réservé",
+      "lost": "Perdu",
+      "overdue": "En Retard"
+    }
+  },
+  "transport": {
+    "pageTitle": "Transport Scolaire",
+    "pageSubtitle": "Gestion des itinéraires et du transport scolaire",
+    "addRoute": "Ajouter un Itinéraire",
+    "editRoute": "Modifier l'itinéraire",
+    "searchPlaceholder": "Rechercher un itinéraire...",
+    "columns": {
+      "routeName": "Itinéraire",
+      "driver": "Chauffeur",
+      "vehicle": "Véhicule",
+      "licensePlate": "Immatriculation",
+      "capacity": "Capacité",
+      "stops": "Arrêts",
+      "departureTime": "Heure de Départ",
+      "arrivalTime": "Heure d'Arrivée",
+      "studentsCount": "Étudiants",
+      "status": "Statut"
+    },
+    "status": {
+      "active": "En service",
+      "inactive": "Hors service",
+      "maintenance": "En maintenance"
+    }
+  },
+  "salles": {
+    "pageTitle": "Salles",
+    "pageSubtitle": "Gestion des salles et espaces de l'établissement",
+    "networkTitle": "Salles & Espaces",
+    "networkSubtitle": "{{count}} espaces · {{available}} disponibles",
+    "addRoom": "Ajouter un espace",
+    "editRoom": "Modifier la salle",
+    "searchPlaceholder": "Rechercher une salle…",
+    "kpi": {
+      "totalSpaces": "Total espaces",
+      "available": "Disponibles",
+      "occupied": "Occupées",
+      "totalCapacity": "Capacité totale"
+    },
+    "allTypes": "Tous types",
+    "allStatuses": "Tous statuts",
+    "building": "Bâtiment",
+    "capacity": "Capacité",
+    "equipment": "Équipements",
+    "places": "places",
+    "details": "Détails",
+    "reserve": "Réserver",
+    "columns": {
+      "name": "Nom / Numéro",
+      "type": "Type",
+      "capacity": "Capacité",
+      "floor": "Étage",
+      "building": "Bâtiment",
+      "equipment": "Équipements",
+      "status": "Statut"
+    },
+    "types": {
+      "classroom": "Salle de Classe",
+      "laboratory": "Laboratoire",
+      "amphitheater": "Amphithéâtre",
+      "sportsHall": "Salle de Sport",
+      "computerRoom": "Salle Informatique",
+      "meetingRoom": "Salle de Réunion",
+      "library": "Bibliothèque"
+    },
+    "status": {
+      "available": "Disponible",
+      "occupied": "Occupée",
+      "maintenance": "En Maintenance",
+      "reserved": "Réservée"
+    }
+  }
+}

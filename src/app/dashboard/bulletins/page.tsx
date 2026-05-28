@@ -1,10 +1,11 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Download, FileText, Archive, Search, CheckSquare,
   Square, Eye, X, Users, BookOpen, TrendingUp,
-  AlertCircle, CheckCircle, Loader2, Award, ChevronDown,
+  AlertCircle, CheckCircle, Loader2, Award,
 } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduBadge } from "@/components/shared/EduBadge";
@@ -26,7 +27,7 @@ const PDFViewer = dynamic(
   () => import("@react-pdf/renderer").then(m => m.PDFViewer),
   { ssr: false, loading: () => (
     <div className="flex items-center justify-center h-full min-h-[400px] text-[var(--ink-4)] text-sm">
-      <Loader2 className="w-5 h-5 animate-spin mr-2" /> Chargement de la visionneuse…
+      <Loader2 className="w-5 h-5 animate-spin mr-2" />
     </div>
   )},
 );
@@ -54,22 +55,12 @@ function moyColor(moy: number) {
 
 // ── Progress Modal ────────────────────────────────────────────────────────────
 function ProgressModal({
-  open,
-  current,
-  total,
-  status,
-  currentName,
-  onClose,
-  onCancel,
+  open, current, total, status, currentName, onClose, onCancel,
 }: {
-  open: boolean;
-  current: number;
-  total: number;
-  status: string;
-  currentName?: string;
-  onClose: () => void;
-  onCancel: () => void;
+  open: boolean; current: number; total: number; status: string;
+  currentName?: string; onClose: () => void; onCancel: () => void;
 }) {
+  const { t } = useTranslation("evaluations");
   const pct = total > 0 ? Math.round((current / total) * 100) : 0;
   const isDone = status === "done";
   const isError = status === "error";
@@ -86,15 +77,13 @@ function ProgressModal({
             ) : (
               <Loader2 className="w-5 h-5 text-[var(--blue)] animate-spin" />
             )}
-            {isDone ? "Téléchargement terminé" : isError ? "Erreur" : "Génération en cours…"}
+            {isDone ? t("bulletins.downloadDone") : isError ? t("bulletins.downloadError") : t("bulletins.generating")}
           </DialogTitle>
         </DialogHeader>
-
         <div className="py-2 space-y-4">
-          {/* Progress bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs text-[var(--ink-4)]">
-              <span>{currentName ?? (isDone ? "Terminé" : status === "zipping" ? "Compression ZIP" : "Initialisation…")}</span>
+              <span>{currentName ?? (isDone ? t("bulletins.done") : status === "zipping" ? t("bulletins.zipping") : t("bulletins.initializing"))}</span>
               <span className="font-medium">{current}/{total}</span>
             </div>
             <div className="h-2 bg-[var(--line)] rounded-full overflow-hidden">
@@ -108,25 +97,21 @@ function ProgressModal({
             </div>
             <p className="text-right text-xs font-medium text-[var(--ink-4)]">{pct}%</p>
           </div>
-
           {isDone && (
             <p className="text-sm text-[var(--success)] text-center font-medium">
-              {total} bulletin{total > 1 ? "s" : ""} généré{total > 1 ? "s" : ""} avec succès.
+              {total} {t("bulletins.generatedCount", { count: total })}
             </p>
           )}
           {isError && (
-            <p className="text-sm text-[var(--danger)] text-center">
-              Une erreur est survenue lors de la génération.
-            </p>
+            <p className="text-sm text-[var(--danger)] text-center">{t("bulletins.generationError")}</p>
           )}
-
           <div className="flex justify-end gap-2 pt-2">
             {(isDone || isError) && (
-              <Button size="sm" onClick={onClose}>Fermer</Button>
+              <Button size="sm" onClick={onClose}>{t("actions.close", { ns: "common" })}</Button>
             )}
             {!isDone && !isError && (
               <Button variant="outline" size="sm" onClick={onCancel}>
-                Annuler
+                {t("actions.cancel", { ns: "common" })}
               </Button>
             )}
           </div>
@@ -138,15 +123,9 @@ function ProgressModal({
 
 // ── Preview Modal ─────────────────────────────────────────────────────────────
 function PreviewModal({
-  open,
-  onClose,
-  bulletin,
-  student,
+  open, onClose, bulletin, student,
 }: {
-  open: boolean;
-  onClose: () => void;
-  bulletin: Bulletin | null;
-  student: Student | null;
+  open: boolean; onClose: () => void; bulletin: Bulletin | null; student: Student | null;
 }) {
   return (
     <Dialog open={open} onOpenChange={v => !v && onClose()}>
@@ -178,22 +157,14 @@ function PreviewModal({
 
 // ── Download Option Card ──────────────────────────────────────────────────────
 function DlCard({
-  icon: Icon,
-  title,
-  desc,
-  disabled,
-  onDownload,
+  icon: Icon, title, desc, disabled, onDownload,
 }: {
-  icon: React.ElementType;
-  title: string;
-  desc: string;
-  disabled?: boolean;
-  onDownload: () => void;
+  icon: React.ElementType; title: string; desc: string; disabled?: boolean; onDownload: () => void;
 }) {
+  const { t } = useTranslation("evaluations");
   return (
     <div className={`
-      group p-4 rounded-[10px] border flex items-center gap-3
-      transition-colors
+      group p-4 rounded-[10px] border flex items-center gap-3 transition-colors
       ${disabled
         ? "border-[var(--line)] bg-[var(--ivory)] opacity-50"
         : "border-[var(--line)] bg-white hover:border-[var(--blue)] hover:bg-[var(--blue-lighter)] cursor-pointer"}
@@ -209,13 +180,10 @@ function DlCard({
         <p className="text-[11px] text-[var(--ink-4)] truncate">{desc}</p>
       </div>
       <Button
-        size="sm"
-        variant="outline"
-        disabled={disabled}
-        onClick={onDownload}
+        size="sm" variant="outline" disabled={disabled} onClick={onDownload}
         className="shrink-0 text-[11px] h-7 px-3"
       >
-        <Download className="w-3 h-3 mr-1" /> Télécharger
+        <Download className="w-3 h-3 mr-1" /> {t("bulletins.download")}
       </Button>
     </div>
   );
@@ -223,6 +191,7 @@ function DlCard({
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function BulletinsPage() {
+  const { t } = useTranslation("evaluations");
   const [semestre, setSemestre] = useState<"S1" | "S2">("S1");
   const [filterClasse, setFilterClasse] = useState("all");
   const [filterFiliere, setFilterFiliere] = useState("all");
@@ -237,18 +206,16 @@ export default function BulletinsPage() {
   const { progress, downloadSingle, downloadBatch, reset, cancel } = useBulletinDownload();
   const progressOpen = progress.status !== "idle";
 
-  // Build a map for quick lookup
   const bulletinMap = useMemo(() => {
     const m = new Map<string, Bulletin>();
     BULLETINS.filter(b => b.semestre === semestre).forEach(b => m.set(b.etuCode, b));
     return m;
   }, [semestre]);
 
-  // Filtered list
   const filtered = useMemo(() => {
     return STUDENTS.filter(s => {
       const b = bulletinMap.get(s.code);
-      if (!b) return false; // no bulletin for this semester
+      if (!b) return false;
       if (filterClasse !== "all" && s.classe !== filterClasse) return false;
       if (filterFiliere !== "all" && s.filiere !== filterFiliere) return false;
       if (filterStatut !== "all" && b.statut !== filterStatut) return false;
@@ -290,7 +257,6 @@ export default function BulletinsPage() {
     });
   }
 
-  // Selection → items with bulletin
   const selectedItems = useMemo(() => {
     return [...selected]
       .map(code => {
@@ -302,7 +268,6 @@ export default function BulletinsPage() {
       .filter(Boolean) as { student: Student; bulletin: Bulletin }[];
   }, [selected, bulletinMap]);
 
-  // Download handlers
   function dlSelection() {
     downloadBatch(selectedItems, `Bulletins_Sélection_${semestre}`);
   }
@@ -336,7 +301,6 @@ export default function BulletinsPage() {
   const previewBulletin = previewCode ? bulletinMap.get(previewCode) ?? null : null;
   const previewStudent = previewCode ? STUDENTS.find(s => s.code === previewCode) ?? null : null;
 
-  // Stats for header strip
   const totalWithBulletin = BULLETINS.filter(b => b.semestre === semestre).length;
   const publishedCount = BULLETINS.filter(b => b.semestre === semestre && b.statut === "Publié").length;
   const avgMoy =
@@ -346,13 +310,12 @@ export default function BulletinsPage() {
   return (
     <div>
       <PageHeader
-        title="Bulletins de notes"
-        subtitle="Prévisualisation, génération et téléchargement des relevés académiques"
+        title={t("bulletins.pageTitle")}
+        subtitle={t("bulletins.pageSubtitle")}
         actions={
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
-              size="sm"
+              variant="outline" size="sm"
               disabled={selectedItems.length === 0}
               onClick={dlSelection}
             >
@@ -364,7 +327,7 @@ export default function BulletinsPage() {
               disabled={selectedItems.length !== 1}
               onClick={() => selectedItems[0] && openPreview(selectedItems[0].student.code)}
             >
-              <Eye className="w-3.5 h-3.5 mr-1.5" /> Prévisualiser
+              <Eye className="w-3.5 h-3.5 mr-1.5" /> {t("bulletins.preview")}
             </Button>
           </div>
         }
@@ -373,10 +336,10 @@ export default function BulletinsPage() {
       {/* ── Stat strip ── */}
       <div className="grid grid-cols-4 gap-3 mb-5">
         {[
-          { label: "Bulletins total", value: totalWithBulletin, icon: FileText, color: "var(--blue)" },
-          { label: "Publiés", value: publishedCount, icon: CheckCircle, color: "var(--success)" },
-          { label: "Brouillons", value: totalWithBulletin - publishedCount, icon: AlertCircle, color: "var(--warning)" },
-          { label: "Moy. générale", value: avgMoy.toFixed(2), icon: TrendingUp, color: moyColor(avgMoy) },
+          { label: t("bulletins.statTotal"), value: totalWithBulletin, icon: FileText, color: "var(--blue)" },
+          { label: t("bulletins.statPublished"), value: publishedCount, icon: CheckCircle, color: "var(--success)" },
+          { label: t("bulletins.statDraft"), value: totalWithBulletin - publishedCount, icon: AlertCircle, color: "var(--warning)" },
+          { label: t("bulletins.columns.average"), value: avgMoy.toFixed(2), icon: TrendingUp, color: moyColor(avgMoy) },
         ].map(stat => (
           <Card key={stat.label} className="border-[var(--line)] shadow-none">
             <CardContent className="p-4 flex items-center gap-3">
@@ -394,7 +357,6 @@ export default function BulletinsPage() {
 
       {/* ── Filter bar ── */}
       <div className="flex items-center gap-3 mb-5 p-3.5 bg-white border border-[var(--line)] rounded-[12px]">
-        {/* Semestre toggle */}
         <div className="flex rounded-[8px] border border-[var(--line)] overflow-hidden shrink-0">
           {(["S1", "S2"] as const).map(s => (
             <button
@@ -415,41 +377,41 @@ export default function BulletinsPage() {
 
         <Select value={filterClasse} onValueChange={setFilterClasse}>
           <SelectTrigger className="h-8 text-[12px] w-40">
-            <SelectValue placeholder="Toutes les classes" />
+            <SelectValue placeholder={t("bulletins.allClasses")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes les classes</SelectItem>
+            <SelectItem value="all">{t("bulletins.allClasses")}</SelectItem>
             {classes.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
           </SelectContent>
         </Select>
 
         <Select value={filterFiliere} onValueChange={setFilterFiliere}>
           <SelectTrigger className="h-8 text-[12px] w-36">
-            <SelectValue placeholder="Filière" />
+            <SelectValue placeholder={t("bulletins.allFilieres")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes filières</SelectItem>
+            <SelectItem value="all">{t("bulletins.allFilieres")}</SelectItem>
             {filieres.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}
           </SelectContent>
         </Select>
 
         <Select value={filterStatut} onValueChange={setFilterStatut}>
           <SelectTrigger className="h-8 text-[12px] w-32">
-            <SelectValue placeholder="Statut" />
+            <SelectValue placeholder={t("fields.status", { ns: "common" })} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tous statuts</SelectItem>
-            <SelectItem value="Publié">Publié</SelectItem>
-            <SelectItem value="Brouillon">Brouillon</SelectItem>
+            <SelectItem value="all">{t("bulletins.allStatuses")}</SelectItem>
+            <SelectItem value="Publié">{t("bulletins.statusPublished")}</SelectItem>
+            <SelectItem value="Brouillon">{t("bulletins.statusDraft")}</SelectItem>
           </SelectContent>
         </Select>
 
         <Select value={filterMention} onValueChange={setFilterMention}>
           <SelectTrigger className="h-8 text-[12px] w-36">
-            <SelectValue placeholder="Mention" />
+            <SelectValue placeholder={t("bulletins.mention")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes mentions</SelectItem>
+            <SelectItem value="all">{t("bulletins.allMentions")}</SelectItem>
             {["Très bien","Bien","Assez bien","Passable","Insuffisant"].map(m => (
               <SelectItem key={m} value={m}>{m}</SelectItem>
             ))}
@@ -461,7 +423,7 @@ export default function BulletinsPage() {
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Rechercher…"
+            placeholder={t("table.searchPlaceholder", { ns: "common" })}
             className="
               pl-8 pr-3 h-8 text-[12px] rounded-[8px]
               border border-[var(--line-dark)] bg-white
@@ -488,15 +450,17 @@ export default function BulletinsPage() {
                 }
               </button>
               <span className="text-[12px] text-[var(--ink-4)]">
-                {filtered.length} bulletin{filtered.length > 1 ? "s" : ""}
+                {filtered.length} {t("bulletins.bulletinCount", { count: filtered.length })}
                 {selected.size > 0 && (
-                  <span className="ml-1 text-[var(--blue)] font-medium">· {selected.size} sélectionné{selected.size > 1 ? "s" : ""}</span>
+                  <span className="ml-1 text-[var(--blue)] font-medium">
+                    · {selected.size} {t("bulletins.selectedCount", { count: selected.size })}
+                  </span>
                 )}
               </span>
             </div>
             {selected.size > 0 && (
               <button onClick={() => setSelected(new Set())} className="text-[11px] text-[var(--ink-4)] hover:text-[var(--danger)] transition-colors">
-                Désélectionner
+                {t("gradeEntry.deselect")}
               </button>
             )}
           </CardHeader>
@@ -504,7 +468,7 @@ export default function BulletinsPage() {
             {filtered.length === 0 ? (
               <div className="py-12 text-center text-[var(--ink-4)]">
                 <BookOpen className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                <p className="text-[13px]">Aucun bulletin trouvé</p>
+                <p className="text-[13px]">{t("bulletins.noBulletins")}</p>
               </div>
             ) : (
               filtered.map(student => {
@@ -520,7 +484,6 @@ export default function BulletinsPage() {
                     `}
                     onClick={() => toggleSelect(student.code)}
                   >
-                    {/* Checkbox */}
                     <button
                       className="shrink-0 text-[var(--ink-4)]"
                       onClick={e => { e.stopPropagation(); toggleSelect(student.code); }}
@@ -531,10 +494,8 @@ export default function BulletinsPage() {
                       }
                     </button>
 
-                    {/* Avatar */}
                     <EduAvatar name={`${student.prenom} ${student.nom}`} size={28} />
 
-                    {/* Info */}
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] font-semibold text-[var(--ink)] leading-none mb-[3px]">
                         {student.prenom} {student.nom}
@@ -544,27 +505,21 @@ export default function BulletinsPage() {
                       </p>
                     </div>
 
-                    {/* Moy + mention */}
                     <div className="text-right shrink-0">
-                      <p
-                        className="text-[14px] font-bold leading-none mb-[3px]"
-                        style={{ color: moyColor(bulletin.moyGeneral) }}
-                      >
+                      <p className="text-[14px] font-bold leading-none mb-[3px]" style={{ color: moyColor(bulletin.moyGeneral) }}>
                         {bulletin.moyGeneral.toFixed(2)}
                       </p>
                       <EduBadge variant={mention.variant}>{mention.label}</EduBadge>
                     </div>
 
-                    {/* Statut */}
                     <EduBadge variant={bulletin.statut === "Publié" ? "green" : "amber"} className="shrink-0">
                       {bulletin.statut}
                     </EduBadge>
 
-                    {/* Preview btn */}
                     <button
                       onClick={e => { e.stopPropagation(); openPreview(student.code); }}
                       className="shrink-0 w-7 h-7 rounded-[6px] flex items-center justify-center text-[var(--ink-4)] hover:bg-[var(--blue-light)] hover:text-[var(--blue)] transition-colors"
-                      title="Prévisualiser"
+                      title={t("bulletins.preview")}
                     >
                       <Eye className="w-3.5 h-3.5" />
                     </button>
@@ -577,12 +532,11 @@ export default function BulletinsPage() {
 
         {/* Download panel */}
         <div className="space-y-3 sticky top-4">
-          {/* Selection info */}
           {selected.size > 0 && (
             <div className="flex items-center gap-2 px-4 py-2.5 rounded-[10px] bg-[var(--blue-light)] border border-[rgba(26,60,143,0.2)]">
               <Users className="w-4 h-4 text-[var(--blue)] shrink-0" />
               <p className="text-[12px] text-[var(--blue)] font-medium">
-                {selected.size} étudiant{selected.size > 1 ? "s" : ""} sélectionné{selected.size > 1 ? "s" : ""}
+                {selected.size} {t("bulletins.selectedCount", { count: selected.size })}
               </p>
               <button onClick={() => setSelected(new Set())} className="ml-auto text-[var(--blue)] hover:opacity-70">
                 <X className="w-3.5 h-3.5" />
@@ -590,24 +544,23 @@ export default function BulletinsPage() {
             </div>
           )}
 
-          {/* Download options */}
           <Card className="border-[var(--line)] shadow-none">
             <CardHeader className="px-4 py-3 border-b border-[var(--line)]">
               <CardTitle className="text-[13px] font-semibold text-[var(--ink)] flex items-center gap-2">
-                <Download className="w-4 h-4 text-[var(--blue)]" /> Téléchargement
+                <Download className="w-4 h-4 text-[var(--blue)]" /> {t("bulletins.downloadTitle")}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-3 space-y-2">
 
               <DlCard
                 icon={FileText}
-                title={selectedItems.length === 1 ? "PDF individuel" : "Archive ZIP"}
+                title={selectedItems.length === 1 ? t("bulletins.individualPdf") : t("bulletins.zipArchive")}
                 desc={
                   selectedItems.length === 0
-                    ? "Sélectionnez des étudiants"
+                    ? t("bulletins.selectStudents")
                     : selectedItems.length === 1
-                      ? `PDF pour ${selectedItems[0].student.prenom} ${selectedItems[0].student.nom}`
-                      : `${selectedItems.length} bulletins compressés`
+                      ? `PDF ${selectedItems[0].student.prenom} ${selectedItems[0].student.nom}`
+                      : `${selectedItems.length} ${t("bulletins.compressedCount", { count: selectedItems.length })}`
                 }
                 disabled={selectedItems.length === 0}
                 onDownload={dlSelection}
@@ -615,19 +568,18 @@ export default function BulletinsPage() {
 
               <DlCard
                 icon={Eye}
-                title="Prévisualiser"
-                desc={selectedItems.length === 1 ? "Ouvrir la visionneuse PDF" : "Sélectionnez 1 étudiant"}
+                title={t("bulletins.preview")}
+                desc={selectedItems.length === 1 ? t("bulletins.openPdfViewer") : t("bulletins.selectOneStudent")}
                 disabled={selectedItems.length !== 1}
                 onDownload={() => selectedItems[0] && openPreview(selectedItems[0].student.code)}
               />
 
               <div className="pt-1 pb-1">
                 <p className="text-[10px] font-semibold text-[var(--ink-4)] uppercase tracking-[0.05em] mb-2 px-1">
-                  Export groupé
+                  {t("bulletins.batchExport")}
                 </p>
               </div>
 
-              {/* By class */}
               {classes.filter(cl => {
                 const count = STUDENTS.filter(s => s.classe === cl && bulletinMap.has(s.code)).length;
                 return count > 0;
@@ -637,8 +589,8 @@ export default function BulletinsPage() {
                   <DlCard
                     key={cl}
                     icon={BookOpen}
-                    title={`Classe ${cl}`}
-                    desc={`${count} bulletin${count > 1 ? "s" : ""} · ${semestre}`}
+                    title={`${t("fields.class", { ns: "common" })} ${cl}`}
+                    desc={`${count} ${t("bulletins.bulletinCount", { count })} · ${semestre}`}
                     onDownload={() => dlClasse(cl)}
                   />
                 );
@@ -646,20 +598,19 @@ export default function BulletinsPage() {
 
               <DlCard
                 icon={Archive}
-                title={`Tous (${semestre})`}
-                desc={`${filtered.length} bulletins filtrés · archive ZIP`}
+                title={`${t("bulletins.allBulletins")} (${semestre})`}
+                desc={`${filtered.length} ${t("bulletins.filteredBulletins")}`}
                 onDownload={dlAll}
               />
 
-              {/* Top students */}
               <div className="flex items-center gap-2 p-3 rounded-[10px] border border-[var(--line)] bg-white">
                 <div className="w-9 h-9 rounded-[8px] bg-[var(--purple-light)] flex items-center justify-center shrink-0">
                   <Award className="w-4 h-4 text-[var(--purple)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[12px] font-semibold text-[var(--ink)] leading-none mb-1">Top étudiants</p>
+                  <p className="text-[12px] font-semibold text-[var(--ink)] leading-none mb-1">{t("bulletins.topStudents")}</p>
                   <div className="flex items-center gap-1">
-                    <span className="text-[11px] text-[var(--ink-4)]">Moy. ≥</span>
+                    <span className="text-[11px] text-[var(--ink-4)]">{t("bulletins.averageMin")}</span>
                     <select
                       value={topN}
                       onChange={e => setTopN(e.target.value)}
@@ -671,7 +622,7 @@ export default function BulletinsPage() {
                       ({filtered.filter(s => {
                         const b = bulletinMap.get(s.code);
                         return b && b.moyGeneral >= parseFloat(topN);
-                      }).length} étudiants)
+                      }).length} {t("gradeEntry.studentsCount")})
                     </span>
                   </div>
                 </div>
@@ -683,31 +634,18 @@ export default function BulletinsPage() {
             </CardContent>
           </Card>
 
-          {/* Quick stats for selection */}
           {selectedItems.length > 0 && (
             <Card className="border-[var(--line)] shadow-none">
               <CardContent className="p-4">
                 <p className="text-[10px] font-semibold text-[var(--ink-4)] uppercase tracking-[0.05em] mb-3">
-                  Résumé sélection
+                  {t("bulletins.selectionSummary")}
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    {
-                      label: "Moy. min.",
-                      value: Math.min(...selectedItems.map(i => i.bulletin.moyGeneral)).toFixed(2),
-                    },
-                    {
-                      label: "Moy. max.",
-                      value: Math.max(...selectedItems.map(i => i.bulletin.moyGeneral)).toFixed(2),
-                    },
-                    {
-                      label: "Validés",
-                      value: selectedItems.filter(i => i.bulletin.creditsValides === i.bulletin.totalCredits).length,
-                    },
-                    {
-                      label: "En difficulté",
-                      value: selectedItems.filter(i => i.bulletin.moyGeneral < 10).length,
-                    },
+                    { label: t("bulletins.minAvg"), value: Math.min(...selectedItems.map(i => i.bulletin.moyGeneral)).toFixed(2) },
+                    { label: t("bulletins.maxAvg"), value: Math.max(...selectedItems.map(i => i.bulletin.moyGeneral)).toFixed(2) },
+                    { label: t("bulletins.passed"), value: selectedItems.filter(i => i.bulletin.creditsValides === i.bulletin.totalCredits).length },
+                    { label: t("bulletins.atRisk"), value: selectedItems.filter(i => i.bulletin.moyGeneral < 10).length },
                   ].map(stat => (
                     <div key={stat.label} className="text-center p-2 rounded-[8px] bg-[var(--ivory)]">
                       <p className="text-[14px] font-bold text-[var(--ink)]">{stat.value}</p>

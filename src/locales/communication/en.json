@@ -1,0 +1,108 @@
+{
+  "messaging": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "newMessage": "",
+    "compose": "",
+    "reply": "",
+    "forward": "",
+    "delete": "",
+    "markRead": "",
+    "markUnread": "",
+    "archive": "",
+    "pageTitle2": "",
+    "unreadCount": "",
+    "unreadCountPlural": "",
+    "newMessageBtn": "",
+    "folders": {
+      "inbox": "",
+      "inboxShort": "",
+      "sent": "",
+      "drafts": "",
+      "archived": "",
+      "trash": ""
+    },
+    "composeForm": {
+      "title": "",
+      "to": "",
+      "recipient": "",
+      "recipientPlaceholder": "",
+      "cc": "",
+      "subject": "",
+      "subjectPlaceholder": "",
+      "message": "",
+      "messagePlaceholder": "",
+      "attachments": "",
+      "addAttachment": "",
+      "send": "",
+      "saveDraft": "",
+      "cancel": ""
+    },
+    "status": {
+      "unread": "",
+      "read": "",
+      "sent": "",
+      "draft": ""
+    },
+    "empty": "",
+    "searchPlaceholder": "",
+    "to": "",
+    "selectMessage": ""
+  },
+  "announcements": {
+    "pageTitle": "",
+    "pageSubtitle": "",
+    "newAnnouncement": "",
+    "newAnnouncementBtn": "",
+    "editAnnouncement": "",
+    "deleteAnnouncement": "",
+    "publish": "",
+    "unpublish": "",
+    "searchPlaceholder": "",
+    "publishedCount": "",
+    "urgentCount": "",
+    "urgentCountPlural": "",
+    "announcementCount": "",
+    "announcementCountPlural": "",
+    "allTargets": "",
+    "allPriorities": "",
+    "modify": "",
+    "archive": "",
+    "noResults": "",
+    "columns": {
+      "title": "",
+      "content": "",
+      "author": "",
+      "targetAudience": "",
+      "publishDate": "",
+      "expiryDate": "",
+      "status": "",
+      "pinned": ""
+    },
+    "audience": {
+      "all": "",
+      "tous": "",
+      "students": "",
+      "etudiants": "",
+      "teachers": "",
+      "enseignants": "",
+      "parents": "",
+      "staff": "",
+      "administratifs": "",
+      "specificClass": ""
+    },
+    "priorities": {
+      "urgent": "",
+      "normal": "",
+      "info": ""
+    },
+    "status": {
+      "published": "",
+      "draft": "",
+      "scheduled": "",
+      "expired": ""
+    },
+    "pin": "",
+    "unpin": ""
+  }
+}

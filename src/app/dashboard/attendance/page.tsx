@@ -1,35 +1,36 @@
 "use client";
 import { useState, useMemo } from "react";
-import { UserCheck, UserX, Clock, ChevronDown, CheckSquare, Save, RotateCcw, Filter } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { UserCheck, UserX, Clock, CheckSquare, Save, RotateCcw, Filter } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EduAvatar } from "@/components/shared/EduAvatar";
 import { EduBadge } from "@/components/shared/EduBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { STUDENTS, CLASSES, EMPLOI_DU_TEMPS, MATIERES } from "@/constants/mock-data";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 
 type PresenceStatut = "Présent" | "Absent" | "Retard" | "Excusé";
 
-const STATUT_CONFIG: Record<PresenceStatut, { label: string; color: string; icon: React.ReactNode; bg: string }> = {
-  Présent: { label: "Présent", color: "text-[var(--success)]", icon: <UserCheck className="w-3.5 h-3.5" />, bg: "bg-[var(--success-light)] border-[rgba(10,124,78,0.3)]" },
-  Absent: { label: "Absent", color: "text-[var(--danger)]", icon: <UserX className="w-3.5 h-3.5" />, bg: "bg-[var(--danger-light)] border-[rgba(192,57,43,0.3)]" },
-  Retard: { label: "Retard", color: "text-[var(--warning)]", icon: <Clock className="w-3.5 h-3.5" />, bg: "bg-[var(--warning-light)] border-[rgba(180,83,9,0.3)]" },
-  Excusé: { label: "Excusé", color: "text-[var(--ink-3)]", icon: <CheckSquare className="w-3.5 h-3.5" />, bg: "bg-[var(--ivory)] border-[var(--line-dark)]" },
-};
-
 const TODAY = new Date().toISOString().split("T")[0];
 const TODAY_FR = new Date().toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
 export default function AttendancePage() {
+  const { t } = useTranslation("pedagogie");
   const toast = useToast();
   const [classeId, setClasseId] = useState(CLASSES[0].code);
   const [coursId, setCoursId] = useState<string>("all");
   const [date, setDate] = useState(TODAY);
   const [saved, setSaved] = useState(false);
+
+  const STATUT_CONFIG: Record<PresenceStatut, { label: string; color: string; icon: React.ReactNode; bg: string }> = {
+    Présent: { label: t("attendance.status.present"), color: "text-[var(--success)]", icon: <UserCheck className="w-3.5 h-3.5" />, bg: "bg-[var(--success-light)] border-[rgba(10,124,78,0.3)]" },
+    Absent:  { label: t("attendance.status.absent"),  color: "text-[var(--danger)]",  icon: <UserX className="w-3.5 h-3.5" />,   bg: "bg-[var(--danger-light)] border-[rgba(192,57,43,0.3)]" },
+    Retard:  { label: t("attendance.status.late"),    color: "text-[var(--warning)]", icon: <Clock className="w-3.5 h-3.5" />,   bg: "bg-[var(--warning-light)] border-[rgba(180,83,9,0.3)]" },
+    Excusé:  { label: t("attendance.status.excused"), color: "text-[var(--ink-3)]",   icon: <CheckSquare className="w-3.5 h-3.5" />, bg: "bg-[var(--ivory)] border-[var(--line-dark)]" },
+  };
 
   const classeStudents = useMemo(
     () => STUDENTS.filter(s => s.classe === classeId),
@@ -64,14 +65,19 @@ export default function AttendancePage() {
   const handleSave = () => {
     const absents = Object.values(presences).filter(p => p === "Absent").length;
     setSaved(true);
-    toast(`Feuille de présence sauvegardée${absents > 0 ? ` · ${absents} absence(s) enregistrée(s)` : " · Tous présents !"}`, absents > 0 ? "warning" : "success");
+    toast(
+      absents > 0
+        ? `${t("attendance.savedSheet")} · ${absents} ${t("attendance.absencesRecorded")}`
+        : `${t("attendance.savedSheet")} · ${t("attendance.allPresent")}`,
+      absents > 0 ? "warning" : "success"
+    );
   };
 
   const counts = {
     present: Object.values(presences).filter(p => p === "Présent").length,
-    absent: Object.values(presences).filter(p => p === "Absent").length,
-    retard: Object.values(presences).filter(p => p === "Retard").length,
-    excuse: Object.values(presences).filter(p => p === "Excusé").length,
+    absent:  Object.values(presences).filter(p => p === "Absent").length,
+    retard:  Object.values(presences).filter(p => p === "Retard").length,
+    excuse:  Object.values(presences).filter(p => p === "Excusé").length,
   };
 
   const tauxPresence = classeStudents.length > 0
@@ -81,15 +87,15 @@ export default function AttendancePage() {
   return (
     <div>
       <PageHeader
-        title="Présences"
+        title={t("attendance.pageTitle")}
         subtitle={TODAY_FR}
         actions={
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={() => markAll("Présent")}>
-              <RotateCcw className="w-3.5 h-3.5" /> Tout présent
+              <RotateCcw className="w-3.5 h-3.5" /> {t("attendance.markAllPresent")}
             </Button>
             <Button size="sm" onClick={handleSave} disabled={saved}>
-              <Save className="w-3.5 h-3.5" /> {saved ? "Sauvegardé" : "Valider la feuille"}
+              <Save className="w-3.5 h-3.5" /> {saved ? t("attendance.saved") : t("attendance.markAttendance")}
             </Button>
           </div>
         }
@@ -99,7 +105,7 @@ export default function AttendancePage() {
       <div className="flex items-center gap-3 mb-5 flex-wrap">
         <div className="flex items-center gap-2">
           <Filter className="w-3.5 h-3.5 text-[var(--ink-4)]" />
-          <span className="text-[12px] font-semibold text-[var(--ink-3)]">Classe :</span>
+          <span className="text-[12px] font-semibold text-[var(--ink-3)]">{t("attendance.columns.class")} :</span>
           <div className="w-44">
             <Select value={classeId} onValueChange={handleClasseChange}>
               <SelectTrigger><SelectValue /></SelectTrigger>
@@ -110,12 +116,12 @@ export default function AttendancePage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[12px] font-semibold text-[var(--ink-3)]">Cours :</span>
+          <span className="text-[12px] font-semibold text-[var(--ink-3)]">{t("attendance.columns.subject")} :</span>
           <div className="w-52">
             <Select value={coursId} onValueChange={setCoursId}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tous les cours</SelectItem>
+                <SelectItem value="all">{t("attendance.allCourses")}</SelectItem>
                 {coursDuJour.map(c => {
                   const mat = MATIERES.find(m => m.code === c.matCode);
                   return (
@@ -129,7 +135,7 @@ export default function AttendancePage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[12px] font-semibold text-[var(--ink-3)]">Date :</span>
+          <span className="text-[12px] font-semibold text-[var(--ink-3)]">{t("attendance.columns.date")} :</span>
           <input
             type="date"
             value={date}
@@ -141,32 +147,31 @@ export default function AttendancePage() {
 
       {/* Summary KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-        {[
-          { value: counts.present, total: classeStudents.length, ...STATUT_CONFIG.Présent },
-          { value: counts.absent, total: classeStudents.length, ...STATUT_CONFIG.Absent },
-          { value: counts.retard, total: classeStudents.length, ...STATUT_CONFIG.Retard },
-          { value: counts.excuse, total: classeStudents.length, ...STATUT_CONFIG.Excusé },
-        ].map(c => (
-          <div key={c.label} className={`border rounded-[12px] p-3.5 flex items-center gap-3 ${c.bg}`}>
-            <div className={cn("w-9 h-9 rounded-[8px] flex items-center justify-center shrink-0", c.bg, "border")}>
-              <span className={c.color}>{c.icon}</span>
-            </div>
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-4)]">{c.label}</div>
-              <div className={cn("font-serif text-[22px] leading-tight", c.color)}>
-                {c.value}
-                <span className="text-[13px] font-sans font-normal text-[var(--ink-4)] ml-1">/{c.total}</span>
+        {(["Présent", "Absent", "Retard", "Excusé"] as PresenceStatut[]).map((statut, i) => {
+          const cfg = STATUT_CONFIG[statut];
+          const value = [counts.present, counts.absent, counts.retard, counts.excuse][i];
+          return (
+            <div key={statut} className={`border rounded-[12px] p-3.5 flex items-center gap-3 ${cfg.bg}`}>
+              <div className={cn("w-9 h-9 rounded-[8px] flex items-center justify-center shrink-0", cfg.bg, "border")}>
+                <span className={cfg.color}>{cfg.icon}</span>
+              </div>
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--ink-4)]">{cfg.label}</div>
+                <div className={cn("font-serif text-[22px] leading-tight", cfg.color)}>
+                  {value}
+                  <span className="text-[13px] font-sans font-normal text-[var(--ink-4)] ml-1">/{classeStudents.length}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Taux de présence */}
       <div className="flex items-center gap-3 mb-5 p-4 bg-white border border-[var(--line)] rounded-[14px]">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[12px] font-semibold text-[var(--ink-3)]">Taux de présence</span>
+            <span className="text-[12px] font-semibold text-[var(--ink-3)]">{t("attendance.stats.attendanceRate")}</span>
             <span className={cn("text-[14px] font-bold", tauxPresence >= 85 ? "text-[var(--success)]" : tauxPresence >= 70 ? "text-[var(--warning)]" : "text-[var(--danger)]")}>
               {tauxPresence}%
             </span>
@@ -184,7 +189,7 @@ export default function AttendancePage() {
         {tauxPresence < 85 && (
           <div className="text-[11px] text-[var(--warning)] font-semibold flex items-center gap-1.5 shrink-0">
             <span className="w-2 h-2 rounded-full bg-[var(--warning)]" />
-            Seuil alerte &lt; 85%
+            {t("attendance.alertThreshold")}
           </div>
         )}
       </div>
@@ -193,7 +198,7 @@ export default function AttendancePage() {
       <Card className="overflow-hidden">
         <CardHeader className="py-3 px-4 border-b border-[var(--line)] flex flex-row items-center justify-between">
           <CardTitle className="text-[13px]">
-            {classeId} — {classeStudents.length} étudiant(s)
+            {classeId} — {classeStudents.length} {t("attendance.studentCount")}
           </CardTitle>
           <div className="flex gap-1.5">
             {(["Présent", "Absent", "Retard"] as PresenceStatut[]).map(s => (
@@ -205,7 +210,7 @@ export default function AttendancePage() {
                   STATUT_CONFIG[s].bg, STATUT_CONFIG[s].color
                 )}
               >
-                Tous {STATUT_CONFIG[s].label}
+                {t("attendance.allLabel")} {STATUT_CONFIG[s].label}
               </button>
             ))}
           </div>
@@ -213,7 +218,7 @@ export default function AttendancePage() {
         <CardContent className="p-0">
           {classeStudents.length === 0 ? (
             <div className="py-12 text-center text-[13px] text-[var(--ink-4)]">
-              Aucun étudiant dans cette classe
+              {t("attendance.noStudents")}
             </div>
           ) : (
             <div className="divide-y divide-[var(--line)]">
@@ -229,10 +234,8 @@ export default function AttendancePage() {
                       statut === "Retard" && "bg-[var(--warning-light)]/30",
                     )}
                   >
-                    {/* Index */}
                     <span className="text-[11px] font-mono text-[var(--ink-4)] w-6 shrink-0 text-right">{idx + 1}</span>
 
-                    {/* Avatar + name */}
                     <EduAvatar name={`${student.prenom} ${student.nom}`} size={32} />
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-[12.5px] text-[var(--ink)]">
@@ -241,20 +244,18 @@ export default function AttendancePage() {
                       <div className="text-[10.5px] text-[var(--ink-4)]">{student.code}</div>
                     </div>
 
-                    {/* Absence history badge */}
                     {student.absences > 0 && (
                       <EduBadge variant={student.absences >= 10 ? "red" : "amber"} className="shrink-0">
-                        {student.absences} abs. hist.
+                        {student.absences} {t("attendance.absHist")}
                       </EduBadge>
                     )}
 
-                    {/* Toggle buttons */}
                     <div className="flex gap-1 shrink-0">
                       {(["Présent", "Absent", "Retard", "Excusé"] as PresenceStatut[]).map(s => (
                         <button
                           key={s}
                           onClick={() => toggle(student.code, s)}
-                          title={s}
+                          title={STATUT_CONFIG[s].label}
                           className={cn(
                             "flex items-center gap-1 px-2.5 py-1.5 rounded-[6px] text-[11px] font-semibold border transition-all",
                             statut === s
@@ -263,7 +264,7 @@ export default function AttendancePage() {
                           )}
                         >
                           <span className={statut === s ? STATUT_CONFIG[s].color : ""}>{STATUT_CONFIG[s].icon}</span>
-                          <span className="hidden sm:inline">{s}</span>
+                          <span className="hidden sm:inline">{STATUT_CONFIG[s].label}</span>
                         </button>
                       ))}
                     </div>

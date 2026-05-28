@@ -301,6 +301,7 @@ export type ParticulariteMatiere = {
 
 export type NavItem = {
   label: string;
+  labelKey?: string;
   href: string;
   icon: string;
   badge?: number;
@@ -308,5 +309,6 @@ export type NavItem = {
 
 export type NavSection = {
   title: string;
+  titleKey?: string;
   items: NavItem[];
 };

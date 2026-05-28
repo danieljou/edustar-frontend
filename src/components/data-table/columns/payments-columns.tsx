@@ -1,21 +1,22 @@
 "use client";
 
+import { TFunction } from "i18next";
 import { ColumnDef } from "@tanstack/react-table";
 import { Payment } from "@/types";
 import { EduAvatar, EduBadge } from "@/components/shared";
 import { DataTableColumnHeader } from "../data-table-column-header";
 import { formatCurrency } from "@/lib/utils";
 
-export const paymentsColumns: ColumnDef<Payment>[] = [
+export const getPaymentsColumns = (t: TFunction): ColumnDef<Payment>[] => [
   {
     accessorKey: "ref",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Référence" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("payments.columns.reference")} />,
     cell: ({ row }) => <span className="font-mono text-[11px] text-[var(--blue)] font-bold">{row.getValue("ref")}</span>,
     size: 120,
   },
   {
     id: "etudiant",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Étudiant" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("payments.columns.student")} />,
     cell: ({ row }) => {
       const paiement = row.original;
       return (
@@ -31,7 +32,7 @@ export const paymentsColumns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "type",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("payments.columns.type")} />,
     cell: ({ row }) => {
       const type = row.getValue("type") as string;
       return <EduBadge variant={type === "Inscription" ? "blue" : type === "Scolarité" ? "purple" : "neutral"}>{type}</EduBadge>;
@@ -40,12 +41,12 @@ export const paymentsColumns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "montant",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Montant" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("payments.columns.amount")} />,
     cell: ({ row }) => <span className="font-bold text-[var(--ink)]">{formatCurrency(row.getValue("montant") as number)}</span>,
   },
   {
     accessorKey: "mode",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Mode paiement" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("payments.columns.method")} />,
     cell: ({ row }) => {
       const mode = row.getValue("mode") as string;
       return <span className="text-[11px]">{mode}</span>;
@@ -54,7 +55,7 @@ export const paymentsColumns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "date",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("payments.columns.date")} />,
     cell: ({ row }) => {
       const date = new Date(row.getValue("date") as string);
       return <span className="text-[var(--ink-4)]">{date.toLocaleDateString("fr-FR")}</span>;
@@ -62,7 +63,7 @@ export const paymentsColumns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "statut",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Statut" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={t("payments.columns.status")} />,
     cell: ({ row }) => {
       const statut = row.getValue("statut") as string;
       return <EduBadge variant={statut === "Payé" ? "green" : statut === "En attente" ? "amber" : "red"}>{statut}</EduBadge>;

@@ -10,19 +10,13 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import { useTranslation } from "react-i18next";
 import { CHART_DATA } from "@/constants/mock-data";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const VIEWS = [
-  { key: "inscrits", label: "Effectifs" },
-  { key: "paiements", label: "Paiements" },
-  { key: "reussite", label: "Réussite" },
-  { key: "presences", label: "Présences" },
-] as const;
-
-type View = (typeof VIEWS)[number]["key"];
+type View = "inscrits" | "paiements" | "reussite" | "presences";
 
 const REUSSITE_DATA = [
   { classe: "M1-INFO", excellent: 8, bien: 9, passable: 3, rattrapage: 2 },
@@ -62,21 +56,29 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const VIEW_DESC: Record<View, string> = {
-  inscrits: "Inscrits & admissions / mois",
-  paiements: "Revenus mensuels en FCFA",
-  reussite: "Répartition des mentions par classe",
-  presences: "Taux de présence par classe",
-};
-
 export function AnalyticsChart() {
+  const { t } = useTranslation("dashboard");
   const [view, setView] = useState<View>("inscrits");
+
+  const VIEWS: { key: View; label: string }[] = [
+    { key: "inscrits", label: t("chart.views.inscrits") },
+    { key: "paiements", label: t("chart.views.paiements") },
+    { key: "reussite", label: t("chart.views.reussite") },
+    { key: "presences", label: t("chart.views.presences") },
+  ];
+
+  const VIEW_DESC: Record<View, string> = {
+    inscrits: t("chart.desc.inscrits"),
+    paiements: t("chart.desc.paiements"),
+    reussite: t("chart.desc.reussite"),
+    presences: t("chart.desc.presences"),
+  };
 
   return (
     <Card>
       <CardHeader className="flex-wrap gap-y-2">
         <div>
-          <CardTitle>Activité — Session 2025–2026</CardTitle>
+          <CardTitle>{t("chart.title")}</CardTitle>
           <p className="text-[10.5px] text-[var(--ink-4)] mt-0.5">{VIEW_DESC[view]}</p>
         </div>
         <div className="flex items-center gap-0.5 shrink-0 flex-wrap">
@@ -116,8 +118,8 @@ export function AnalyticsChart() {
                 width={32}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="inscrits" name="Étudiants" fill="#1a3c8f" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="admissions" name="Admissions" fill="#0099cc" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="inscrits" name={t("chart.bars.students")} fill="#1a3c8f" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="admissions" name={t("chart.bars.admissions")} fill="#0099cc" radius={[4, 4, 0, 0]} />
             </BarChart>
           ) : view === "paiements" ? (
             <AreaChart data={CHART_DATA}>
@@ -169,10 +171,10 @@ export function AnalyticsChart() {
                 width={28}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="excellent" name="Excellent (≥15)" stackId="s" fill="#10b981" radius={[0, 0, 0, 0]} />
-              <Bar dataKey="bien" name="Bien (12–14)" stackId="s" fill="#0099cc" radius={[0, 0, 0, 0]} />
-              <Bar dataKey="passable" name="Passable (10–11)" stackId="s" fill="#f59e0b" radius={[0, 0, 0, 0]} />
-              <Bar dataKey="rattrapage" name="Rattrapage (<10)" stackId="s" fill="#ef4444" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="excellent" name={t("chart.legend.excellent")} stackId="s" fill="#10b981" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="bien" name={t("chart.legend.bien")} stackId="s" fill="#0099cc" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="passable" name={t("chart.legend.passable")} stackId="s" fill="#f59e0b" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="rattrapage" name={t("chart.legend.rattrapage")} stackId="s" fill="#ef4444" radius={[4, 4, 0, 0]} />
             </BarChart>
           ) : (
             <BarChart data={PRESENCE_DATA} barSize={22}>
@@ -196,7 +198,7 @@ export function AnalyticsChart() {
                 width={36}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="pct" name="Taux présence" fill="#0099cc" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="pct" name={t("chart.bars.presenceRate")} fill="#0099cc" radius={[4, 4, 0, 0]} />
             </BarChart>
           )}
         </ResponsiveContainer>
@@ -205,14 +207,14 @@ export function AnalyticsChart() {
         {view === "reussite" && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 pt-3 border-t border-[var(--line)]">
             {[
-              { color: "#10b981", label: "Excellent ≥15" },
-              { color: "#0099cc", label: "Bien 12–14" },
-              { color: "#f59e0b", label: "Passable 10–11" },
-              { color: "#ef4444", label: "Rattrapage <10" },
-            ].map(({ color, label }) => (
-              <div key={label} className="flex items-center gap-1.5">
+              { color: "#10b981", labelKey: "chart.legend.excellent" },
+              { color: "#0099cc", labelKey: "chart.legend.bien" },
+              { color: "#f59e0b", labelKey: "chart.legend.passable" },
+              { color: "#ef4444", labelKey: "chart.legend.rattrapage" },
+            ].map(({ color, labelKey }) => (
+              <div key={labelKey} className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-[3px] shrink-0" style={{ background: color }} />
-                <span className="text-[10.5px] text-[var(--ink-4)]">{label}</span>
+                <span className="text-[10.5px] text-[var(--ink-4)]">{t(labelKey)}</span>
               </div>
             ))}
           </div>
